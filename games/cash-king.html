@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>💰 CASH KING™ — Click. Earn. Repeat.</title>
+<link rel="icon" type="image/svg+xml" href="../icon.svg" />
+<link rel="manifest" href="../manifest.json" />
+<meta name="theme-color" content="#ffd700" />
+<style>
+  :root {
+    --bg-grad: linear-gradient(135deg, #0a3d0a, #1a5e1a, #0a3d0a);
+    --accent: #ffd700;
+    --accent-2: #fff200;
+    --good: #1a7a1a;
+    --bad: #ff3030;
+    --panel-bg: linear-gradient(180deg, #fffbe6, #fff5cc);
+    --panel-text: #222;
+    --panel-border: #ffd700;
+    --header-bg: linear-gradient(180deg, #000, #1a1a00);
+    --shop-bg: linear-gradient(180deg, #1a1a1a, #2a2a00);
+    --shop-text: #fff;
+    --btn-bg: radial-gradient(circle at 30% 30%, #ffe066, #1a7a1a 70%);
+    --btn-text: #fff200;
+    --btn-shadow: #b8860b;
+    --ticker-bg: #b8000c;
+    --ticker-text: #fff200;
+    --balance-color: #1a7a1a;
+    --font-main: 'Arial Black', Impact, sans-serif;
+  }
+
+  .back-to-hub {
+    position: fixed; top: 10px; left: 10px; z-index: 5000;
+    background: #1a1a2e; color: #fff; padding: 8px 14px;
+    border-radius: 6px; text-decoration: none;
+    font-family: Arial, sans-serif; font-size: 13px;
+    border: 2px solid #ffd700; box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  }
+  .back-to-hub:hover { background: #ffd700; color: #000; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { overflow-x: hidden; }
+  body {
+    font-family: var(--font-main);
+    background: var(--bg-grad);
+    color: #fff;
+    min-height: 100vh;
+    line-height: 1.4;
+    transition: background 0.4s;
+  }
+
+  /* === TICKER === */
+  .ticker {
+    background: var(--ticker-bg);
+    color: var(--ticker-text);
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 8px 0;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-bottom: 3px solid var(--accent);
+  }
+  .ticker-inner { display: inline-block; padding-left: 100%; animation: ticker 32s linear infinite; }
+  @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+
+  /* === HEADER === */
+  header {
+    background: var(--header-bg);
+    border-bottom: 4px solid var(--accent);
+    padding: 14px 20px;
+    text-align: center;
+    box-shadow: 0 4px 20px color-mix(in srgb, var(--accent) 40%, transparent);
+    position: relative;
+  }
+  .logo {
+    font-size: 38px;
+    background: linear-gradient(180deg, var(--accent-2), var(--accent), var(--btn-shadow));
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
+    letter-spacing: 2px;
+    filter: drop-shadow(2px 2px 0 #000);
+  }
+  .tagline { color: var(--accent-2); font-size: 13px; margin-top: 4px; text-transform: uppercase; }
+
+  .header-controls {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .ctrl-btn {
+    background: var(--accent);
+    color: #000;
+    border: 2px solid #000;
+    padding: 6px 14px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 12px;
+    text-transform: uppercase;
+    border-radius: 4px;
+    position: relative;
+    transition: transform 0.1s;
+  }
+  .ctrl-btn:hover { transform: translateY(-1px); filter: brightness(1.1); }
+  .ctrl-btn .badge {
+    background: var(--bad); color: #fff;
+    border-radius: 10px; padding: 1px 6px; font-size: 10px;
+    margin-left: 4px;
+  }
+  .theme-select {
+    background: #000; color: var(--accent-2); border: 2px solid var(--accent);
+    padding: 6px 10px; font-family: inherit; font-size: 12px;
+    text-transform: uppercase; border-radius: 4px; cursor: pointer;
+  }
+
+  /* === URGENCY BANNER === */
+  .urgency {
+    background: repeating-linear-gradient(45deg, var(--accent), var(--accent) 10px, #000 10px, #000 20px);
+    padding: 4px;
+  }
+  .urgency-inner {
+    background: #000; color: var(--accent-2);
+    text-align: center; padding: 10px;
+    font-size: 16px; text-transform: uppercase;
+    animation: blink 1.2s infinite;
+  }
+  @keyframes blink { 50% { color: var(--bad); } }
+
+  /* === LAYOUT === */
+  .container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 16px;
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 20px;
+  }
+  @media (max-width: 900px) { .container { grid-template-columns: 1fr; } }
+
+  /* === GAME PANEL === */
+  .game-panel {
+    background: var(--panel-bg);
+    color: var(--panel-text);
+    border: 4px solid var(--panel-border);
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+    box-shadow: 0 0 40px color-mix(in srgb, var(--accent) 50%, transparent);
+    position: relative;
+    overflow: hidden;
+  }
+  .balance-label {
+    font-size: 14px;
+    color: var(--btn-shadow);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+  }
+  .balance {
+    font-size: 56px;
+    color: var(--balance-color);
+    text-shadow: 2px 2px 0 var(--accent);
+    margin-bottom: 4px;
+    font-family: 'Courier New', monospace;
+  }
+  .per-click-info { color: var(--panel-text); opacity: 0.7; font-size: 13px; margin-bottom: 16px; }
+
+  .diamond-row {
+    background: linear-gradient(90deg, #2d004a, #4a0080, #2d004a);
+    color: #fff;
+    border: 2px solid #ff66ff;
+    border-radius: 8px;
+    padding: 8px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    text-transform: uppercase;
+  }
+  .diamond-row b { color: #ff99ff; font-size: 18px; font-family: 'Courier New', monospace; }
+
+  /* === BIG BUTTON === */
+  .click-area { position: relative; display: inline-block; margin: 4px auto 20px; }
+  .money-btn {
+    width: 240px; height: 240px;
+    border-radius: 50%;
+    border: 8px solid var(--accent);
+    background: var(--btn-bg);
+    color: var(--btn-text);
+    font-size: 90px;
+    cursor: pointer;
+    box-shadow:
+      0 8px 0 var(--btn-shadow),
+      0 12px 30px rgba(0,0,0,0.4),
+      inset 0 0 30px color-mix(in srgb, var(--accent) 60%, transparent);
+    transition: transform 0.05s, box-shadow 0.05s;
+    user-select: none;
+    text-shadow: 3px 3px 0 #000;
+    font-family: var(--font-main);
+  }
+  .money-btn:hover { filter: brightness(1.1); }
+  .money-btn:active {
+    transform: translateY(6px);
+    box-shadow:
+      0 2px 0 var(--btn-shadow),
+      0 4px 10px rgba(0,0,0,0.4),
+      inset 0 0 30px color-mix(in srgb, var(--accent) 60%, transparent);
+  }
+
+  .float-money {
+    position: absolute; pointer-events: none;
+    font-size: 28px; font-weight: bold;
+    color: var(--balance-color);
+    text-shadow: 1px 1px 0 var(--accent), -1px -1px 0 var(--accent), 1px -1px 0 var(--accent), -1px 1px 0 var(--accent);
+    animation: floatUp 1.1s ease-out forwards;
+    z-index: 10; transform: translate(-50%, 0);
+  }
+  @keyframes floatUp {
+    0%   { opacity: 1; transform: translate(-50%, 0) scale(0.6); }
+    20%  { transform: translate(-50%, -10px) scale(1.4); }
+    100% { opacity: 0; transform: translate(-50%, -110px) scale(1); }
+  }
+
+  /* === STATS === */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 6px;
+  }
+  .stat {
+    background: #000; color: var(--accent-2);
+    border: 2px solid var(--accent);
+    border-radius: 6px;
+    padding: 10px 6px;
+    font-size: 11px;
+    text-transform: uppercase;
+  }
+  .stat b { display: block; font-size: 16px; color: #fff; margin-top: 2px; font-family: 'Courier New', monospace; }
+
+  .panel-buttons {
+    display: flex; gap: 8px;
+    margin-top: 14px; justify-content: center;
+    flex-wrap: wrap;
+  }
+  .prestige-btn {
+    background: linear-gradient(135deg, #ff00ff, #4a0080);
+    color: #fff; border: 3px solid #ff99ff;
+    padding: 10px 20px; cursor: pointer;
+    font-family: inherit; font-size: 14px;
+    text-transform: uppercase; border-radius: 6px;
+    box-shadow: 0 0 20px rgba(255, 0, 255, 0.6);
+    animation: glow 2s infinite;
+  }
+  @keyframes glow { 50% { box-shadow: 0 0 30px rgba(255, 0, 255, 1); } }
+  .prestige-btn:disabled {
+    opacity: 0.4; cursor: not-allowed;
+    animation: none; box-shadow: none;
+    background: #555; border-color: #888;
+  }
+  .reset-btn {
+    background: var(--bad); color: #fff;
+    border: 2px solid #fff; padding: 8px 14px;
+    cursor: pointer; font-family: inherit; font-size: 12px;
+    text-transform: uppercase; border-radius: 4px;
+  }
+
+  /* === SHOP === */
+  .shop {
+    background: var(--shop-bg);
+    color: var(--shop-text);
+    border: 4px solid var(--accent);
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 0 30px color-mix(in srgb, var(--accent) 40%, transparent);
+  }
+  .shop h2 {
+    text-align: center; color: var(--accent-2);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    border-bottom: 2px dashed var(--accent);
+    padding-bottom: 8px; font-size: 20px;
+  }
+  .shop-item {
+    background: var(--panel-bg); color: var(--panel-text);
+    border: 2px solid var(--btn-shadow);
+    border-radius: 8px; padding: 10px;
+    margin-bottom: 10px; cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.1s;
+    position: relative;
+  }
+  .shop-item:hover:not(.disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 60%, transparent);
+    border-color: var(--bad);
+  }
+  .shop-item.disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(0.6); }
+  .shop-item .name { font-size: 14px; color: var(--good); text-transform: uppercase; }
+  .shop-item .desc { font-size: 11px; opacity: 0.8; margin: 3px 0 6px; font-weight: normal; font-family: Arial; }
+  .shop-item .price {
+    background: var(--good); color: var(--accent-2);
+    padding: 4px 8px; border-radius: 4px;
+    display: inline-block; font-size: 13px;
+  }
+  .shop-item .owned {
+    position: absolute; top: 8px; right: 8px;
+    background: var(--bad); color: #fff;
+    padding: 2px 8px; border-radius: 10px; font-size: 11px;
+  }
+
+  /* === TESTIMONIALS === */
+  .testimonials { max-width: 1200px; margin: 30px auto; padding: 0 16px; }
+  .testimonials h3 {
+    color: var(--accent-2); text-align: center;
+    text-transform: uppercase; margin-bottom: 16px;
+    font-size: 22px; text-shadow: 2px 2px 0 #000;
+  }
+  .testi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 14px;
+  }
+  .testi {
+    background: var(--panel-bg); color: var(--panel-text);
+    border-left: 5px solid var(--good);
+    border-radius: 6px; padding: 12px;
+    font-size: 13px; font-family: Arial, sans-serif;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  }
+  .testi .who { color: var(--btn-shadow); margin-top: 6px; font-size: 12px; }
+  .testi .stars { color: var(--accent); }
+
+  footer {
+    text-align: center; padding: 20px;
+    color: var(--accent-2); font-size: 11px;
+    border-top: 2px dashed var(--accent);
+    margin-top: 30px; background: #000;
+  }
+  .disclaimer { color: #888; font-family: Arial; font-weight: normal; margin-top: 6px; }
+
+  /* === MODAL === */
+  .modal-bg {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.85);
+    display: none; z-index: 1000;
+    align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .modal-bg.show { display: flex; }
+  .modal {
+    background: var(--panel-bg); color: var(--panel-text);
+    border: 4px solid var(--accent);
+    border-radius: 12px;
+    max-width: 720px; width: 100%;
+    max-height: 85vh; overflow-y: auto;
+    padding: 20px;
+    box-shadow: 0 0 60px var(--accent);
+  }
+  .modal h2 {
+    color: var(--good); text-transform: uppercase;
+    text-align: center; margin-bottom: 14px;
+    border-bottom: 2px dashed var(--accent);
+    padding-bottom: 10px;
+  }
+  .modal-close {
+    background: var(--bad); color: #fff;
+    border: 2px solid #000; padding: 8px 16px;
+    cursor: pointer; font-family: inherit; font-size: 12px;
+    text-transform: uppercase; border-radius: 4px;
+    display: block; margin: 16px auto 0;
+  }
+
+  .ach-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+  }
+  .ach-card {
+    border: 2px solid var(--btn-shadow);
+    border-radius: 6px; padding: 10px;
+    text-align: center; font-family: Arial, sans-serif;
+    background: rgba(0,0,0,0.05);
+    transition: transform 0.1s;
+  }
+  .ach-card.locked { opacity: 0.35; filter: grayscale(0.9); }
+  .ach-card.unlocked {
+    background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 30%, transparent), transparent);
+    border-color: var(--good);
+  }
+  .ach-card .icon { font-size: 32px; }
+  .ach-card .ach-name { font-weight: bold; font-size: 13px; margin: 4px 0 2px; color: var(--good); }
+  .ach-card .ach-desc { font-size: 11px; opacity: 0.8; }
+
+  /* === TOAST === */
+  .toast-wrap {
+    position: fixed; bottom: 20px; right: 20px;
+    z-index: 2000; display: flex; flex-direction: column; gap: 8px;
+    pointer-events: none;
+  }
+  .toast {
+    background: linear-gradient(135deg, var(--good), #000);
+    color: var(--accent-2);
+    border: 3px solid var(--accent);
+    border-radius: 8px; padding: 12px 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    min-width: 240px;
+    animation: toastIn 0.4s, toastOut 0.4s 3.6s forwards;
+    font-size: 14px;
+  }
+  .toast .toast-title { font-weight: bold; text-transform: uppercase; font-size: 12px; color: var(--accent); }
+  .toast .toast-body { margin-top: 4px; }
+  @keyframes toastIn { from { transform: translateX(120%); } to { transform: translateX(0); } }
+  @keyframes toastOut { to { transform: translateX(120%); opacity: 0; } }
+
+  /* === PRESTIGE MODAL === */
+  .prestige-info {
+    background: linear-gradient(135deg, #2d004a, #4a0080);
+    color: #fff; border: 2px solid #ff99ff;
+    border-radius: 8px; padding: 14px;
+    text-align: center; margin-bottom: 14px;
+    font-family: Arial, sans-serif; font-size: 14px;
+  }
+  .prestige-info b { font-size: 24px; color: #ff99ff; font-family: var(--font-main); }
+  .prestige-confirm {
+    display: flex; gap: 10px; justify-content: center; margin-top: 10px;
+  }
+  .btn-yes {
+    background: var(--good); color: #fff; border: 2px solid #fff;
+    padding: 10px 20px; cursor: pointer; font-family: inherit;
+    text-transform: uppercase; border-radius: 4px;
+  }
+  .btn-no {
+    background: #555; color: #fff; border: 2px solid #fff;
+    padding: 10px 20px; cursor: pointer; font-family: inherit;
+    text-transform: uppercase; border-radius: 4px;
+  }
+</style>
+</head>
+<body>
+
+<a href="../index.html" class="back-to-hub">← Kembali ke Hub</a>
+<div class="ticker"><div class="ticker-inner" id="tickerText"></div></div>
+
+<header>
+  <div class="logo" id="logo">💰 CASH KING™ 💰</div>
+  <div class="tagline" id="tagline">Loading...</div>
+  <div class="header-controls">
+    <select class="theme-select" id="themeSelect">
+      <option value="moneysite">🟢 Moneysite</option>
+      <option value="casino">🎰 Casino</option>
+      <option value="crypto">🚀 Crypto Bro</option>
+      <option value="mlm">💅 MLM Boss Babe</option>
+    </select>
+    <button class="ctrl-btn" id="achBtn">🏆 Achievements <span class="badge" id="achBadge">0/20</span></button>
+  </div>
+</header>
+
+<div class="urgency">
+  <div class="urgency-inner" id="urgencyText">Loading...</div>
+</div>
+
+<div class="container">
+  <div class="game-panel">
+    <div class="balance-label" id="balanceLabel">💵 Saldo Anda 💵</div>
+    <div class="balance"><span id="curSym">$</span><span id="balance">0</span></div>
+    <div class="per-click-info">
+      Per Klik: <b><span id="curSym2">$</span><span id="perClick">1</span></b>
+      &nbsp;|&nbsp; Per Detik: <b><span id="curSym3">$</span><span id="perSec">0</span></b>
+    </div>
+
+    <div class="diamond-row">
+      💎 Diamonds: <b id="diamonds">0</b>
+      &nbsp;•&nbsp; Bonus permanen: <b id="diamondBonus">+0%</b>
+      &nbsp;•&nbsp; Prestige: <b id="prestigeCount">0</b>x
+    </div>
+
+    <div class="click-area" id="clickArea">
+      <button class="money-btn" id="moneyBtn">💵</button>
+    </div>
+
+    <div class="stats">
+      <div class="stat">Total Klik<b id="totalClicks">0</b></div>
+      <div class="stat">Total Earned<b><span id="curSym4">$</span><span id="totalEarned">0</span></b></div>
+      <div class="stat">Multiplier<b><span id="mult">1</span>x</b></div>
+    </div>
+
+    <div class="panel-buttons">
+      <button class="prestige-btn" id="prestigeBtn" disabled>💎 Prestige (+0)</button>
+      <button class="reset-btn" id="resetBtn">🗑️ Reset</button>
+    </div>
+  </div>
+
+  <div class="shop">
+    <h2 id="shopTitle">🛒 Power-Up Shop</h2>
+    <div id="shopList"></div>
+  </div>
+</div>
+
+<div class="testimonials">
+  <h3 id="testiTitle">💬 Apa Kata Mereka?</h3>
+  <div class="testi-grid" id="testiGrid"></div>
+</div>
+
+<footer>
+  © 2026 <span id="footerBrand">CASH KING™</span> — All Rights Reserved.
+  <div class="disclaimer">
+    *Game parodi bertema moneysite/casino/crypto/MLM. Tidak ada uang asli yang dihasilkan. 100% klik, 0% rich.
+  </div>
+</footer>
+
+<!-- ACHIEVEMENTS MODAL -->
+<div class="modal-bg" id="achModal">
+  <div class="modal">
+    <h2>🏆 Achievements <span id="achModalCount" style="font-size:14px;color:#888;"></span></h2>
+    <div class="ach-grid" id="achGrid"></div>
+    <button class="modal-close" onclick="document.getElementById('achModal').classList.remove('show')">Tutup</button>
+  </div>
+</div>
+
+<!-- PRESTIGE MODAL -->
+<div class="modal-bg" id="prestigeModal">
+  <div class="modal">
+    <h2>💎 Prestige</h2>
+    <div class="prestige-info">
+      Prestige akan <b>RESET</b> saldo & semua item, tapi memberi Anda<br>
+      <b id="prestigeGain">+0</b> 💎 Diamonds permanen (+2% bonus per Diamond, selamanya).
+      <br><br>
+      Setelah prestige: <b id="prestigeAfter">0</b> total Diamonds = <b id="prestigeBonus">+0%</b> bonus.
+    </div>
+    <div class="prestige-confirm">
+      <button class="btn-yes" id="prestigeConfirm">✅ Lanjut Prestige</button>
+      <button class="btn-no" onclick="document.getElementById('prestigeModal').classList.remove('show')">❌ Batal</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+(() => {
+  // ============ THEMES ============
+  const THEMES = {
+    moneysite: {
+      title: '💰 CASH KING™ 💰',
+      tagline: '★★★★★ #1 Online Wealth Generator 2026 — As Seen On TV ★★★★★',
+      btnLabel: '💵',
+      currency: '$',
+      balanceLabel: '💵 Saldo Anda 💵',
+      shopTitle: '🛒 Power-Up Shop',
+      footerBrand: 'CASH KING™',
+      titleTab: '💰 CASH KING™ — Click. Earn. Repeat.',
+      ticker: [
+        '🔥 BREAKING: User #4,872 baru saja withdraw $12,400',
+        '💰 LIMITED TIME: Click bonus 2x aktif sampai server reset!',
+        '🚀 Sudah 1,243,567 orang ikut sistem ini',
+        '⚡ "Saya berhenti kerja kantor minggu lalu" - Budi, Pekanbaru',
+        '💵 PROVEN SYSTEM • NO SCAM • REAL CASH',
+      ],
+      urgency: id => `⚠️ PERHATIAN: HANYA TERSISA ${id} SLOT HARI INI — KLIK SEKARANG SEBELUM HABIS! ⚠️`,
+      testimonials: [
+        { stars: '★★★★★', text: '"Awalnya saya skeptis, tapi setelah klik 5 menit saya udah dapat $50! Sekarang saya beli mobil baru." 🚗', who: '— Joko S., Jakarta' },
+        { stars: '★★★★★', text: '"Sistem ini mengubah hidup saya. Sekarang saya bisa pensiun di umur 28!" 🏖️', who: '— Sari M., Surabaya' },
+        { stars: '★★★★★', text: '"DOKTER MEMBENCI TRIK INI! Saya dapat $1000 hanya dengan klik tombol hijau." 💊', who: '— Pak Bambang, Medan' },
+        { stars: '★★★★★', text: '"Bos saya nangis waktu saya resign. Terima kasih CASH KING!" 😭', who: '— Anonim, Pekanbaru' },
+      ],
+      vars: {
+        '--bg-grad': 'linear-gradient(135deg, #0a3d0a, #1a5e1a, #0a3d0a)',
+        '--accent': '#ffd700', '--accent-2': '#fff200',
+        '--good': '#1a7a1a', '--bad': '#ff3030',
+        '--panel-bg': 'linear-gradient(180deg, #fffbe6, #fff5cc)',
+        '--panel-text': '#222', '--panel-border': '#ffd700',
+        '--header-bg': 'linear-gradient(180deg, #000, #1a1a00)',
+        '--shop-bg': 'linear-gradient(180deg, #1a1a1a, #2a2a00)',
+        '--shop-text': '#fff',
+        '--btn-bg': 'radial-gradient(circle at 30% 30%, #ffe066, #1a7a1a 70%)',
+        '--btn-text': '#fff200', '--btn-shadow': '#b8860b',
+        '--ticker-bg': '#b8000c', '--ticker-text': '#fff200',
+        '--balance-color': '#1a7a1a',
+      },
+    },
+
+    casino: {
+      title: '🎰 JACKPOT CITY 🎰',
+      tagline: '♠️♥️♦️♣️ HIGH ROLLER LOUNGE — OPEN 24/7 — Lucky 7s Tonight ♣️♦️♥️♠️',
+      btnLabel: '🎰',
+      currency: '🪙',
+      balanceLabel: '🪙 Chip Stack Anda 🪙',
+      shopTitle: '🎲 VIP Upgrade Lounge',
+      footerBrand: 'JACKPOT CITY™',
+      titleTab: '🎰 JACKPOT CITY — Spin. Win. Repeat.',
+      ticker: [
+        '🎰 Player777 hit JACKPOT 🪙500,000!',
+        '♠️ Lucky 7s aligned 12 kali dalam jam terakhir',
+        '🎲 Hot streak 24 spin berturut!',
+        '💎 "Saya menang 🪙10K dalam 5 menit!" - Ronnie, Vegas',
+        '🎰 NO DEPOSIT • NO LIMIT • PURE LUCK',
+      ],
+      urgency: id => `🔥 HOT TABLE: HANYA TERSISA ${id} KURSI VIP — JACKPOT MENUNGGU! 🔥`,
+      testimonials: [
+        { stars: '★★★★★', text: '"Saya menang 🪙50,000 di spin pertama! Mertua saya ikut nangis bahagia." 😭', who: '— Robby K., Vegas' },
+        { stars: '★★★★★', text: '"Akhirnya dapet bonus 100x! Lambo sudah dipesan." 🏎️', who: '— High Roller #88' },
+        { stars: '★★★★★', text: '"Sistem RTP-nya 99.99%! Saya udah bayar lunas KPR." 🏠', who: '— Lucky Lady' },
+        { stars: '★★★★★', text: '"Croupier bilang saya lucky charm-nya casino ini." 🍀', who: '— Mr. Spin' },
+      ],
+      vars: {
+        '--bg-grad': 'linear-gradient(135deg, #1a0000, #4a0a0a, #1a0000)',
+        '--accent': '#ff0040', '--accent-2': '#ffd700',
+        '--good': '#00cc66', '--bad': '#ffaa00',
+        '--panel-bg': 'linear-gradient(180deg, #2a0008, #1a0000)',
+        '--panel-text': '#ffe6cc', '--panel-border': '#ffd700',
+        '--header-bg': 'linear-gradient(180deg, #000, #2a0000)',
+        '--shop-bg': 'linear-gradient(180deg, #1a0000, #2a0000)',
+        '--shop-text': '#ffd700',
+        '--btn-bg': 'radial-gradient(circle at 30% 30%, #ff6088, #8b0000 70%)',
+        '--btn-text': '#ffd700', '--btn-shadow': '#4a0000',
+        '--ticker-bg': '#ffd700', '--ticker-text': '#000',
+        '--balance-color': '#ffd700',
+      },
+    },
+
+    crypto: {
+      title: '🚀 MOON GAINS 🌙',
+      tagline: '💎 WAGMI • Diamond Hands • To The Moon • Few Understand • NGMI? 💎',
+      btnLabel: '₿',
+      currency: 'Ƀ',
+      balanceLabel: '🚀 Bag Anda 💼',
+      shopTitle: '⚡ Alpha Plays Marketplace',
+      footerBrand: 'MOON GAINS DAO',
+      titleTab: '🚀 MOON GAINS — HODL. Tap. Moon.',
+      ticker: [
+        '🚀 +420% on $PEPE in 24h — bullish!',
+        '💎 Whale just bought 1000 ETH — diamond hands!',
+        '🌙 "Bought a Lambo last week, fr fr" - 0xBigBrain',
+        '⚡ Presale slot LIMITED — DYOR (or don\'t)',
+        '💸 RUG-PROOF • AUDITED • DOXXED • WAGMI',
+      ],
+      urgency: id => `⚡ BULLISH: HANYA TERSISA ${id} PRESALE SPOT SEBELUM LIFTOFF! ⚡`,
+      testimonials: [
+        { stars: '★★★★★', text: '"Bought the dip with rent money. Mom evicted me but Lambo soon!" 🚗', who: '— @0xDegenKing' },
+        { stars: '★★★★★', text: '"WAGMI energy unmatched. Quit my job at McDonald to trade memes 24/7." 📈', who: '— PepeWhale.eth' },
+        { stars: '★★★★★', text: '"Bro literally moon. My portfolio: +9999%. Few understand." 🌙', who: '— @diamond_hands_only' },
+        { stars: '★★★★★', text: '"Not financial advice but I am now financially advisable." 🧠', who: '— Vitalik\'s Cousin' },
+      ],
+      vars: {
+        '--bg-grad': 'linear-gradient(135deg, #050524, #1a0a3d, #050524)',
+        '--accent': '#00ffff', '--accent-2': '#ff00ff',
+        '--good': '#00ff88', '--bad': '#ff0066',
+        '--panel-bg': 'linear-gradient(180deg, #0a0a2a, #1a0a3a)',
+        '--panel-text': '#00ffff', '--panel-border': '#ff00ff',
+        '--header-bg': 'linear-gradient(180deg, #000, #0a0a2a)',
+        '--shop-bg': 'linear-gradient(180deg, #0a0a1a, #1a0a2a)',
+        '--shop-text': '#00ffff',
+        '--btn-bg': 'radial-gradient(circle at 30% 30%, #ff00ff, #4a0080 70%)',
+        '--btn-text': '#00ffff', '--btn-shadow': '#2a004a',
+        '--ticker-bg': '#ff00ff', '--ticker-text': '#00ffff',
+        '--balance-color': '#00ff88',
+      },
+    },
+
+    mlm: {
+      title: '✨ BOSS BABE INC. ✨',
+      tagline: '💕 Join My Team • Be Your Own Boss • #Blessed #Mompreneur 💕',
+      btnLabel: '💅',
+      currency: '💖',
+      balanceLabel: '💖 Total Komisi Sayang 💖',
+      shopTitle: '💼 Upgrade Bisnismu, Queen!',
+      footerBrand: 'BOSS BABE INC.™',
+      titleTab: '💅 BOSS BABE INC. — Hustle. Slay. Repeat.',
+      ticker: [
+        '💕 Sarah just made DIAMOND RANK in 3 minggu!',
+        '✨ DM aku untuk join team-ku, hun!',
+        '🌸 "Saya leaving the 9-5 grind!" - Tisha',
+        '💼 NO BOSS • NO ALARM • JUST HUSTLE',
+        '👑 Kamu deserve better than corporate cubicle, queen!',
+      ],
+      urgency: id => `✨ OPPORTUNITY: HANYA TERSISA ${id} SPOT DI DOWNLINE-KU! DM SEKARANG! ✨`,
+      testimonials: [
+        { stars: '★★★★★', text: '"Aku quit corporate job aku & sekarang jadi stay-at-home mompreneur. #Blessed" 👶', who: '— Tisha, Diamond Rank' },
+        { stars: '★★★★★', text: '"Suami aku ragu, tapi sekarang dia yang minta produk gratis dari aku, hun." 💍', who: '— Mira, Ruby Tier' },
+        { stars: '★★★★★', text: '"Sahabat aku unfollow karena iri sama income aku. It\'s lonely at the top, sis." 👑', who: '— @bossbabevibes' },
+        { stars: '★★★★★', text: '"Aku ga jualan, aku SHARING opportunity. Big difference, queen." 💁', who: '— Felicia, Pearl Director' },
+      ],
+      vars: {
+        '--bg-grad': 'linear-gradient(135deg, #ffd6e8, #d6f5f5, #ffd6e8)',
+        '--accent': '#ff66b3', '--accent-2': '#66cccc',
+        '--good': '#cc3380', '--bad': '#ff3399',
+        '--panel-bg': 'linear-gradient(180deg, #fff, #fff0f5)',
+        '--panel-text': '#663355', '--panel-border': '#ff66b3',
+        '--header-bg': 'linear-gradient(180deg, #ffb3d9, #ffcce0)',
+        '--shop-bg': 'linear-gradient(180deg, #fff5fa, #ffe6f0)',
+        '--shop-text': '#663355',
+        '--btn-bg': 'radial-gradient(circle at 30% 30%, #ffb3d9, #ff66b3 70%)',
+        '--btn-text': '#fff', '--btn-shadow': '#cc4488',
+        '--ticker-bg': '#ff66b3', '--ticker-text': '#fff',
+        '--balance-color': '#cc3380',
+      },
+    },
+  };
+
+  // ============ SHOP ============
+  // names = { themeId: '...' }
+  const SHOP = [
+    { id: 'finger', type: 'click', value: 1, baseCost: 15, names: {
+      moneysite: ['👆 Golden Finger', '+1 per klik'],
+      casino:    ['🎰 Lucky Lever', '+1 per spin'],
+      crypto:    ['👆 Diamond Tap', '+1 per click (HODL!)'],
+      mlm:       ['💅 Power Manicure', '+1 per like, queen'],
+    }},
+    { id: 'kid', type: 'auto', value: 1, baseCost: 100, names: {
+      moneysite: ['👶 Magang Click', 'Auto $1/detik'],
+      casino:    ['🎲 Auto-Spin Bot', 'Auto 🪙1/detik'],
+      crypto:    ['🤖 Sniper Bot v1', 'Auto Ƀ1/detik'],
+      mlm:       ['📱 Auto-DM Tool', 'Auto 💖1/detik kirim DM'],
+    }},
+    { id: 'piggy', type: 'auto', value: 5, baseCost: 600, names: {
+      moneysite: ['🐷 Celengan Pintar', 'Auto $5/detik'],
+      casino:    ['🃏 Card Counter', 'Auto 🪙5/detik'],
+      crypto:    ['📈 Yield Farm', 'Auto Ƀ5/detik APY: ∞%'],
+      mlm:       ['📦 Drop-Ship Box', 'Auto 💖5/detik'],
+    }},
+    { id: 'atm', type: 'auto', value: 20, baseCost: 3000, names: {
+      moneysite: ['🏧 ATM Pribadi', 'Auto $20/detik'],
+      casino:    ['🎰 Slot Machine VIP', 'Auto 🪙20/detik'],
+      crypto:    ['⛏️ Mining Rig', 'Auto Ƀ20/detik'],
+      mlm:       ['🛍️ Online Boutique', 'Auto 💖20/detik'],
+    }},
+    { id: 'gold', type: 'click', value: 10, baseCost: 5000, names: {
+      moneysite: ['🥇 Emas Batangan', '+10 per klik'],
+      casino:    ['💎 Diamond Chip', '+10 per spin'],
+      crypto:    ['💎 NFT PFP Rare', '+10 per click (status!)'],
+      mlm:       ['👑 Crown Tiara', '+10 per click, queen'],
+    }},
+    { id: 'bank', type: 'auto', value: 100, baseCost: 15000, names: {
+      moneysite: ['🏦 Bank Mini', 'Auto $100/detik'],
+      casino:    ['🎰 Casino Floor', 'Auto 🪙100/detik'],
+      crypto:    ['🐋 Whale Wallet', 'Auto Ƀ100/detik'],
+      mlm:       ['💼 Downline Tier 1', 'Auto 💖100/detik'],
+    }},
+    { id: 'crypto', type: 'auto', value: 500, baseCost: 80000, names: {
+      moneysite: ['₿ Mining Rig', 'Auto $500/detik'],
+      casino:    ['🏛️ Casino Empire', 'Auto 🪙500/detik'],
+      crypto:    ['🚀 Layer-2 Validator', 'Auto Ƀ500/detik'],
+      mlm:       ['💼 Downline Tier 5', 'Auto 💖500/detik'],
+    }},
+    { id: 'mult', type: 'mult', value: 2, baseCost: 250000, max: 5, names: {
+      moneysite: ['✨ Lucky Charm 2x', 'Multiplier permanen 2x'],
+      casino:    ['🍀 Four-Leaf Clover', 'RTP boost 2x permanen'],
+      crypto:    ['🧙 Galaxy Brain Pill', 'Alpha multiplier 2x'],
+      mlm:       ['💖 Manifest Crystal', 'Energi 2x permanen, sis'],
+    }},
+    { id: 'oil', type: 'auto', value: 5000, baseCost: 1000000, names: {
+      moneysite: ['🛢️ Sumur Minyak', 'Auto $5,000/detik'],
+      casino:    ['🌍 Global Casino Chain', 'Auto 🪙5,000/detik'],
+      crypto:    ['🏦 Own Your Own L1 Chain', 'Auto Ƀ5,000/detik'],
+      mlm:       ['🏆 Pearl Director Status', 'Auto 💖5,000/detik passive'],
+    }},
+  ];
+
+  // ============ ACHIEVEMENTS ============
+  const ACHIEVEMENTS = [
+    { id: 'first_click',  icon: '👆', name: 'First Tap',       desc: 'Klik pertama!',           check: s => s.totalClicks >= 1 },
+    { id: 'click_100',    icon: '🖱️', name: 'Trigger Happy',   desc: '100 klik',                check: s => s.totalClicks >= 100 },
+    { id: 'click_1k',     icon: '⚡', name: 'Click Master',     desc: '1,000 klik',              check: s => s.totalClicks >= 1000 },
+    { id: 'click_10k',    icon: '🔥', name: 'Carpal Tunnel',    desc: '10,000 klik',             check: s => s.totalClicks >= 10000 },
+    { id: 'click_100k',   icon: '💀', name: 'Mouse Murderer',   desc: '100,000 klik',            check: s => s.totalClicks >= 100000 },
+    { id: 'earn_100',     icon: '💵', name: 'Pocket Change',    desc: 'Total earn 100',          check: s => s.totalEarned >= 100 },
+    { id: 'earn_10k',     icon: '💸', name: 'Wad of Cash',      desc: 'Total earn 10K',          check: s => s.totalEarned >= 10000 },
+    { id: 'earn_1m',      icon: '🤑', name: 'Millionaire',      desc: 'Total earn 1M',           check: s => s.totalEarned >= 1e6 },
+    { id: 'earn_1b',      icon: '💎', name: 'Billionaire',      desc: 'Total earn 1B',           check: s => s.totalEarned >= 1e9 },
+    { id: 'earn_1t',      icon: '🌍', name: 'Trillionaire',     desc: 'Total earn 1T',           check: s => s.totalEarned >= 1e12 },
+    { id: 'first_buy',    icon: '🛒', name: 'First Spend',      desc: 'Beli upgrade pertama',    check: s => itemCount(s) >= 1 },
+    { id: 'shop_50',      icon: '📦', name: 'Hoarder',          desc: 'Punya 50 item total',     check: s => itemCount(s) >= 50 },
+    { id: 'shop_500',     icon: '🏭', name: 'Tycoon',           desc: 'Punya 500 item total',    check: s => itemCount(s) >= 500 },
+    { id: 'own_oil',      icon: '🛢️', name: 'Top Tier',         desc: 'Punya item terakhir',     check: s => (s.items.oil || 0) >= 1 },
+    { id: 'mult_max',     icon: '✨', name: 'Lucky Maxed',      desc: 'Multiplier item ke-5',     check: s => (s.items.mult || 0) >= 5 },
+    { id: 'first_prest',  icon: '💎', name: 'Reborn',           desc: 'Prestige pertama',        check: s => s.prestigeCount >= 1 },
+    { id: 'prest_5',      icon: '🌟', name: 'Veteran',          desc: '5x prestige',             check: s => s.prestigeCount >= 5 },
+    { id: 'prest_25',     icon: '👑', name: 'Ascended',         desc: '25x prestige',            check: s => s.prestigeCount >= 25 },
+    { id: 'all_themes',   icon: '🎨', name: 'Dress to Impress', desc: 'Coba semua 4 tema',       check: s => Object.keys(s.themesSeen).length >= 4 },
+    { id: 'rich_now',     icon: '🏰', name: 'Cash Castle',      desc: 'Saldo aktif 1B',          check: s => s.balance >= 1e9 },
+  ];
+
+  // ============ STATE ============
+  const SAVE_KEY = 'cashKingSave_v2';
+  const state = {
+    balance: 0, totalEarned: 0, totalClicks: 0,
+    perClick: 1, perSec: 0, multiplier: 1,
+    items: {},
+    diamonds: 0, prestigeCount: 0,
+    achievements: {}, // id -> timestamp
+    theme: 'moneysite',
+    themesSeen: { moneysite: 1 },
+  };
+
+  // ============ HELPERS ============
+  const $ = id => document.getElementById(id);
+  function fmt(n) {
+    if (n < 1000)  return Math.floor(n).toString();
+    if (n < 1e6)   return (n/1e3).toFixed(2) + 'K';
+    if (n < 1e9)   return (n/1e6).toFixed(2) + 'M';
+    if (n < 1e12)  return (n/1e9).toFixed(2) + 'B';
+    if (n < 1e15)  return (n/1e12).toFixed(2) + 'T';
+    return (n/1e15).toFixed(2) + 'Q';
+  }
+  function itemCount(s) {
+    let n = 0;
+    for (const k in s.items) n += s.items[k];
+    return n;
+  }
+  const costOf = item => Math.floor(item.baseCost * Math.pow(1.18, state.items[item.id] || 0));
+  const diamondBonus = () => state.diamonds * 0.02; // +2% per diamond
+  const totalMult = () => state.multiplier * (1 + diamondBonus());
+  function pendingDiamonds() {
+    if (state.totalEarned < 1e9) return 0;
+    const target = Math.floor(Math.sqrt(state.totalEarned / 1e9) * 5);
+    return Math.max(0, target - state.diamonds);
+  }
+
+  // ============ CORE LOOP ============
+  function click(e) {
+    const gain = state.perClick * totalMult();
+    state.balance += gain;
+    state.totalEarned += gain;
+    state.totalClicks++;
+    spawnFloat(e, gain);
+    checkAchievements();
+    render();
+  }
+  function spawnFloat(e, amount) {
+    const area = $('clickArea'), rect = area.getBoundingClientRect();
+    const el = document.createElement('div');
+    el.className = 'float-money';
+    el.textContent = '+' + currentTheme().currency + fmt(amount);
+    el.style.left = (e.clientX - rect.left) + 'px';
+    el.style.top  = (e.clientY - rect.top) + 'px';
+    area.appendChild(el);
+    setTimeout(() => el.remove(), 1100);
+  }
+  function buy(item) {
+    const cost = costOf(item);
+    if (state.balance < cost) return;
+    if (item.max && (state.items[item.id] || 0) >= item.max) return;
+    state.balance -= cost;
+    state.items[item.id] = (state.items[item.id] || 0) + 1;
+    recalc();
+    checkAchievements();
+    render();
+  }
+  function recalc() {
+    let pc = 1, ps = 0, mu = 1;
+    for (const item of SHOP) {
+      const n = state.items[item.id] || 0;
+      if (!n) continue;
+      if (item.type === 'click') pc += item.value * n;
+      if (item.type === 'auto')  ps += item.value * n;
+      if (item.type === 'mult')  mu *= Math.pow(item.value, n);
+    }
+    state.perClick = pc; state.perSec = ps; state.multiplier = mu;
+  }
+
+  // ============ ACHIEVEMENTS ============
+  function checkAchievements() {
+    for (const a of ACHIEVEMENTS) {
+      if (state.achievements[a.id]) continue;
+      if (a.check(state)) {
+        state.achievements[a.id] = Date.now();
+        toast('🏆 Achievement Unlocked!', `${a.icon} ${a.name} — ${a.desc}`);
+      }
+    }
+  }
+  function toast(title, body) {
+    const wrap = $('toastWrap');
+    const el = document.createElement('div');
+    el.className = 'toast';
+    el.innerHTML = `<div class="toast-title">${title}</div><div class="toast-body">${body}</div>`;
+    wrap.appendChild(el);
+    setTimeout(() => el.remove(), 4200);
+  }
+
+  // ============ PRESTIGE ============
+  function openPrestige() {
+    const gain = pendingDiamonds();
+    $('prestigeGain').textContent = '+' + gain;
+    $('prestigeAfter').textContent = state.diamonds + gain;
+    $('prestigeBonus').textContent = '+' + ((state.diamonds + gain) * 2) + '%';
+    $('prestigeModal').classList.add('show');
+  }
+  function doPrestige() {
+    const gain = pendingDiamonds();
+    if (gain <= 0) return;
+    state.diamonds += gain;
+    state.prestigeCount++;
+    state.balance = 0; state.totalEarned = 0; state.totalClicks = 0;
+    state.items = {};
+    recalc();
+    $('prestigeModal').classList.remove('show');
+    toast('💎 PRESTIGED!', `+${gain} Diamonds. Bonus permanen sekarang +${(state.diamonds * 2).toFixed(0)}%`);
+    checkAchievements();
+    render();
+    save();
+  }
+
+  // ============ THEME ============
+  function currentTheme() { return THEMES[state.theme]; }
+  function applyTheme(id) {
+    const t = THEMES[id];
+    if (!t) return;
+    state.theme = id;
+    state.themesSeen[id] = (state.themesSeen[id] || 0) + 1;
+    for (const [k, v] of Object.entries(t.vars)) {
+      document.documentElement.style.setProperty(k, v);
+    }
+    document.title = t.titleTab;
+    $('logo').textContent = t.title;
+    $('tagline').textContent = t.tagline;
+    $('balanceLabel').textContent = t.balanceLabel;
+    $('shopTitle').textContent = t.shopTitle;
+    $('footerBrand').textContent = t.footerBrand;
+    $('moneyBtn').textContent = t.btnLabel;
+    $('themeSelect').value = id;
+    // currency symbols
+    for (const sid of ['curSym','curSym2','curSym3','curSym4']) $(sid).textContent = t.currency;
+    // ticker
+    $('tickerText').textContent = t.ticker.join('  •  ') + '  •  ';
+    // testimonials
+    $('testiTitle').textContent = '💬 Apa Kata Mereka? (REAL TESTIMONIAL)';
+    $('testiGrid').innerHTML = t.testimonials.map(te =>
+      `<div class="testi"><div class="stars">${te.stars}</div>${te.text}<div class="who">${te.who}</div></div>`
+    ).join('');
+    checkAchievements();
+    render();
+  }
+
+  // ============ RENDER ============
+  function render() {
+    const t = currentTheme();
+    $('balance').textContent = fmt(state.balance);
+    $('perClick').textContent = fmt(state.perClick * totalMult());
+    $('perSec').textContent = fmt(state.perSec * totalMult());
+    $('totalClicks').textContent = state.totalClicks.toLocaleString('id-ID');
+    $('totalEarned').textContent = fmt(state.totalEarned);
+    $('mult').textContent = state.multiplier.toFixed(0);
+    $('diamonds').textContent = state.diamonds;
+    $('diamondBonus').textContent = '+' + (state.diamonds * 2) + '%';
+    $('prestigeCount').textContent = state.prestigeCount;
+
+    // prestige button
+    const pg = pendingDiamonds();
+    $('prestigeBtn').textContent = '💎 Prestige (+' + pg + ')';
+    $('prestigeBtn').disabled = pg <= 0;
+
+    // ach badge
+    const unlocked = Object.keys(state.achievements).length;
+    $('achBadge').textContent = unlocked + '/' + ACHIEVEMENTS.length;
+
+    // shop
+    const list = $('shopList');
+    list.innerHTML = '';
+    for (const item of SHOP) {
+      const owned = state.items[item.id] || 0;
+      const cost = costOf(item);
+      const maxedOut = item.max && owned >= item.max;
+      const canBuy = !maxedOut && state.balance >= cost;
+      const [name, desc] = item.names[state.theme] || item.names.moneysite;
+      const div = document.createElement('div');
+      div.className = 'shop-item' + (canBuy ? '' : ' disabled');
+      div.innerHTML = `
+        ${owned ? `<span class="owned">x${owned}${item.max ? '/'+item.max : ''}</span>` : ''}
+        <div class="name">${name}</div>
+        <div class="desc">${desc}</div>
+        <span class="price">${maxedOut ? 'MAX' : t.currency + fmt(cost)}</span>
+      `;
+      if (canBuy) div.onclick = () => buy(item);
+      list.appendChild(div);
+    }
+  }
+  function renderAchModal() {
+    const grid = $('achGrid');
+    grid.innerHTML = '';
+    for (const a of ACHIEVEMENTS) {
+      const unlocked = !!state.achievements[a.id];
+      const div = document.createElement('div');
+      div.className = 'ach-card ' + (unlocked ? 'unlocked' : 'locked');
+      div.innerHTML = `
+        <div class="icon">${a.icon}</div>
+        <div class="ach-name">${unlocked ? a.name : '???'}</div>
+        <div class="ach-desc">${a.desc}</div>
+      `;
+      grid.appendChild(div);
+    }
+    const u = Object.keys(state.achievements).length;
+    $('achModalCount').textContent = `(${u}/${ACHIEVEMENTS.length})`;
+  }
+
+  // ============ PERSIST ============
+  function save() {
+    try { localStorage.setItem(SAVE_KEY, JSON.stringify(state)); } catch (e) {}
+  }
+  function load() {
+    try {
+      const raw = localStorage.getItem(SAVE_KEY);
+      if (!raw) return;
+      const data = JSON.parse(raw);
+      Object.assign(state, data);
+      if (!state.themesSeen) state.themesSeen = { [state.theme || 'moneysite']: 1 };
+      if (!state.achievements) state.achievements = {};
+      recalc();
+    } catch (e) {}
+  }
+  function reset() {
+    if (!confirm('Yakin reset SEMUA progress (termasuk Diamonds & Achievements)? Tidak bisa di-undo!')) return;
+    localStorage.removeItem(SAVE_KEY);
+    location.reload();
+  }
+
+  // ============ TICKERS ============
+  setInterval(() => {
+    if (state.perSec > 0) {
+      const gain = (state.perSec * totalMult()) / 10;
+      state.balance += gain;
+      state.totalEarned += gain;
+      checkAchievements();
+      render();
+    }
+  }, 100);
+  setInterval(save, 5000);
+  // urgency countdown
+  let slots = 37;
+  setInterval(() => {
+    slots = slots > 3 ? slots - 1 : 30 + Math.floor(Math.random() * 15);
+    $('urgencyText').innerHTML = currentTheme().urgency(slots);
+  }, 8000);
+
+  // ============ INIT ============
+  $('moneyBtn').addEventListener('click', click);
+  $('resetBtn').addEventListener('click', reset);
+  $('themeSelect').addEventListener('change', e => { applyTheme(e.target.value); save(); });
+  $('achBtn').addEventListener('click', () => { renderAchModal(); $('achModal').classList.add('show'); });
+  $('prestigeBtn').addEventListener('click', openPrestige);
+  $('prestigeConfirm').addEventListener('click', doPrestige);
+  window.addEventListener('beforeunload', save);
+  // close modal by clicking background
+  for (const m of document.querySelectorAll('.modal-bg')) {
+    m.addEventListener('click', e => { if (e.target === m) m.classList.remove('show'); });
+  }
+
+  load();
+  applyTheme(state.theme || 'moneysite');
+  $('urgencyText').innerHTML = currentTheme().urgency(slots);
+
+  // dev cheat (Ctrl+Shift+M = +1M cash) for testing
+  window.addEventListener('keydown', e => {
+    if (e.ctrlKey && e.shiftKey && e.key === 'M') {
+      state.balance += 1e6; state.totalEarned += 1e6;
+      checkAchievements(); render();
+    }
+  });
+})();
+</script>
+</body>
+</html>

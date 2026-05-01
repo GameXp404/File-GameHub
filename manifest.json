@@ -1,0 +1,12 @@
+{
+  "name": "GameHub — Portal Game Pribadi",
+  "short_name": "GameHub",
+  "description": "Portal game pribadi ala CrazyGames. Cash King, Snake, 2048, dll.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0f1729",
+  "theme_color": "#6b46ff",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

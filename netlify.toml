@@ -1,0 +1,23 @@
+[build]
+  publish = "."
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[redirects]]
+  from = "/cash-king"
+  to = "/games/cash-king.html"
+  status = 200
+
+[[redirects]]
+  from = "/snake"
+  to = "/games/snake.html"
+  status = 200
+
+[[redirects]]
+  from = "/2048"
+  to = "/games/2048.html"
+  status = 200

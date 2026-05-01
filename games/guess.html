@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="id"><head>
+<meta charset="UTF-8" /><title>🔮 Tebak Angka</title>
+<link rel="stylesheet" href="game.css" />
+<style>
+  .guess-input {
+    font-size: 28px; padding: 10px 16px; width: 200px;
+    text-align: center; border-radius: 8px;
+    background: #0f1729; color: #fff; border: 3px solid #6b46ff;
+    margin: 10px;
+  }
+  .history { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 12px; }
+  .history span { background: #2a2a4a; padding: 4px 10px; border-radius: 4px; font-size: 13px; }
+  .history span.hot { background: #b8000c; }
+  .history span.warm { background: #d97706; }
+  .history span.cold { background: #1e40af; }
+  .history span.win { background: #00cc66; color: #000; font-weight: bold; }
+</style></head><body>
+<a href="../index.html" class="back-to-hub">← Kembali ke Hub</a>
+<div class="game-wrap">
+  <h1>🔮 Tebak Angka</h1>
+  <div class="subtitle">Tebak angka 1-100. Saya kasih hint: 🥶 dingin / 🔥 panas!</div>
+  <div class="score-row">
+    <div class="score-box">Tebakan<b id="tries">0</b></div>
+    <div class="score-box">Best<b id="best">-</b></div>
+  </div>
+  <input type="number" class="guess-input" id="input" min="1" max="100" placeholder="1-100" />
+  <br>
+  <button class="primary" id="submit">🎯 Tebak</button>
+  <button class="secondary" id="newgame">🔄 Game Baru</button>
+  <div class="message" id="msg">Ketik angka antara 1-100</div>
+  <div class="history" id="history"></div>
+</div>
+<script>
+let target, tries, history, won;
+function init() {
+  target = Math.floor(Math.random()*100)+1;
+  tries = 0; history = []; won = false;
+  document.getElementById('tries').textContent = 0;
+  document.getElementById('msg').textContent = 'Game baru! Tebak angka 1-100';
+  document.getElementById('history').innerHTML = '';
+  document.getElementById('input').value = '';
+  document.getElementById('input').focus();
+  document.getElementById('best').textContent = localStorage.guessBest || '-';
+}
+function submit() {
+  if (won) return;
+  const v = parseInt(document.getElementById('input').value);
+  if (!v || v<1 || v>100) { document.getElementById('msg').textContent = '⚠️ Masukkan 1-100'; return; }
+  tries++; document.getElementById('tries').textContent = tries;
+  const diff = Math.abs(v - target);
+  let cls, label;
+  if (v === target) {
+    cls = 'win'; label = `✅ ${v}`;
+    document.getElementById('msg').textContent = `🎉 Benar! ${tries} tebakan`;
+    won = true;
+    const best = parseInt(localStorage.guessBest || '999');
+    if (tries < best) localStorage.guessBest = tries;
+  } else {
+    if (diff <= 3) cls = 'hot';
+    else if (diff <= 10) cls = 'warm';
+    else cls = 'cold';
+    const arrow = v < target ? '⬆️ lebih besar' : '⬇️ lebih kecil';
+    const heat = diff<=3?'🔥 PANAS':diff<=10?'🌡️ Hangat':'🥶 Dingin';
+    label = `${v} ${arrow}`;
+    document.getElementById('msg').textContent = `${heat} — coba ${arrow}`;
+  }
+  const span = document.createElement('span');
+  span.className = cls; span.textContent = label;
+  document.getElementById('history').appendChild(span);
+  document.getElementById('input').value = '';
+  document.getElementById('input').focus();
+}
+document.getElementById('submit').onclick = submit;
+document.getElementById('newgame').onclick = init;
+document.getElementById('input').addEventListener('keypress', e => { if (e.key === 'Enter') submit(); });
+init();
+</script>
+</body></html>

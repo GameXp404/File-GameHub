@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="id"><head>
+<meta charset="UTF-8" /><title>🔨 Whack-a-Mole</title>
+<link rel="stylesheet" href="game.css" />
+<style>
+  .grid { display: inline-grid; grid-template-columns: repeat(3, 110px); gap: 12px; }
+  .hole {
+    width: 110px; height: 110px;
+    background: radial-gradient(ellipse at center bottom, #2a1810 60%, #0a0e22 100%);
+    border-radius: 50% 50% 30% 30% / 60% 60% 40% 40%;
+    border: 3px solid #6b46ff;
+    display: flex; align-items: flex-end; justify-content: center;
+    overflow: hidden; cursor: pointer;
+  }
+  .mole {
+    width: 80px; height: 80px;
+    background: radial-gradient(circle at 50% 30%, #b8865a, #7a4a2a);
+    border-radius: 50%; transform: translateY(100%);
+    transition: transform 0.15s;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 40px;
+  }
+  .hole.up .mole { transform: translateY(15%); }
+  .hole.bonk .mole { background: radial-gradient(circle, #ff66b3, #cc3380); }
+</style></head><body>
+<a href="../index.html" class="back-to-hub">← Kembali ke Hub</a>
+<div class="game-wrap">
+  <h1>🔨 Whack-a-Mole</h1>
+  <div class="subtitle">Pukul mole secepat mungkin selama 30 detik!</div>
+  <div class="score-row">
+    <div class="score-box">Skor<b id="score">0</b></div>
+    <div class="score-box">Waktu<b id="time">30</b></div>
+    <div class="score-box">Best<b id="best">0</b></div>
+  </div>
+  <div class="grid" id="grid"></div>
+  <div class="message" id="msg">Tekan tombol untuk mulai</div>
+  <button class="primary" id="start">▶️ Mulai</button>
+</div>
+<script>
+const grid = document.getElementById('grid');
+let holes = [], score, time, running, popLoop, timeLoop;
+for (let i=0;i<9;i++) {
+  const h = document.createElement('div');
+  h.className = 'hole';
+  h.innerHTML = '<div class="mole">🐹</div>';
+  h.onclick = () => bonk(i);
+  grid.appendChild(h); holes.push(h);
+}
+function bonk(i) {
+  if (!running || !holes[i].classList.contains('up')) return;
+  score++; document.getElementById('score').textContent = score;
+  holes[i].classList.add('bonk');
+  setTimeout(() => holes[i].classList.remove('up','bonk'), 100);
+}
+function pop() {
+  holes.forEach(h => h.classList.remove('up'));
+  const i = Math.floor(Math.random()*9);
+  holes[i].classList.add('up');
+  setTimeout(() => holes[i].classList.remove('up'), 700);
+}
+function start() {
+  if (running) return;
+  running = true; score = 0; time = 30;
+  document.getElementById('score').textContent = 0;
+  document.getElementById('msg').textContent = 'GO! Pukul mole-nya!';
+  popLoop = setInterval(pop, 750);
+  timeLoop = setInterval(() => {
+    time--; document.getElementById('time').textContent = time;
+    if (time <= 0) end();
+  }, 1000);
+}
+function end() {
+  running = false;
+  clearInterval(popLoop); clearInterval(timeLoop);
+  holes.forEach(h => h.classList.remove('up'));
+  const best = Math.max(score, parseInt(localStorage.whackBest||0));
+  localStorage.whackBest = best;
+  document.getElementById('best').textContent = best;
+  document.getElementById('msg').textContent = `⏱️ Waktu habis! Skor: ${score}`;
+  document.getElementById('time').textContent = 30;
+}
+document.getElementById('start').onclick = start;
+document.getElementById('best').textContent = localStorage.whackBest || 0;
+</script>
+</body></html>

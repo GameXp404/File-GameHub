@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="id"><head>
+<meta charset="UTF-8" /><title>⭕ Tic Tac Toe</title>
+<link rel="stylesheet" href="game.css" />
+<style>
+  .board { display: inline-grid; grid-template-columns: repeat(3, 90px); gap: 6px; background: #6b46ff; padding: 6px; border-radius: 8px; }
+  .cell { width:90px;height:90px;background:#0f1729;display:flex;align-items:center;justify-content:center;font-size:48px;font-weight:bold;cursor:pointer;border-radius:6px;color:#fff; }
+  .cell:hover { background: #1a2545; }
+  .cell.x { color: #ff66b3; }
+  .cell.o { color: #00d4ff; }
+  .cell.win { background: #2a5a2a; animation: pulse 0.5s infinite alternate; }
+  @keyframes pulse { to { background: #4a8a4a; } }
+</style></head><body>
+<a href="../index.html" class="back-to-hub">← Kembali ke Hub</a>
+<div class="game-wrap">
+  <h1>⭕ Tic Tac Toe</h1>
+  <div class="subtitle">Kamu = ❌, AI = ⭕. Cari 3 berderet duluan!</div>
+  <div class="score-row">
+    <div class="score-box">Kamu<b id="ws">0</b></div>
+    <div class="score-box">Seri<b id="ds">0</b></div>
+    <div class="score-box">AI<b id="ls">0</b></div>
+  </div>
+  <div class="board" id="board"></div>
+  <div class="message" id="msg">Klik sel untuk mulai (kamu jalan dulu)</div>
+  <button class="primary" id="restart">🔄 Ronde Baru</button>
+</div>
+<script>
+let board, gameOver, scores = JSON.parse(localStorage.tttScores || '{"w":0,"d":0,"l":0}');
+const WIN = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+function init() {
+  board = Array(9).fill(''); gameOver = false;
+  render(); document.getElementById('msg').textContent = 'Giliran kamu (X)';
+}
+function render(highlight) {
+  const b = document.getElementById('board'); b.innerHTML = '';
+  board.forEach((v,i) => {
+    const c = document.createElement('div');
+    c.className = 'cell ' + v.toLowerCase() + (highlight && highlight.includes(i) ? ' win' : '');
+    c.textContent = v;
+    c.onclick = () => play(i);
+    b.appendChild(c);
+  });
+  document.getElementById('ws').textContent = scores.w;
+  document.getElementById('ds').textContent = scores.d;
+  document.getElementById('ls').textContent = scores.l;
+}
+function play(i) {
+  if (gameOver || board[i]) return;
+  board[i] = 'X'; render();
+  if (check('X')) return;
+  setTimeout(aiMove, 400);
+}
+function aiMove() {
+  // try win, then block, then center, then corner, then random
+  let move = findBest('O') ?? findBest('X') ?? (board[4]==='' ? 4 : null);
+  if (move === null) {
+    const corners = [0,2,6,8].filter(i => !board[i]);
+    if (corners.length) move = corners[Math.floor(Math.random()*corners.length)];
+    else { const empty = board.map((v,i)=>v?-1:i).filter(i=>i>=0); move = empty[Math.floor(Math.random()*empty.length)]; }
+  }
+  board[move] = 'O'; render();
+  check('O');
+}
+function findBest(p) {
+  for (const [a,b,c] of WIN) {
+    const line = [board[a],board[b],board[c]];
+    const idx = [a,b,c];
+    if (line.filter(v=>v===p).length === 2 && line.includes('')) return idx[line.indexOf('')];
+  }
+  return null;
+}
+function check(p) {
+  for (const w of WIN) {
+    if (w.every(i => board[i] === p)) {
+      gameOver = true;
+      if (p==='X') { scores.w++; document.getElementById('msg').textContent='🎉 Kamu menang!'; }
+      else        { scores.l++; document.getElementById('msg').textContent='🤖 AI menang!'; }
+      localStorage.tttScores = JSON.stringify(scores);
+      render(w); return true;
+    }
+  }
+  if (!board.includes('')) {
+    gameOver = true; scores.d++;
+    localStorage.tttScores = JSON.stringify(scores);
+    document.getElementById('msg').textContent = '🤝 Seri!';
+    render(); return true;
+  }
+  return false;
+}
+document.getElementById('restart').onclick = init;
+init();
+</script>
+</body></html>

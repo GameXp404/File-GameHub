@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>🎮 GameHub — Portal Game Pribadi</title>
+<link rel="icon" type="image/svg+xml" href="icon.svg" />
+<link rel="manifest" href="manifest.json" />
+<meta name="theme-color" content="#6b46ff" />
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #0f1729;
+    color: #eaeaea;
+    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* === LAYOUT === */
+  .layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    min-height: 100vh;
+  }
+
+  /* === SIDEBAR === */
+  .sidebar {
+    background: #16213e;
+    border-right: 1px solid #2a2a4a;
+    padding: 16px 0;
+    position: sticky; top: 0;
+    height: 100vh; overflow-y: auto;
+  }
+  .sidebar::-webkit-scrollbar { width: 6px; }
+  .sidebar::-webkit-scrollbar-thumb { background: #6b46ff; border-radius: 3px; }
+
+  .brand {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 20px 18px;
+    font-size: 22px; font-weight: 800;
+    background: linear-gradient(135deg, #ff66b3, #6b46ff);
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
+  }
+  .brand-icon {
+    background: linear-gradient(135deg, #ff66b3, #6b46ff);
+    width: 32px; height: 32px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 18px;
+    -webkit-text-fill-color: #fff;
+  }
+
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 20px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #b8b8d4;
+    border-left: 3px solid transparent;
+    transition: all 0.15s;
+  }
+  .nav-item:hover { background: #1c2748; color: #fff; }
+  .nav-item.active {
+    background: #1c2748;
+    color: #ff66b3;
+    border-left-color: #ff66b3;
+    font-weight: 600;
+  }
+  .nav-item .icon { width: 20px; text-align: center; font-size: 15px; }
+  .nav-divider {
+    height: 1px; background: #2a2a4a;
+    margin: 8px 16px;
+  }
+
+  /* === MAIN === */
+  main { padding: 0; }
+
+  .topbar {
+    position: sticky; top: 0;
+    background: #16213e;
+    border-bottom: 1px solid #2a2a4a;
+    padding: 12px 24px;
+    display: flex; align-items: center; gap: 16px;
+    z-index: 50;
+  }
+  .topbar .menu-btn {
+    background: none; border: none; color: #fff;
+    font-size: 20px; cursor: pointer;
+    display: none;
+  }
+  .search-wrap {
+    flex: 1; max-width: 600px; margin: 0 auto;
+    position: relative;
+  }
+  .search-wrap input {
+    width: 100%;
+    background: #0f1729;
+    border: 1px solid #2a2a4a;
+    color: #fff;
+    padding: 10px 16px 10px 40px;
+    border-radius: 24px;
+    font-size: 14px;
+    outline: none;
+  }
+  .search-wrap input:focus { border-color: #6b46ff; }
+  .search-wrap::before {
+    content: '🔍'; position: absolute;
+    left: 14px; top: 50%; transform: translateY(-50%);
+    pointer-events: none; opacity: 0.6;
+  }
+  .top-actions {
+    display: flex; gap: 8px; align-items: center;
+  }
+  .icon-btn {
+    background: #2a2a4a; border: none; color: #fff;
+    width: 36px; height: 36px; border-radius: 50%;
+    font-size: 16px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .icon-btn:hover { background: #3a3a5a; }
+  .icon-btn .dot {
+    position: absolute; top: 4px; right: 4px;
+    width: 8px; height: 8px; background: #ff3030;
+    border-radius: 50%;
+  }
+  .login-btn {
+    background: #6b46ff; color: #fff; border: none;
+    padding: 8px 20px; border-radius: 20px;
+    font-weight: 600; font-size: 13px; cursor: pointer;
+  }
+  .login-btn:hover { background: #5535dd; }
+
+  /* === SECTIONS === */
+  section {
+    padding: 24px;
+    max-width: 1400px;
+  }
+  .section-head {
+    margin-bottom: 16px;
+  }
+  .section-head h1 {
+    font-size: 22px; margin-bottom: 4px;
+    color: #fff;
+  }
+  .section-head p { color: #8a8aaa; font-size: 13px; }
+
+  /* === GAME GRID === */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 14px;
+  }
+  .card {
+    aspect-ratio: 1 / 1;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+    background: #2a2a4a;
+    transition: transform 0.15s, box-shadow 0.15s;
+    border: 2px solid transparent;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(107, 70, 255, 0.4);
+    border-color: #6b46ff;
+  }
+  .card.disabled { opacity: 0.5; cursor: not-allowed; }
+  .card.disabled:hover { transform: none; box-shadow: none; border-color: transparent; }
+
+  .card-thumb {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 64px;
+    background-size: cover;
+    text-shadow: 0 4px 10px rgba(0,0,0,0.6);
+    position: relative;
+  }
+  .card-thumb::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.85) 100%);
+  }
+  .card-overlay {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 8px 10px;
+    color: #fff; z-index: 2;
+  }
+  .card-title {
+    font-size: 13px; font-weight: 700;
+    text-shadow: 0 1px 4px #000;
+    line-height: 1.2;
+  }
+  .card-cat { font-size: 10px; opacity: 0.85; text-transform: uppercase; }
+  .badge {
+    position: absolute; top: 6px; left: 6px;
+    background: #6b46ff; color: #fff;
+    padding: 2px 8px; border-radius: 10px;
+    font-size: 10px; font-weight: 700;
+    z-index: 2;
+    text-transform: uppercase;
+  }
+  .badge.top { background: #ffaa00; color: #000; }
+  .badge.new { background: #ff3030; }
+  .badge.originals { background: #6b46ff; }
+  .badge.soon { background: #555; }
+
+  /* === EMPTY === */
+  .empty {
+    text-align: center; padding: 60px 20px;
+    color: #8a8aaa;
+  }
+  .empty .icon { font-size: 64px; margin-bottom: 12px; }
+
+  /* === MOBILE === */
+  @media (max-width: 768px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar {
+      position: fixed; top: 0; left: -240px; width: 240px;
+      transition: left 0.3s; z-index: 100;
+    }
+    .sidebar.open { left: 0; }
+    .topbar .menu-btn { display: block; }
+    .grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="#"><span class="brand-icon">🎮</span> GameHub</a>
+
+    <div class="nav-item active" data-cat="all"><span class="icon">🏠</span> Beranda</div>
+    <div class="nav-item" data-cat="trending"><span class="icon">⭐</span> Sedang Tren</div>
+    <div class="nav-item" data-cat="new"><span class="icon">🆕</span> Baru</div>
+    <div class="nav-item" data-cat="originals"><span class="icon">🎯</span> Originals</div>
+    <div class="nav-divider"></div>
+    <div class="nav-item" data-cat="action"><span class="icon">⚔️</span> Aksi</div>
+    <div class="nav-item" data-cat="arcade"><span class="icon">🕹️</span> Arcade</div>
+    <div class="nav-item" data-cat="card"><span class="icon">🃏</span> Kartu</div>
+    <div class="nav-item" data-cat="word"><span class="icon">📝</span> Kata</div>
+    <div class="nav-item" data-cat="clicker"><span class="icon">👆</span> Mengeklik</div>
+    <div class="nav-item" data-cat="board"><span class="icon">♟️</span> Papan</div>
+    <div class="nav-item" data-cat="puzzle"><span class="icon">🧩</span> Puzzle</div>
+    <div class="nav-item" data-cat="strategy"><span class="icon">🛡️</span> Strategi</div>
+    <div class="nav-item" data-cat="trivia"><span class="icon">🎲</span> Trivia</div>
+    <div class="nav-item" data-cat="reflex"><span class="icon">⚡</span> Refleks</div>
+  </aside>
+
+  <main>
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <button class="menu-btn" id="menuBtn">☰</button>
+      <div class="search-wrap">
+        <input type="text" id="search" placeholder="Cari game dan kategori" />
+      </div>
+      <div class="top-actions">
+        <button class="icon-btn" title="Notifikasi">🔔<span class="dot"></span></button>
+        <button class="icon-btn" title="Favorit">❤️</button>
+        <button class="icon-btn" title="Profile">👤</button>
+        <button class="login-btn">Masuk</button>
+      </div>
+    </div>
+
+    <!-- HERO SECTION -->
+    <section>
+      <div class="section-head">
+        <h1 id="sectionTitle">Game Sedang Tren</h1>
+        <p id="sectionSub">Mainkan Game Favorit Pengguna Kami. Ini adalah Game Paling Populer di GameHub dan Diperbarui Secara Berkala</p>
+      </div>
+      <div class="grid" id="grid"></div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+const GAMES = [
+  // Real playable games
+  { id:'cash-king', title:'Cash King', cat:'clicker', tags:['trending','originals','top'], emoji:'💰',
+    grad:'linear-gradient(135deg, #1a7a1a, #ffd700)', url:'games/cash-king.html', badge:'top' },
+  { id:'snake', title:'Snake Classic', cat:'arcade', tags:['trending','arcade'], emoji:'🐍',
+    grad:'linear-gradient(135deg, #0a3d0a, #00ff88)', url:'games/snake.html', badge:'originals' },
+  { id:'2048', title:'2048', cat:'puzzle', tags:['trending','puzzle'], emoji:'🔢',
+    grad:'linear-gradient(135deg, #f59563, #edcf72)', url:'games/2048.html', badge:'top' },
+  { id:'ttt', title:'Tic Tac Toe', cat:'board', tags:['board','strategy'], emoji:'⭕',
+    grad:'linear-gradient(135deg, #6b46ff, #ff66b3)', url:'games/tictactoe.html', badge:'' },
+  { id:'memory', title:'Memory Match', cat:'puzzle', tags:['puzzle','trivia'], emoji:'🧠',
+    grad:'linear-gradient(135deg, #00d4ff, #6b46ff)', url:'games/memory.html', badge:'new' },
+  { id:'rps', title:'Rock Paper Scissors', cat:'arcade', tags:['arcade'], emoji:'✊',
+    grad:'linear-gradient(135deg, #ff3030, #ffaa00)', url:'games/rps.html', badge:'' },
+  { id:'whack', title:'Whack-a-Mole', cat:'reflex', tags:['arcade','trending','reflex'], emoji:'🔨',
+    grad:'linear-gradient(135deg, #7a4a2a, #b8865a)', url:'games/whack.html', badge:'new' },
+  { id:'reaction', title:'Reaction Test', cat:'reflex', tags:['reflex','arcade'], emoji:'⚡',
+    grad:'linear-gradient(135deg, #00cc66, #00d4ff)', url:'games/reaction.html', badge:'new' },
+  { id:'guess', title:'Tebak Angka', cat:'trivia', tags:['trivia','puzzle'], emoji:'🔮',
+    grad:'linear-gradient(135deg, #4a0080, #ff66b3)', url:'games/guess.html', badge:'' },
+
+  // Coming soon placeholders to fill grid
+  { id:'tetris',  title:'Block Drop',     cat:'puzzle',   tags:[],          emoji:'🟦', grad:'linear-gradient(135deg, #1e40af, #00d4ff)', soon:true, badge:'soon' },
+  { id:'chess',   title:'Catur Mini',     cat:'board',    tags:['board'],   emoji:'♟️', grad:'linear-gradient(135deg, #2a2a4a, #6b46ff)', soon:true, badge:'soon' },
+  { id:'sudoku',  title:'Sudoku',         cat:'puzzle',   tags:['puzzle'],  emoji:'🔢', grad:'linear-gradient(135deg, #d97706, #ffaa00)', soon:true, badge:'soon' },
+  { id:'wordle',  title:'Wordle ID',      cat:'word',     tags:['word'],    emoji:'📝', grad:'linear-gradient(135deg, #2a5a2a, #00cc66)', soon:true, badge:'soon' },
+  { id:'pong',    title:'Pong',           cat:'arcade',   tags:['arcade'],  emoji:'🏓', grad:'linear-gradient(135deg, #16213e, #00ffff)', soon:true, badge:'soon' },
+  { id:'flappy',  title:'Flappy Burung',  cat:'reflex',   tags:['reflex'],  emoji:'🐦', grad:'linear-gradient(135deg, #00d4ff, #ffd700)', soon:true, badge:'soon' },
+  { id:'racing',  title:'Drag Race',      cat:'action',   tags:['action'],  emoji:'🏎️', grad:'linear-gradient(135deg, #b8000c, #ffaa00)', soon:true, badge:'soon' },
+  { id:'mine',    title:'Minesweeper',    cat:'puzzle',   tags:['puzzle'],  emoji:'💣', grad:'linear-gradient(135deg, #555, #2a2a4a)', soon:true, badge:'soon' },
+  { id:'crypto',  title:'Crypto Trader',  cat:'strategy', tags:['strategy'],emoji:'📈', grad:'linear-gradient(135deg, #ff00ff, #00ffff)', soon:true, badge:'soon' },
+  { id:'farm',    title:'Idle Farm',      cat:'clicker',  tags:['clicker'], emoji:'🌾', grad:'linear-gradient(135deg, #4a8a2a, #ffd700)', soon:true, badge:'soon' },
+  { id:'tower',   title:'Tower Defense',  cat:'strategy', tags:['strategy'],emoji:'🏰', grad:'linear-gradient(135deg, #2a2a4a, #ff66b3)', soon:true, badge:'soon' },
+  { id:'space',   title:'Space Shooter',  cat:'action',   tags:['action'],  emoji:'🚀', grad:'linear-gradient(135deg, #050524, #ff00ff)', soon:true, badge:'soon' },
+  { id:'jewel',   title:'Match-3 Jewel',  cat:'puzzle',   tags:['puzzle'],  emoji:'💎', grad:'linear-gradient(135deg, #ff66b3, #00d4ff)', soon:true, badge:'soon' },
+  { id:'cards',   title:'Solitaire',      cat:'card',     tags:['card'],    emoji:'🃏', grad:'linear-gradient(135deg, #b8000c, #000)', soon:true, badge:'soon' },
+];
+
+const $ = id => document.getElementById(id);
+let currentCat = 'all';
+let currentSearch = '';
+
+const TITLES = {
+  all: 'Game Sedang Tren',
+  trending: 'Sedang Tren',
+  new: 'Baru Ditambahkan',
+  originals: 'GameHub Originals',
+  action: 'Game Aksi',
+  arcade: 'Game Arcade',
+  card: 'Game Kartu',
+  word: 'Game Kata',
+  clicker: 'Game Mengeklik',
+  board: 'Game Papan',
+  puzzle: 'Game Puzzle',
+  strategy: 'Game Strategi',
+  trivia: 'Game Trivia',
+  reflex: 'Game Refleks',
+};
+
+function render() {
+  const grid = $('grid');
+  grid.innerHTML = '';
+  const filtered = GAMES.filter(g => {
+    let catMatch = currentCat === 'all' || g.cat === currentCat || g.tags.includes(currentCat);
+    let searchMatch = !currentSearch || g.title.toLowerCase().includes(currentSearch) || g.cat.includes(currentSearch);
+    return catMatch && searchMatch;
+  });
+
+  if (!filtered.length) {
+    grid.innerHTML = '<div class="empty" style="grid-column:1/-1;"><div class="icon">🔍</div>Tidak ada game cocok dengan filter ini.</div>';
+    return;
+  }
+
+  for (const g of filtered) {
+    const card = document.createElement(g.soon ? 'div' : 'a');
+    card.className = 'card' + (g.soon ? ' disabled' : '');
+    if (!g.soon) card.href = g.url;
+    card.innerHTML = `
+      ${g.badge ? `<span class="badge ${g.badge}">${g.soon ? 'Segera' : g.badge}</span>` : ''}
+      <div class="card-thumb" style="background:${g.grad};">${g.emoji}</div>
+      <div class="card-overlay">
+        <div class="card-title">${g.title}</div>
+        <div class="card-cat">${g.cat}${g.soon ? ' • coming soon' : ''}</div>
+      </div>
+    `;
+    grid.appendChild(card);
+  }
+}
+
+// Sidebar nav
+for (const item of document.querySelectorAll('.nav-item')) {
+  item.addEventListener('click', () => {
+    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+    item.classList.add('active');
+    currentCat = item.dataset.cat;
+    $('sectionTitle').textContent = TITLES[currentCat] || 'Semua Game';
+    $('sectionSub').textContent = currentCat === 'all'
+      ? 'Mainkan Game Favorit Pengguna Kami. Ini adalah Game Paling Populer di GameHub dan Diperbarui Secara Berkala'
+      : `Menampilkan game kategori: ${TITLES[currentCat]?.toLowerCase() || currentCat}`;
+    render();
+    // close mobile sidebar
+    $('sidebar').classList.remove('open');
+  });
+}
+
+// Search
+$('search').addEventListener('input', e => {
+  currentSearch = e.target.value.trim().toLowerCase();
+  render();
+});
+
+// Mobile menu
+$('menuBtn').addEventListener('click', () => $('sidebar').classList.toggle('open'));
+
+render();
+</script>
+</body>
+</html>

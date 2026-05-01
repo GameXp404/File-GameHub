@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="id"><head>
+<meta charset="UTF-8" /><title>✊ Rock Paper Scissors</title>
+<link rel="stylesheet" href="game.css" />
+<style>
+  .choices { display: flex; justify-content: center; gap: 16px; margin: 20px 0; }
+  .choice {
+    width: 110px; height: 110px; font-size: 60px;
+    background: #0f1729; border: 3px solid #6b46ff;
+    border-radius: 50%; cursor: pointer; transition: all 0.15s;
+  }
+  .choice:hover { background: #6b46ff; transform: scale(1.1); }
+  .battle { display: flex; justify-content: center; gap: 30px; align-items: center; margin: 20px 0; min-height: 90px; }
+  .battle-item { font-size: 64px; }
+  .vs { font-size: 28px; font-weight: bold; color: #ff66b3; }
+</style></head><body>
+<a href="../index.html" class="back-to-hub">← Kembali ke Hub</a>
+<div class="game-wrap">
+  <h1>✊ Rock Paper Scissors</h1>
+  <div class="subtitle">Pilih ✊ Batu / ✋ Kertas / ✌️ Gunting. Best of unlimited!</div>
+  <div class="score-row">
+    <div class="score-box">Kamu<b id="ws">0</b></div>
+    <div class="score-box">Seri<b id="ds">0</b></div>
+    <div class="score-box">CPU<b id="ls">0</b></div>
+  </div>
+  <div class="battle"><div class="battle-item" id="you">❓</div><div class="vs">VS</div><div class="battle-item" id="cpu">❓</div></div>
+  <div class="message" id="msg">Pilih senjatamu!</div>
+  <div class="choices">
+    <button class="choice" data-c="rock">✊</button>
+    <button class="choice" data-c="paper">✋</button>
+    <button class="choice" data-c="scissors">✌️</button>
+  </div>
+  <button class="secondary" id="reset">🔄 Reset Skor</button>
+</div>
+<script>
+const EMOJI = {rock:'✊', paper:'✋', scissors:'✌️'};
+const BEATS = {rock:'scissors', paper:'rock', scissors:'paper'};
+let scores = JSON.parse(localStorage.rpsScores || '{"w":0,"d":0,"l":0}');
+function update() {
+  document.getElementById('ws').textContent = scores.w;
+  document.getElementById('ds').textContent = scores.d;
+  document.getElementById('ls').textContent = scores.l;
+  localStorage.rpsScores = JSON.stringify(scores);
+}
+function play(p) {
+  const choices = ['rock','paper','scissors'];
+  const cpu = choices[Math.floor(Math.random()*3)];
+  document.getElementById('you').textContent = EMOJI[p];
+  document.getElementById('cpu').textContent = EMOJI[cpu];
+  let msg;
+  if (p === cpu) { scores.d++; msg = '🤝 Seri!'; }
+  else if (BEATS[p] === cpu) { scores.w++; msg = '🎉 Kamu menang!'; }
+  else { scores.l++; msg = '💀 CPU menang!'; }
+  document.getElementById('msg').textContent = msg;
+  update();
+}
+document.querySelectorAll('.choice').forEach(b => b.onclick = () => play(b.dataset.c));
+document.getElementById('reset').onclick = () => { scores={w:0,d:0,l:0}; update(); document.getElementById('msg').textContent='Skor di-reset'; };
+update();
+</script>
+</body></html>

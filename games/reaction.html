@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="id"><head>
+<meta charset="UTF-8" /><title>⚡ Reaction Test</title>
+<link rel="stylesheet" href="game.css" />
+<style>
+  .pad {
+    width: 100%; max-width: 500px; height: 280px;
+    margin: 16px auto;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; font-weight: bold;
+    border-radius: 12px; cursor: pointer;
+    transition: background 0.1s; user-select: none;
+    border: 3px solid #6b46ff;
+  }
+  .pad.wait { background: #b8000c; color: #fff; }
+  .pad.go { background: #00cc66; color: #000; }
+  .pad.idle { background: #2a2a4a; color: #aaa; }
+  .pad.early { background: #ffaa00; color: #000; }
+</style></head><body>
+<a href="../index.html" class="back-to-hub">← Kembali ke Hub</a>
+<div class="game-wrap">
+  <h1>⚡ Reaction Test</h1>
+  <div class="subtitle">Klik segera setelah area berubah HIJAU. Jangan terlalu cepat!</div>
+  <div class="score-row">
+    <div class="score-box">Terakhir<b id="last">- ms</b></div>
+    <div class="score-box">Best<b id="best">- ms</b></div>
+    <div class="score-box">Rata-rata<b id="avg">- ms</b></div>
+  </div>
+  <div class="pad idle" id="pad">Klik untuk mulai</div>
+  <button class="secondary" id="reset">🗑️ Reset Statistik</button>
+</div>
+<script>
+const pad = document.getElementById('pad');
+let state = 'idle', startTime, timer;
+let times = JSON.parse(localStorage.reactTimes || '[]');
+function update() {
+  if (times.length) {
+    document.getElementById('last').textContent = times[times.length-1] + ' ms';
+    document.getElementById('best').textContent = Math.min(...times) + ' ms';
+    document.getElementById('avg').textContent = Math.round(times.reduce((a,b)=>a+b,0)/times.length) + ' ms';
+  } else {
+    document.getElementById('last').textContent = '- ms';
+    document.getElementById('best').textContent = '- ms';
+    document.getElementById('avg').textContent = '- ms';
+  }
+}
+pad.onclick = () => {
+  if (state === 'idle') {
+    state = 'wait'; pad.className = 'pad wait';
+    pad.textContent = 'Tunggu... jangan klik dulu!';
+    timer = setTimeout(() => {
+      state = 'go'; pad.className = 'pad go'; pad.textContent = 'KLIK SEKARANG!';
+      startTime = performance.now();
+    }, 1500 + Math.random() * 2500);
+  } else if (state === 'wait') {
+    clearTimeout(timer);
+    state = 'idle'; pad.className = 'pad early';
+    pad.textContent = '⚠️ Terlalu cepat! Klik untuk coba lagi';
+    setTimeout(() => { pad.className = 'pad idle'; pad.textContent = 'Klik untuk mulai'; }, 1200);
+  } else if (state === 'go') {
+    const ms = Math.round(performance.now() - startTime);
+    times.push(ms); if (times.length > 20) times.shift();
+    localStorage.reactTimes = JSON.stringify(times);
+    state = 'idle'; pad.className = 'pad idle';
+    pad.textContent = `${ms} ms — klik untuk lagi`;
+    update();
+  }
+};
+document.getElementById('reset').onclick = () => { times = []; localStorage.reactTimes='[]'; update(); };
+update();
+</script>
+</body></html>

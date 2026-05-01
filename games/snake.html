@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="id"><head>
+<meta charset="UTF-8" /><title>🐍 Snake Classic</title>
+<link rel="stylesheet" href="game.css" />
+</head><body>
+<a href="../index.html" class="back-to-hub">← Kembali ke Hub</a>
+<div class="game-wrap">
+  <h1>🐍 Snake Classic</h1>
+  <div class="subtitle">Panah / WASD untuk gerak. Makan apel, jangan tabrak diri sendiri.</div>
+  <div class="score-row">
+    <div class="score-box">Skor<b id="score">0</b></div>
+    <div class="score-box">Best<b id="best">0</b></div>
+  </div>
+  <canvas id="c" width="400" height="400"></canvas>
+  <div class="message" id="msg">Tekan tombol arah / WASD untuk mulai</div>
+  <button class="primary" id="restart">🔄 Mulai Ulang</button>
+</div>
+<script>
+const c = document.getElementById('c'), ctx = c.getContext('2d');
+const SIZE = 20, COLS = 20, ROWS = 20;
+let snake, dir, nextDir, apple, score, alive, loop;
+
+function reset() {
+  snake = [{x:10,y:10}];
+  dir = nextDir = {x:0, y:0};
+  score = 0; alive = true;
+  spawnApple();
+  document.getElementById('score').textContent = 0;
+  document.getElementById('msg').textContent = 'Tekan tombol arah / WASD untuk mulai';
+  draw();
+  if (loop) clearInterval(loop);
+  loop = setInterval(tick, 110);
+}
+function spawnApple() {
+  while (true) {
+    apple = {x: Math.floor(Math.random()*COLS), y: Math.floor(Math.random()*ROWS)};
+    if (!snake.some(s => s.x===apple.x && s.y===apple.y)) break;
+  }
+}
+function tick() {
+  if (!alive) return;
+  dir = nextDir;
+  if (dir.x === 0 && dir.y === 0) return;
+  const head = {x: snake[0].x + dir.x, y: snake[0].y + dir.y};
+  if (head.x<0 || head.y<0 || head.x>=COLS || head.y>=ROWS || snake.some(s=>s.x===head.x&&s.y===head.y)) {
+    alive = false;
+    document.getElementById('msg').textContent = '💀 Game Over! Skor akhir: ' + score;
+    const best = Math.max(score, parseInt(localStorage.snakeBest||0));
+    localStorage.snakeBest = best;
+    document.getElementById('best').textContent = best;
+    return;
+  }
+  snake.unshift(head);
+  if (head.x === apple.x && head.y === apple.y) {
+    score++; document.getElementById('score').textContent = score;
+    spawnApple();
+  } else snake.pop();
+  draw();
+}
+function draw() {
+  ctx.fillStyle = '#0a0e22'; ctx.fillRect(0,0,c.width,c.height);
+  ctx.fillStyle = '#ff66b3';
+  ctx.beginPath(); ctx.arc(apple.x*SIZE+SIZE/2, apple.y*SIZE+SIZE/2, SIZE/2-2, 0, Math.PI*2); ctx.fill();
+  snake.forEach((s,i) => {
+    ctx.fillStyle = i===0 ? '#6b46ff' : '#9b7eff';
+    ctx.fillRect(s.x*SIZE+1, s.y*SIZE+1, SIZE-2, SIZE-2);
+  });
+}
+const KEYS = {ArrowUp:[0,-1],ArrowDown:[0,1],ArrowLeft:[-1,0],ArrowRight:[1,0],w:[0,-1],s:[0,1],a:[-1,0],d:[1,0],W:[0,-1],S:[0,1],A:[-1,0],D:[1,0]};
+window.addEventListener('keydown', e => {
+  const k = KEYS[e.key]; if (!k) return;
+  e.preventDefault();
+  if (k[0] === -dir.x && k[1] === -dir.y) return;
+  nextDir = {x:k[0], y:k[1]};
+});
+document.getElementById('restart').onclick = reset;
+document.getElementById('best').textContent = localStorage.snakeBest || 0;
+reset();
+</script>
+</body></html>
