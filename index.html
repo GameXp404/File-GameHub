@@ -658,6 +658,15 @@
     <h2>🔄 Auto-Sync ke GitHub</h2>
     <p class="modal-sub">Setiap perubahan game/layout otomatis push ke GitHub repo. GitHub Pages auto-rebuild ~2 menit.</p>
 
+    <!-- STATUS PANEL -->
+    <div id="syncStatusPanel" style="background:#0f1729;border:1px solid #2a2a4a;border-radius:6px;padding:10px;margin-bottom:14px;font-size:12px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <b style="color:#fff;">📊 Status Auto-Sync</b>
+        <span id="syncCurrentMode" style="font-size:11px;"></span>
+      </div>
+      <div id="syncStatusContent">Loading...</div>
+    </div>
+
     <div class="form-row">
       <label>
         <input type="checkbox" id="ghAutoSyncToggle" style="width:auto;margin-right:6px;" />
@@ -1098,6 +1107,7 @@ const STORE = {
   adminPass: 'gameHubAdminPass',
   ghPat: 'gameHubGitHubPat',
   autoSync: 'gameHubAutoSync',
+  syncLog: 'gameHubSyncLog',
 };
 
 // GitHub repo info (untuk auto-sync)
@@ -2052,11 +2062,23 @@ function triggerAutoSync(reason) {
   toast('⏳ Auto-sync queued (push dalam 5s)...');
 }
 
+function recordSyncStatus(status, message, commit) {
+  const log = JSON.parse(localStorage.getItem(STORE.syncLog) || '[]');
+  log.unshift({ ts: Date.now(), status, message, commit });
+  if (log.length > 20) log.pop();
+  localStorage.setItem(STORE.syncLog, JSON.stringify(log));
+  if (document.getElementById('syncStatusContent')) renderSyncStatus();
+}
+
 async function syncToGitHub(reason, pat) {
   if (syncInProgress) return;
   syncInProgress = true;
   pat = pat || localStorage.getItem(STORE.ghPat);
-  if (!pat) { syncInProgress = false; return; }
+  if (!pat) {
+    syncInProgress = false;
+    recordSyncStatus('error', 'PAT belum di-set', null);
+    return;
+  }
   try {
     toast('🔄 Pushing ke GitHub...');
     const headers = {
@@ -2065,14 +2087,17 @@ async function syncToGitHub(reason, pat) {
       'X-GitHub-Api-Version': '2022-11-28'
     };
     const getRes = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/index.html`, { headers });
-    if (!getRes.ok) throw new Error('GET failed: ' + getRes.status);
+    if (!getRes.ok) {
+      const errText = await getRes.text();
+      throw new Error(`GET ${getRes.status} ${getRes.statusText}: ${errText.substring(0,100)}`);
+    }
     const fileInfo = await getRes.json();
     const currentContent = decodeURIComponent(escape(atob(fileInfo.content.replace(/\n/g, ''))));
 
     const games = getGames();
     const gamesStr = generateGamesArrayString(games);
     const newContent = currentContent.replace(/const GAMES = \[[\s\S]*?\n\];/, gamesStr);
-    if (newContent === currentContent) throw new Error('GAMES array tidak ketemu');
+    if (newContent === currentContent) throw new Error('GAMES array tidak ketemu di source');
 
     const putRes = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/index.html`, {
       method: 'PUT',
@@ -2088,14 +2113,81 @@ async function syncToGitHub(reason, pat) {
       throw new Error('PUT failed: ' + (err.message || putRes.status));
     }
     const result = await putRes.json();
-    toast(`✅ Pushed ${result.commit.sha.substring(0,7)} | live ~2 min`);
-    addNotif('🔄', 'Auto-sync sukses', `${reason} | ${result.commit.sha.substring(0,7)}`);
+    const sha = result.commit.sha.substring(0,7);
+    toast(`✅ Pushed ${sha} | live ~2 min`);
+    addNotif('🔄', 'Auto-sync sukses', `${reason} | ${sha}`);
+    recordSyncStatus('success', `Pushed: ${reason}`, sha);
   } catch (e) {
-    toast('❌ Sync gagal: ' + e.message);
+    const errMsg = e.message;
+    toast(`❌ Sync gagal: ${errMsg}`);
     console.error('[Sync]', e);
+    addNotif('❌', 'Auto-sync ERROR', errMsg);
+    recordSyncStatus('error', errMsg, null);
+    // FALLBACK: auto-buka Export Manual modal supaya user bisa copy-paste
+    setTimeout(() => {
+      const games = getGames();
+      const lines = games.map(g => {
+        const parts = [`id:'${g.id}'`, `title:${JSON.stringify(g.title)}`, `cat:'${g.cat}'`,
+          `tags:${JSON.stringify(g.tags||[])}`, `emoji:${JSON.stringify(g.emoji||'🎮')}`,
+          `grad:${JSON.stringify(g.grad||'')}`];
+        if (g.url) parts.push(`url:${JSON.stringify(g.url)}`);
+        if (g.badge) parts.push(`badge:'${g.badge}'`);
+        if (g.soon) parts.push('soon:true');
+        if (g.external) parts.push('external:true');
+        if (g.gameType && g.gameType !== 'web') parts.push(`gameType:'${g.gameType}'`);
+        return '  { ' + parts.join(', ') + ' },';
+      });
+      $('exportText').value = '// Sync otomatis GAGAL — copy ini, paste manual ke source/index.html (~baris 472)\n// Lalu local _auto-deploy.ps1 akan push ke GitHub otomatis dalam 30 detik\n\nconst GAMES = [\n' + lines.join('\n') + '\n];';
+      closeModal('ghSyncModal');
+      openModal('exportModal');
+      toast('💡 Fallback: Export Manual terbuka — copy + paste ke source code', 'warning');
+    }, 1500);
   } finally {
     syncInProgress = false;
   }
+}
+
+function renderSyncStatus() {
+  const el = $('syncStatusContent');
+  const modeEl = $('syncCurrentMode');
+  if (!el) return;
+  const log = JSON.parse(localStorage.getItem(STORE.syncLog) || '[]');
+  const isOn = state.autoSync && !!localStorage.getItem(STORE.ghPat);
+  modeEl.innerHTML = isOn
+    ? '<span style="color:#00ff88;">● AKTIF</span>'
+    : '<span style="color:#8a8aaa;">○ NONAKTIF</span>';
+  if (log.length === 0) {
+    el.innerHTML = '<div style="color:#8a8aaa;font-style:italic;">Belum ada history sync. Klik "Test Sync Sekarang" untuk mulai.</div>';
+    return;
+  }
+  const lastSuccess = log.find(l => l.status === 'success');
+  const lastError = log.find(l => l.status === 'error');
+  let html = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px;">';
+  html += '<div style="background:rgba(0,255,136,0.1);border-left:3px solid #00ff88;padding:8px;border-radius:4px;">';
+  html += '<div style="color:#00ff88;font-weight:700;font-size:11px;">✅ TERAKHIR SUKSES</div>';
+  if (lastSuccess) {
+    html += `<div style="color:#fff;margin-top:4px;">${timeAgo(lastSuccess.ts)}</div>`;
+    html += `<div style="color:#8a8aaa;font-size:11px;">${lastSuccess.message}</div>`;
+    if (lastSuccess.commit) html += `<div style="color:#00ff88;font-family:monospace;font-size:11px;">commit: ${lastSuccess.commit}</div>`;
+  } else html += '<div style="color:#8a8aaa;margin-top:4px;">Belum pernah</div>';
+  html += '</div>';
+  html += '<div style="background:rgba(255,48,48,0.1);border-left:3px solid #ff3030;padding:8px;border-radius:4px;">';
+  html += '<div style="color:#ff6666;font-weight:700;font-size:11px;">❌ TERAKHIR ERROR</div>';
+  if (lastError) {
+    html += `<div style="color:#fff;margin-top:4px;">${timeAgo(lastError.ts)}</div>`;
+    html += `<div style="color:#ff8888;font-size:11px;word-break:break-word;">${lastError.message.substring(0,80)}</div>`;
+  } else html += '<div style="color:#8a8aaa;margin-top:4px;">Belum ada</div>';
+  html += '</div></div>';
+  // Recent log (5 terakhir)
+  html += '<details style="font-size:11px;"><summary style="cursor:pointer;color:#8a8aaa;">📋 Log 10 sync terakhir</summary>';
+  html += '<div style="margin-top:6px;max-height:120px;overflow-y:auto;background:#000;padding:6px;border-radius:4px;font-family:monospace;">';
+  log.slice(0, 10).forEach(l => {
+    const icon = l.status === 'success' ? '✅' : '❌';
+    const color = l.status === 'success' ? '#00ff88' : '#ff6666';
+    html += `<div style="color:${color};margin-bottom:3px;">${icon} ${new Date(l.ts).toLocaleTimeString('id-ID')} — ${l.message.substring(0,60)}</div>`;
+  });
+  html += '</div></details>';
+  el.innerHTML = html;
 }
 
 function generateGamesArrayString(games) {
@@ -2126,6 +2218,7 @@ function openGhSyncModal() {
   $('ghPatInput').value = localStorage.getItem(STORE.ghPat) || '';
   closeModal('adminPanel');
   openModal('ghSyncModal');
+  renderSyncStatus();
 }
 
 function saveGhSync() {
