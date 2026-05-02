@@ -540,25 +540,25 @@
       </div>
     </div>
 
-    <!-- HERO BANNER (customizable, admin-editable) -->
-    <div id="heroBanner" style="margin:20px 24px 0;border-radius:14px;overflow:hidden;position:relative;min-height:200px;background:linear-gradient(135deg,#16213e,#0f1729);border:1px solid #2a2a4a;display:flex;align-items:center;justify-content:center;padding:30px;">
-      <div id="heroBannerBg" style="position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 0.3s;"></div>
-      <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(15,23,41,0.85) 100%);"></div>
-      <div style="position:relative;z-index:2;text-align:center;max-width:800px;">
-        <h1 id="heroTitle" style="font-size:42px;font-weight:900;background:linear-gradient(135deg,#ff66b3,#6b46ff);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:8px;line-height:1.1;">🎮 Selamat Datang di GameHub</h1>
-        <p id="heroSubtitle" style="color:#b8b8d4;font-size:16px;margin-bottom:14px;">22+ Game Online Gratis · No Download · Langsung Main</p>
-        <div id="heroButtons" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-          <button id="heroBtn1" style="background:linear-gradient(135deg,#ff66b3,#6b46ff);color:#fff;border:none;padding:10px 22px;border-radius:8px;font-weight:700;cursor:pointer;font-size:14px;">▶️ Mulai Main</button>
-          <button id="heroBtn2" style="background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.3);padding:10px 22px;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px;">📲 Install App</button>
-        </div>
+    <!-- BANNER KOSONG (admin tempel banner di sini) -->
+    <div id="topBanner" style="margin:20px 24px 0;border-radius:14px;overflow:hidden;position:relative;min-height:120px;background:linear-gradient(135deg,#16213e,#0f1729);border:2px dashed #2a2a4a;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color 0.15s;">
+      <div id="topBannerImg" style="position:absolute;inset:0;background-size:cover;background-position:center;display:none;"></div>
+      <div id="topBannerEmpty" style="position:relative;z-index:2;text-align:center;color:#666;font-size:13px;padding:20px;">
+        <div style="font-size:32px;margin-bottom:6px;opacity:0.4;">🖼️</div>
+        <div>Banner kosong — <span id="topBannerHint">login admin untuk tempel banner</span></div>
       </div>
-      <button id="editHeroBtn" style="display:none;position:absolute;top:10px;right:10px;background:#ff66b3;color:#fff;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:700;z-index:3;">✏️ Edit Banner</button>
+      <button id="editTopBannerBtn" style="display:none;position:absolute;top:8px;right:8px;background:#ff66b3;color:#fff;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:700;z-index:3;">✏️ Edit Banner</button>
+      <button id="removeTopBannerBtn" style="display:none;position:absolute;top:8px;right:110px;background:#ff3030;color:#fff;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:700;z-index:3;">🗑️ Hapus</button>
     </div>
 
     <section>
-      <div class="section-head">
-        <h1 id="sectionTitle">Game Sedang Tren</h1>
-        <p id="sectionSub">Mainkan Game Favorit Pengguna Kami. Ini adalah Game Paling Populer di GameHub dan Diperbarui Secara Berkala</p>
+      <!-- SECTION HEADER dengan ikon GH + welcome text (yang dipindah dari hero) -->
+      <div class="section-head" style="display:flex;align-items:center;gap:18px;">
+        <img id="sectionIcon" src="icons/icon-192.png" alt="GameHub" style="width:84px;height:84px;border-radius:16px;flex-shrink:0;box-shadow:0 4px 16px rgba(255,102,179,0.3);" />
+        <div style="flex:1;min-width:0;">
+          <h1 id="sectionTitle" style="font-size:32px;font-weight:900;background:linear-gradient(135deg,#ff66b3,#6b46ff);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:4px;line-height:1.1;">🎮 Selamat Datang di GameHub</h1>
+          <p id="sectionSub" style="color:#b8b8d4;font-size:14px;">22+ Game Online Gratis · No Download · Langsung Main</p>
+        </div>
       </div>
       <div class="grid" id="grid"></div>
     </section>
@@ -683,50 +683,27 @@
   </div>
 </div>
 
-<!-- HERO BANNER EDIT MODAL (admin-only) -->
-<div class="modal-bg" id="heroEditModal">
-  <div class="modal" style="max-width:600px;">
-    <h2>✏️ Edit Hero Banner</h2>
-    <p class="modal-sub">Customize judul, subtitle, gambar background, dan tombol CTA banner depan.</p>
-
+<!-- TOP BANNER EDIT MODAL (admin-only) -->
+<div class="modal-bg" id="bannerEditModal">
+  <div class="modal" style="max-width:520px;">
+    <h2>🖼️ Edit Banner</h2>
+    <p class="modal-sub">Tempel URL gambar/GIF banner. Akan tampil di kotak banner atas.</p>
     <div class="form-row">
-      <label>Judul Utama</label>
-      <input type="text" id="hb_title" maxlength="100" />
-    </div>
-    <div class="form-row">
-      <label>Subtitle</label>
-      <input type="text" id="hb_subtitle" maxlength="200" />
+      <label>URL Gambar / GIF *</label>
+      <input type="text" id="bn_url" placeholder="https://example.com/banner.jpg atau .gif" />
+      <div style="font-size:11px;color:#8a8aaa;margin-top:4px;">💡 Saran: gambar landscape 1920x300px (atau apapun yang Anda mau)</div>
     </div>
     <div class="form-row">
-      <label>URL Gambar Background (opsional, kosongkan = pakai gradient default)</label>
-      <input type="text" id="hb_bg" placeholder="https://example.com/banner.jpg atau .gif" />
-      <div style="font-size:11px;color:#8a8aaa;margin-top:4px;">💡 Saran: gambar landscape 1920x600px atau lebih besar</div>
+      <label>Link saat banner di-klik (opsional)</label>
+      <input type="text" id="bn_link" placeholder="games/cash-king.html atau https://..." />
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-      <div class="form-row">
-        <label>Tombol 1 - Teks</label>
-        <input type="text" id="hb_btn1text" placeholder="▶️ Mulai Main" maxlength="40" />
-      </div>
-      <div class="form-row">
-        <label>Tombol 1 - Link</label>
-        <input type="text" id="hb_btn1url" placeholder="games/cash-king.html atau https://..." />
-      </div>
+    <div class="form-row">
+      <label>Tinggi Banner (px)</label>
+      <input type="number" id="bn_height" min="80" max="500" placeholder="120" />
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-      <div class="form-row">
-        <label>Tombol 2 - Teks</label>
-        <input type="text" id="hb_btn2text" placeholder="📲 Install App" maxlength="40" />
-      </div>
-      <div class="form-row">
-        <label>Tombol 2 - Link</label>
-        <input type="text" id="hb_btn2url" placeholder="URL atau kosongkan" />
-      </div>
-    </div>
-
     <div class="modal-actions">
-      <button class="btn-primary" id="saveHeroBtn">💾 Simpan</button>
-      <button class="btn-secondary" id="resetHeroBtn">↩️ Reset Default</button>
-      <button class="btn-secondary" onclick="closeModal('heroEditModal')">Batal</button>
+      <button class="btn-primary" id="saveBannerBtn">💾 Simpan</button>
+      <button class="btn-secondary" onclick="closeModal('bannerEditModal')">Batal</button>
     </div>
   </div>
 </div>
@@ -1294,7 +1271,7 @@ const GAMES = [
 ];
 
 const TITLES = {
-  all: 'Game Sedang Tren',
+  all: '🎮 Selamat Datang di GameHub',
   trending: 'Sedang Tren',
   new: 'Baru Ditambahkan',
   originals: 'GameHub Originals',
@@ -1337,8 +1314,8 @@ const GH_REPO = 'GameXp404/File-GameHub';
 
 const DEFAULT_LAYOUT = {
   brand: 'GameHub',
-  sectionTitle: 'Game Sedang Tren',
-  sectionSub: 'Mainkan Game Favorit Pengguna Kami. Ini adalah Game Paling Populer di GameHub dan Diperbarui Secara Berkala',
+  sectionTitle: '🎮 Selamat Datang di GameHub',
+  sectionSub: '22+ Game Online Gratis · No Download · Langsung Main',
   accentColor: '#ff66b3',
   primaryColor: '#6b46ff',
   bgColor: '#0f1729',
@@ -1698,7 +1675,7 @@ for (const item of document.querySelectorAll('.nav-item')) {
     state.cat = item.dataset.cat;
     $('sectionTitle').textContent = TITLES[state.cat] || 'Semua Game';
     $('sectionSub').textContent = state.cat === 'all'
-      ? 'Mainkan Game Favorit Pengguna Kami. Ini adalah Game Paling Populer di GameHub dan Diperbarui Secara Berkala'
+      ? '22+ Game Online Gratis · No Download · Langsung Main'
       : `Menampilkan game kategori: ${(TITLES[state.cat]||state.cat).toLowerCase()}`;
     render();
     $('sidebar').classList.remove('open');
@@ -2942,98 +2919,84 @@ function tickClock() {
 }
 setInterval(tickClock, 1000);
 
-// ============ HERO BANNER ============
-const HERO_STORE = 'gameHubHeroBanner';
-const DEFAULT_HERO = {
-  title: '🎮 Selamat Datang di GameHub',
-  subtitle: '22+ Game Online Gratis · No Download · Langsung Main',
-  bg: '',
-  btn1text: '▶️ Mulai Main',
-  btn1url: 'games/cash-king.html',
-  btn2text: '📲 Install App',
-  btn2url: ''
-};
+// ============ TOP BANNER (admin-editable image only) ============
+const BANNER_STORE = 'gameHubTopBanner';
+function getBanner() { return JSON.parse(localStorage.getItem(BANNER_STORE) || '{}'); }
+function saveBanner(b) { localStorage.setItem(BANNER_STORE, JSON.stringify(b)); }
 
-function getHero() {
-  return Object.assign({}, DEFAULT_HERO, JSON.parse(localStorage.getItem(HERO_STORE) || '{}'));
-}
-function saveHero(h) { localStorage.setItem(HERO_STORE, JSON.stringify(h)); }
+function applyBanner() {
+  const b = getBanner();
+  const bn = $('topBanner');
+  const img = $('topBannerImg');
+  const empty = $('topBannerEmpty');
+  const editBtn = $('editTopBannerBtn');
+  const removeBtn = $('removeTopBannerBtn');
+  if (!bn) return;
 
-function applyHero() {
-  const h = getHero();
-  if ($('heroTitle')) $('heroTitle').textContent = h.title;
-  if ($('heroSubtitle')) $('heroSubtitle').textContent = h.subtitle;
-  if ($('heroBtn1')) {
-    $('heroBtn1').textContent = h.btn1text;
-    $('heroBtn1').onclick = () => { if (h.btn1url) window.open(h.btn1url, h.btn1url.startsWith('http') ? '_blank' : '_self'); };
-    $('heroBtn1').style.display = h.btn1text ? 'inline-block' : 'none';
+  if (b.url) {
+    img.style.backgroundImage = `url('${b.url}')`;
+    img.style.display = 'block';
+    empty.style.display = 'none';
+    bn.style.borderStyle = 'solid';
+    bn.style.borderColor = '#6b46ff';
+    bn.style.minHeight = (b.height || 120) + 'px';
+    bn.onclick = b.link ? () => window.open(b.link, b.link.startsWith('http') ? '_blank' : '_self') : null;
+    bn.style.cursor = b.link ? 'pointer' : 'default';
+  } else {
+    img.style.display = 'none';
+    empty.style.display = 'block';
+    bn.style.borderStyle = 'dashed';
+    bn.style.borderColor = '#2a2a4a';
+    bn.style.minHeight = '120px';
+    bn.onclick = state.isAdmin ? openBannerEdit : null;
+    bn.style.cursor = state.isAdmin ? 'pointer' : 'default';
   }
-  if ($('heroBtn2')) {
-    $('heroBtn2').textContent = h.btn2text;
-    $('heroBtn2').onclick = () => { if (h.btn2url) window.open(h.btn2url, h.btn2url.startsWith('http') ? '_blank' : '_self'); };
-    $('heroBtn2').style.display = h.btn2text ? 'inline-block' : 'none';
+
+  // Admin controls + hint
+  if (editBtn) editBtn.style.display = state.isAdmin ? 'block' : 'none';
+  if (removeBtn) removeBtn.style.display = (state.isAdmin && b.url) ? 'block' : 'none';
+  if ($('topBannerHint')) {
+    $('topBannerHint').textContent = state.isAdmin ? 'klik untuk tempel banner' : 'login admin untuk tempel banner';
   }
-  const bg = $('heroBannerBg');
-  if (bg) {
-    if (h.bg) {
-      bg.style.backgroundImage = `url('${h.bg}')`;
-      bg.style.opacity = '0.7';
-    } else {
-      bg.style.backgroundImage = '';
-      bg.style.opacity = '0';
-    }
-  }
-  // Show edit button only for admin
-  if ($('editHeroBtn')) $('editHeroBtn').style.display = state.isAdmin ? 'block' : 'none';
 }
 
-function openHeroEdit() {
-  const h = getHero();
-  $('hb_title').value = h.title;
-  $('hb_subtitle').value = h.subtitle;
-  $('hb_bg').value = h.bg;
-  $('hb_btn1text').value = h.btn1text;
-  $('hb_btn1url').value = h.btn1url;
-  $('hb_btn2text').value = h.btn2text;
-  $('hb_btn2url').value = h.btn2url;
-  openModal('heroEditModal');
+function openBannerEdit() {
+  const b = getBanner();
+  $('bn_url').value = b.url || '';
+  $('bn_link').value = b.link || '';
+  $('bn_height').value = b.height || 120;
+  openModal('bannerEditModal');
 }
 
-function saveHeroEdit() {
-  const h = {
-    title: $('hb_title').value || DEFAULT_HERO.title,
-    subtitle: $('hb_subtitle').value || DEFAULT_HERO.subtitle,
-    bg: $('hb_bg').value.trim(),
-    btn1text: $('hb_btn1text').value,
-    btn1url: $('hb_btn1url').value,
-    btn2text: $('hb_btn2text').value,
-    btn2url: $('hb_btn2url').value
+function saveBannerEdit() {
+  const b = {
+    url: $('bn_url').value.trim(),
+    link: $('bn_link').value.trim(),
+    height: parseInt($('bn_height').value) || 120
   };
-  saveHero(h);
-  applyHero();
-  closeModal('heroEditModal');
-  toast('✅ Hero banner diupdate');
-  if (typeof triggerAutoSync === 'function') triggerAutoSync('Edit hero banner');
+  if (!b.url) { alert('URL banner wajib diisi'); return; }
+  saveBanner(b);
+  applyBanner();
+  closeModal('bannerEditModal');
+  toast('✅ Banner diupdate');
 }
 
-function resetHero() {
-  if (!confirm('Reset banner ke default?')) return;
-  localStorage.removeItem(HERO_STORE);
-  applyHero();
-  closeModal('heroEditModal');
-  toast('↩️ Banner direset');
+function removeBanner() {
+  saveBanner({});
+  applyBanner();
+  toast('🗑️ Banner dihapus');
 }
 
-// Wire hero events
-$('editHeroBtn')?.addEventListener('click', openHeroEdit);
-$('saveHeroBtn')?.addEventListener('click', saveHeroEdit);
-$('resetHeroBtn')?.addEventListener('click', resetHero);
+// Wire banner events
+$('editTopBannerBtn')?.addEventListener('click', e => { e.stopPropagation(); openBannerEdit(); });
+$('removeTopBannerBtn')?.addEventListener('click', e => { e.stopPropagation(); removeBanner(); });
+$('saveBannerBtn')?.addEventListener('click', saveBannerEdit);
 
-// Update hero edit button visibility when admin status changes
+// Re-render banner on admin status change
 const oldUpdateAdminUI = updateAdminUI;
 window.updateAdminUI = function() {
   oldUpdateAdminUI();
-  applyHero();
+  applyBanner();
 };
 
 // ============ INIT ============
@@ -3043,7 +3006,7 @@ renderChatMessages();
 updateChatGate();
 renderFloatingWidgets();
 tickClock();
-applyHero();
+applyBanner();
 $('chatLoginBtn')?.addEventListener('click', () => openModal('loginModal'));
 $('chatSendBtn')?.addEventListener('click', postChatMessage);
 $('chatInput')?.addEventListener('keypress', e => { if (e.key === 'Enter') postChatMessage(); });
