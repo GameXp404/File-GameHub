@@ -575,7 +575,7 @@
       <button class="btn-secondary" onclick="closeModal('adminLoginModal')">Batal</button>
     </div>
     <p style="text-align:center;font-size:11px;color:#666;margin-top:12px;" id="adminHint">
-      💡 Default: username <b style="color:#ff66b3;">admin</b> / password <b style="color:#ff66b3;">admin123</b>
+      💡 Default: username <b style="color:#ff66b3;">admin</b> / password <b style="color:#ff66b3;">GameHub2026!</b>
     </p>
   </div>
 </div>
@@ -1019,7 +1019,7 @@ const $ = id => document.getElementById(id);
 // ============ ADMIN CREDENTIALS ============
 // EDIT INI untuk ganti password admin (jangan share repo!)
 const ADMIN_USER = 'admin';
-const ADMIN_PASS = 'admin123';
+const ADMIN_PASS = 'GameHub2026!';
 
 const STORE = {
   user: 'gameHubUser',
@@ -1739,7 +1739,7 @@ function savePass() {
   addNotif('🔑', 'Password Diganti', 'Password admin berhasil diubah');
 }
 function resetPass() {
-  if (!confirm('Reset password ke default (admin123)?')) return;
+  if (!confirm('Reset password ke default (GameHub2026!)?')) return;
   localStorage.removeItem(STORE.adminPass);
   closeModal('changePassModal');
   toast('↩️ Password direset ke default');
@@ -1828,8 +1828,8 @@ $('oauthAdmin').addEventListener('click', () => {
   // Update hint kalau password sudah diganti
   const isCustom = !!localStorage.getItem(STORE.adminPass);
   $('adminHint').innerHTML = isCustom
-    ? '🔑 Password Anda sudah diganti dari default. Lupa? Klik <a href="#" onclick="if(confirm(\'Reset ke admin123?\')){localStorage.removeItem(STORE.adminPass);location.reload();}return false;" style="color:#ff66b3;">Reset</a>'
-    : '💡 Default: username <b style="color:#ff66b3;">admin</b> / password <b style="color:#ff66b3;">admin123</b>';
+    ? '🔑 Password Anda sudah diganti dari default. Lupa? Klik <a href="#" onclick="if(confirm(\'Reset ke GameHub2026!?\')){localStorage.removeItem(STORE.adminPass);location.reload();}return false;" style="color:#ff66b3;">Reset</a>'
+    : '💡 Default: username <b style="color:#ff66b3;">admin</b> / password <b style="color:#ff66b3;">GameHub2026!</b>';
   openModal('adminLoginModal');
 });
 $('layoutBtn').addEventListener('click', () => { closeModal('adminPanel'); openLayoutModal(); });
