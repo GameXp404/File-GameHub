@@ -521,17 +521,25 @@
       <div style="text-align:center;color:#8a8aaa;font-size:10px;">mode lengkap dengan verifikasi akun baru</div>
     </div>
 
-    <!-- Chat Tabs -->
-    <div style="background:#0f1729;border:1px solid #2a2a4a;border-radius:8px;padding:8px;flex:1;display:flex;flex-direction:column;min-height:300px;">
-      <div style="display:flex;gap:2px;margin-bottom:8px;border-bottom:1px solid #2a2a4a;">
-        <button class="chat-tab active" data-tab="chat" style="flex:1;background:none;border:none;color:#ff66b3;padding:6px;font-size:11px;cursor:pointer;border-bottom:2px solid #ff66b3;">Chat Room</button>
-        <button class="chat-tab" data-tab="info" style="flex:1;background:none;border:none;color:#8a8aaa;padding:6px;font-size:11px;cursor:pointer;border-bottom:2px solid transparent;">INDODAX Info</button>
-        <button class="chat-tab" data-tab="news" style="flex:1;background:none;border:none;color:#8a8aaa;padding:6px;font-size:11px;cursor:pointer;border-bottom:2px solid transparent;">News</button>
+    <!-- Chat Room (gated by login) -->
+    <div style="background:#0f1729;border:1px solid #2a2a4a;border-radius:8px;padding:8px;flex:1;display:flex;flex-direction:column;min-height:300px;position:relative;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;border-bottom:1px solid #2a2a4a;padding-bottom:6px;">
+        <b style="color:#ff66b3;font-size:13px;">💬 Chat Room GameHub</b>
+        <span id="chatOnlineCount" style="font-size:10px;color:#00ff88;">● 0 online</span>
       </div>
-      <div id="chatMessages" style="flex:1;overflow-y:auto;font-size:11px;line-height:1.5;max-height:300px;"></div>
-      <div style="display:flex;gap:4px;margin-top:6px;">
-        <input type="text" id="chatInput" placeholder="Masuk untuk menulis pesan..." style="flex:1;background:#000;border:1px solid #2a2a4a;color:#fff;padding:6px;border-radius:4px;font-size:11px;" />
+      <div id="chatMessages" style="flex:1;overflow-y:auto;font-size:11px;line-height:1.5;max-height:280px;"></div>
+      <!-- Login overlay (for non-logged users) -->
+      <div id="chatLoginGate" style="position:absolute;inset:0;background:rgba(15,23,41,0.95);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;border-radius:8px;">
+        <div style="font-size:32px;margin-bottom:8px;">🔒</div>
+        <div style="color:#fff;font-weight:700;font-size:13px;margin-bottom:4px;">Login dulu untuk chat</div>
+        <div style="color:#8a8aaa;font-size:11px;margin-bottom:14px;">Daftar gratis untuk join chat room</div>
+        <button id="chatLoginBtn" style="background:linear-gradient(135deg,#ff66b3,#6b46ff);color:#fff;border:none;padding:8px 18px;border-radius:6px;cursor:pointer;font-weight:600;font-size:12px;">Masuk / Daftar</button>
       </div>
+      <div id="chatInputWrap" style="display:none;gap:4px;margin-top:6px;">
+        <input type="text" id="chatInput" maxlength="200" placeholder="Ketik pesan... (Enter kirim)" style="flex:1;background:#000;border:1px solid #2a2a4a;color:#fff;padding:6px;border-radius:4px;font-size:11px;" />
+        <button id="chatSendBtn" style="background:#ff66b3;color:#fff;border:none;padding:6px 10px;border-radius:4px;cursor:pointer;font-size:11px;">▶</button>
+      </div>
+      <div style="margin-top:6px;font-size:9px;color:#666;text-align:center;">💡 Chat lokal browser. Multi-user real perlu Firebase backend.</div>
     </div>
   </aside>
 </div>
@@ -1323,6 +1331,7 @@ function updateAuthUI() {
     $('userPill').classList.remove('show');
     $('profileBtn').style.display = 'none';
   }
+  if (typeof updateChatGate === 'function') updateChatGate();
 }
 
 // ============ MODAL ============
@@ -2470,61 +2479,60 @@ function openDownloadModal(type) {
 $('playStoreBadge').addEventListener('click', e => { e.preventDefault(); openDownloadModal('play'); });
 $('appStoreBadge').addEventListener('click', e => { e.preventDefault(); openDownloadModal('app'); });
 
-// ============ CHAT MOCK ============
-const CHAT_DATA = {
-  chat: [
-    { user:'Candracantik23', color:'#ff66b3', msg:'update status post ig tag iklik aja haga beda' },
-    { user:'Candracantik23', color:'#ff66b3', msg:'nanti kalau pump semua eror lagu lemaaaa' },
-    { user:'Aagy', color:'#00ff88', msg:'@ibrahimaziz1051 mending cari koin yang sehat aja yang hidup bener' },
-    { user:'AryaAnay', color:'#00d4ff', msg:'FUN FUN di coin kong. Siap siap 300%' },
-    { user:'Aagy', color:'#00ff88', msg:'@ibrahimaziz1051 inget jangan fomo sekarang ini banyak banget yang beli di puncak sayang in duit juh' },
-    { user:'ibrahimaziz1051', color:'#ffaa00', msg:'@Aagyy siyap rdan laksanakan..' },
-    { user:'Aagy', color:'#00ff88', msg:'ada LINDA ama YUASA gila tess' },
-    { user:'DANA2005', color:'#a855f7', msg:'Lunc......simpen....xidoxxxxd...' },
-    { user:'Aagy', color:'#00ff88', msg:'@ibrahimaziz1051 nanti jam 8 ada koin pump' },
-    { user:'cbiper', color:'#ff66b3', msg:'koin pas dibuka MT nya sedih yekik harum nya, yg nyangkut sapa aja itu' },
-    { user:'Aagy', color:'#00ff88', msg:'@ibrahimaziz1051 cobs aja list ya jam 8 aku ga menjamin ada tapi pasti ada sih' },
-    { user:'ibrahimaziz1051', color:'#ffaa00', msg:'@Aagyy zenobnn kayanya gren tuh hu,' },
-    { user:'Aagy', color:'#00ff88', msg:'dimakan seller terus tuh' },
-    { user:'BangEleng', color:'#00d4ff', msg:'HNST INSTAN BUY KONG mau REBOUND KONG' },
-    { user:'BangEleng', color:'#00d4ff', msg:'HNST INSTAN BUY KONG' },
-  ],
-  info: [
-    { user:'INDODAX', color:'#ffaa00', msg:'📊 BTC: Rp 1.5 milyar (+2.3%)' },
-    { user:'INDODAX', color:'#ffaa00', msg:'📈 ETH: Rp 65 juta (+5.1%)' },
-    { user:'INDODAX', color:'#ffaa00', msg:'📉 DOGE: Rp 1.2 ribu (-1.5%)' },
-    { user:'INDODAX', color:'#ffaa00', msg:'⚡ Top Gainer: PEPE (+45%)' },
-  ],
-  news: [
-    { user:'News', color:'#ff66b3', msg:'🎮 GameHub update: 22 game baru ditambah!' },
-    { user:'News', color:'#ff66b3', msg:'📱 PWA support sudah aktif' },
-    { user:'News', color:'#ff66b3', msg:'🎯 Coming soon: Sudoku, Catur Mini' },
-  ]
-};
-let activeChatTab = 'chat';
+// ============ CHAT ROOM (login gated, localStorage) ============
+const CHAT_STORE = 'gameHubChatRoom';
+function getChatMessages() {
+  const def = [
+    { user:'GameHub Bot', color:'#ff66b3', msg:'👋 Selamat datang di Chat Room GameHub!', ts:Date.now()-7200000 },
+    { user:'GameHub Bot', color:'#ff66b3', msg:'Tulis pesan untuk join chat. Multi-user real dengan Firebase coming soon!', ts:Date.now()-7100000 },
+  ];
+  return JSON.parse(localStorage.getItem(CHAT_STORE) || JSON.stringify(def));
+}
+function saveChatMessages(msgs) { localStorage.setItem(CHAT_STORE, JSON.stringify(msgs.slice(-50))); }
 
 function renderChatMessages() {
-  const el = $('chatMessages');
-  if (!el) return;
-  const data = CHAT_DATA[activeChatTab] || [];
-  el.innerHTML = data.map(m =>
-    `<div style="margin-bottom:4px;"><b style="color:${m.color};">${m.user}:</b> <span style="color:#b8b8d4;">${m.msg}</span></div>`
-  ).join('');
+  const el = $('chatMessages'); if (!el) return;
+  const msgs = getChatMessages();
+  el.innerHTML = msgs.map(m => {
+    const time = new Date(m.ts || Date.now()).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
+    return `<div style="margin-bottom:6px;"><span style="color:#666;font-size:9px;">${time}</span> <b style="color:${m.color};">${m.user}:</b> <span style="color:#b8b8d4;">${m.msg}</span></div>`;
+  }).join('');
   el.scrollTop = el.scrollHeight;
 }
 
-document.querySelectorAll('.chat-tab').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.chat-tab').forEach(b => {
-      b.style.color = '#8a8aaa';
-      b.style.borderBottomColor = 'transparent';
-    });
-    btn.style.color = '#ff66b3';
-    btn.style.borderBottomColor = '#ff66b3';
-    activeChatTab = btn.dataset.tab;
-    renderChatMessages();
+function updateChatGate() {
+  const gate = $('chatLoginGate');
+  const inputWrap = $('chatInputWrap');
+  if (!gate || !inputWrap) return;
+  if (state.user) {
+    gate.style.display = 'none';
+    inputWrap.style.display = 'flex';
+  } else {
+    gate.style.display = 'flex';
+    inputWrap.style.display = 'none';
+  }
+  // Update online count (mock - count unique users in chat)
+  const uniqueUsers = new Set(getChatMessages().map(m => m.user)).size;
+  if ($('chatOnlineCount')) $('chatOnlineCount').textContent = `● ${uniqueUsers} pernah chat`;
+}
+
+function postChatMessage() {
+  if (!state.user) { toast('🔒 Login dulu'); return; }
+  const input = $('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+  if (text.length > 200) { toast('Max 200 karakter'); return; }
+  const msgs = getChatMessages();
+  // Color berdasarkan role
+  const color = state.user.isAdmin ? '#ff66b3' : '#00ff88';
+  msgs.push({
+    user: state.user.name + (state.user.isAdmin ? ' 🛠️' : ''),
+    color, msg: text, ts: Date.now()
   });
-});
+  saveChatMessages(msgs);
+  input.value = '';
+  renderChatMessages();
+}
 
 // ============ FLOATING WIDGET (draggable + resizable) ============
 const WIDGET_STORE = 'gameHubFloatingWidgets';
@@ -2633,7 +2641,11 @@ function openWidgetEdit(idx) {
 updateAuthUI();
 updateAdminUI();
 renderChatMessages();
+updateChatGate();
 renderFloatingWidgets();
+$('chatLoginBtn')?.addEventListener('click', () => openModal('loginModal'));
+$('chatSendBtn')?.addEventListener('click', postChatMessage);
+$('chatInput')?.addEventListener('keypress', e => { if (e.key === 'Enter') postChatMessage(); });
 $('favCount').textContent = state.favs.length;
 updateNotifDot();
 render();
