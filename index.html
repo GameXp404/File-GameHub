@@ -102,20 +102,26 @@
   .sidebar::-webkit-scrollbar { width: 6px; }
   .sidebar::-webkit-scrollbar-thumb { background: #6b46ff; border-radius: 3px; }
   .brand {
-    display: flex; align-items: center; gap: 10px;
-    padding: 12px 14px 18px;
-    margin: 0 8px;
+    display: flex !important; align-items: center; gap: 10px;
+    padding: 14px 16px 18px;
+    margin: 0;
     font-size: 22px; font-weight: 900;
+    text-decoration: none;
+  }
+  .brand-text {
     background: linear-gradient(135deg, #ff66b3, #6b46ff);
     -webkit-background-clip: text; background-clip: text;
-    color: transparent;
+    -webkit-text-fill-color: transparent; color: transparent;
   }
   .brand-icon {
     background: linear-gradient(135deg, #ff66b3, #6b46ff);
     width: 38px; height: 38px; border-radius: 10px;
     display: flex; align-items: center; justify-content: center;
-    color: #fff; font-size: 20px; -webkit-text-fill-color: #fff;
+    color: #fff !important;
+    -webkit-text-fill-color: #fff !important;
+    font-size: 20px;
     box-shadow: 0 4px 12px rgba(255, 102, 179, 0.4);
+    flex-shrink: 0;
   }
   /* Sidebar nav-item = gradient pill button (seperti tombol "Mulai Main") */
   .nav-item {
@@ -465,7 +471,7 @@
 <div class="layout">
 
   <aside class="sidebar" id="sidebar">
-    <a class="brand" href="#"><span class="brand-icon">🎮</span> GameHub</a>
+    <a class="brand" href="#"><span class="brand-icon">🎮</span><span class="brand-text">GameHub</span></a>
     <div class="nav-item active" data-cat="all"><span class="icon">🏠</span> Beranda</div>
     <div class="nav-item" data-cat="trending"><span class="icon">⭐</span> Sedang Tren</div>
     <div class="nav-item" data-cat="new"><span class="icon">🆕</span> Baru</div>
@@ -541,14 +547,17 @@
     </div>
 
     <!-- BANNER KOSONG (admin tempel banner di sini) -->
-    <div id="topBanner" style="margin:20px 24px 0;border-radius:14px;overflow:hidden;position:relative;min-height:120px;background:linear-gradient(135deg,#16213e,#0f1729);border:2px dashed #2a2a4a;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color 0.15s;">
-      <div id="topBannerImg" style="position:absolute;inset:0;background-size:cover;background-position:center;display:none;"></div>
-      <div id="topBannerEmpty" style="position:relative;z-index:2;text-align:center;color:#666;font-size:13px;padding:20px;">
+    <div id="topBanner" style="margin:20px 24px 0;border-radius:14px;overflow:hidden;min-height:120px;background:linear-gradient(135deg,#16213e,#0f1729);border:2px dashed #2a2a4a;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color 0.15s;position:relative;">
+      <div id="topBannerImg" style="position:absolute;inset:0;background-size:cover;background-position:center;display:none;z-index:1;"></div>
+      <div id="topBannerEmpty" style="position:relative;z-index:2;text-align:center;color:#666;font-size:13px;padding:20px;width:100%;">
         <div style="font-size:32px;margin-bottom:6px;opacity:0.4;">🖼️</div>
         <div>Banner kosong — <span id="topBannerHint">login admin untuk tempel banner</span></div>
+        <!-- Admin controls dipindah ke dalam konten, bukan absolute -->
+        <div id="bannerAdminControls" style="display:none;justify-content:center;gap:6px;margin-top:10px;">
+          <button id="editTopBannerBtn" style="background:#ff66b3;color:#fff;border:none;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:700;">✏️ Edit Banner</button>
+          <button id="removeTopBannerBtn" style="background:#ff3030;color:#fff;border:none;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:700;display:none;">🗑️ Hapus</button>
+        </div>
       </div>
-      <button id="editTopBannerBtn" style="display:none;position:absolute;top:8px;right:8px;background:#ff66b3;color:#fff;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:700;z-index:3;">✏️ Edit Banner</button>
-      <button id="removeTopBannerBtn" style="display:none;position:absolute;top:8px;right:110px;background:#ff3030;color:#fff;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:700;z-index:3;">🗑️ Hapus</button>
     </div>
 
     <section>
@@ -2929,32 +2938,47 @@ function applyBanner() {
   const bn = $('topBanner');
   const img = $('topBannerImg');
   const empty = $('topBannerEmpty');
-  const editBtn = $('editTopBannerBtn');
+  const adminCtrl = $('bannerAdminControls');
   const removeBtn = $('removeTopBannerBtn');
   if (!bn) return;
 
   if (b.url) {
+    // Banner ada gambar → tampilkan gambar
     img.style.backgroundImage = `url('${b.url}')`;
     img.style.display = 'block';
-    empty.style.display = 'none';
     bn.style.borderStyle = 'solid';
     bn.style.borderColor = '#6b46ff';
     bn.style.minHeight = (b.height || 120) + 'px';
+    // Tampilkan admin controls overlay kalau admin (tetap visible bahkan saat banner ada gambar)
+    if (state.isAdmin) {
+      empty.style.display = 'block';
+      empty.style.background = 'rgba(0,0,0,0.5)';
+      empty.style.borderRadius = '8px';
+      empty.querySelector('div:first-child').style.display = 'none';  // hide ikon 🖼️
+      empty.querySelector('div:nth-child(2)').style.display = 'none'; // hide teks "Banner kosong"
+      adminCtrl.style.display = 'flex';
+      removeBtn.style.display = 'inline-block';
+    } else {
+      empty.style.display = 'none';
+    }
     bn.onclick = b.link ? () => window.open(b.link, b.link.startsWith('http') ? '_blank' : '_self') : null;
     bn.style.cursor = b.link ? 'pointer' : 'default';
   } else {
+    // Banner kosong
     img.style.display = 'none';
     empty.style.display = 'block';
+    empty.style.background = 'transparent';
+    empty.querySelector('div:first-child').style.display = 'block';
+    empty.querySelector('div:nth-child(2)').style.display = 'block';
     bn.style.borderStyle = 'dashed';
     bn.style.borderColor = '#2a2a4a';
     bn.style.minHeight = '120px';
+    adminCtrl.style.display = state.isAdmin ? 'flex' : 'none';
+    removeBtn.style.display = 'none';
     bn.onclick = state.isAdmin ? openBannerEdit : null;
     bn.style.cursor = state.isAdmin ? 'pointer' : 'default';
   }
 
-  // Admin controls + hint
-  if (editBtn) editBtn.style.display = state.isAdmin ? 'block' : 'none';
-  if (removeBtn) removeBtn.style.display = (state.isAdmin && b.url) ? 'block' : 'none';
   if ($('topBannerHint')) {
     $('topBannerHint').textContent = state.isAdmin ? 'klik untuk tempel banner' : 'login admin untuk tempel banner';
   }
