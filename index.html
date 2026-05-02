@@ -592,12 +592,24 @@
       <button class="btn-primary" id="layoutBtn" style="flex:0;background:linear-gradient(135deg,#00d4ff,#6b46ff);">🎨 Layout Manual</button>
       <button class="btn-primary" id="changePassBtn" style="flex:0;background:linear-gradient(135deg,#ffaa00,#ff3030);">🔑 Ganti Password</button>
       <button class="btn-secondary" id="exportBtn">📋 Export JSON</button>
-      <button class="btn-secondary" id="clearCookiesBtn" style="border-color:#00d4ff;color:#00d4ff;" title="Hapus data login, favorit, riwayat main, skor — TIDAK menghapus game">🍪 Hapus Cookies Player</button>
-      <button class="btn-secondary" id="resetGamesBtn" style="border-color:#ff3030;color:#ff6666;" title="⚠️ HAPUS semua game yang ditambah via admin, kembali ke daftar default">⚠️ Reset Daftar Game</button>
+      <button class="btn-secondary" id="clearCookiesBtn" style="border-color:#00d4ff;color:#00d4ff;" title="Hapus data login, favorit, riwayat main, skor">🍪 Hapus Cookies Player</button>
+      <button class="btn-secondary" id="ghSyncBtn" style="border-color:#00cc66;color:#00ff88;" title="Setup auto-sync ke GitHub">🔄 GitHub Sync</button>
       <button class="btn-secondary" id="adminLogoutBtn" style="margin-left:auto;border-color:#ff3030;color:#ff6666;">🚪 Keluar Admin</button>
     </div>
 
-    <div id="adminGameList" style="max-height:50vh;overflow-y:auto;background:#0f1729;border-radius:6px;padding:8px;"></div>
+    <!-- Multi-select toolbar -->
+    <div style="background:#0f1729;border:1px solid #2a2a4a;border-radius:6px;padding:10px;margin-bottom:10px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+      <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;">
+        <input type="checkbox" id="selectAllGames" style="width:auto;cursor:pointer;" />
+        <span>Pilih Semua</span>
+      </label>
+      <span id="selectedCount" style="font-size:12px;color:#8a8aaa;">0 dipilih</span>
+      <button class="btn-danger" id="deleteSelectedBtn" style="margin-left:auto;padding:6px 14px;font-size:12px;display:none;">🗑️ Hapus Terpilih</button>
+      <button class="btn-secondary" id="resetGamesBtn" style="border-color:#ff3030;color:#ff6666;padding:6px 14px;font-size:12px;" title="Reset SEMUA ke daftar default source code">⚠️ Reset Semua ke Default</button>
+      <span id="autoSyncStatus" style="font-size:11px;color:#8a8aaa;"></span>
+    </div>
+
+    <div id="adminGameList" style="max-height:46vh;overflow-y:auto;background:#0f1729;border-radius:6px;padding:8px;"></div>
 
     <div class="modal-actions" style="margin-top:14px;">
       <button class="btn-secondary" style="flex:1;" onclick="closeModal('adminPanel')">Tutup</button>
@@ -636,6 +648,48 @@
       • Password tersimpan di localStorage browser ini saja (per browser)<br>
       • Browser lain (HP, laptop kantor) masih pakai password default<br>
       • Untuk universal, klik <b>Export</b> → paste ke <code>ADMIN_PASS</code> di source code → re-deploy
+    </div>
+  </div>
+</div>
+
+<!-- GITHUB SYNC SETUP MODAL -->
+<div class="modal-bg" id="ghSyncModal">
+  <div class="modal" style="max-width:560px;">
+    <h2>🔄 Auto-Sync ke GitHub</h2>
+    <p class="modal-sub">Setiap perubahan game/layout otomatis push ke GitHub repo. GitHub Pages auto-rebuild ~2 menit.</p>
+
+    <div class="form-row">
+      <label>
+        <input type="checkbox" id="ghAutoSyncToggle" style="width:auto;margin-right:6px;" />
+        ✅ Aktifkan Auto-Sync (push otomatis tiap save, no confirmation)
+      </label>
+    </div>
+
+    <div class="form-row">
+      <label>GitHub Personal Access Token (PAT)</label>
+      <input type="password" id="ghPatInput" placeholder="ghp_xxxxxxxxxxxxxxx atau gho_xxxxxxxxxx" autocomplete="off" />
+      <div style="font-size:11px;color:#8a8aaa;margin-top:4px;">
+        🔐 Tersimpan local di browser ini (localStorage). Tidak ke-share.
+      </div>
+    </div>
+
+    <div style="background:#0f1729;border:1px solid #00cc66;padding:12px;border-radius:6px;font-size:12px;margin-top:10px;">
+      <b style="color:#00ff88;">📋 Cara dapat PAT (kalau belum punya):</b>
+      <ol style="padding-left:20px;margin-top:6px;line-height:1.6;color:#b8b8d4;">
+        <li>Buka <a href="https://github.com/settings/tokens?type=beta" target="_blank" style="color:#ff66b3;">github.com/settings/tokens</a> (Fine-grained tokens)</li>
+        <li>Click <b>"Generate new token"</b></li>
+        <li>Token name: <code>GameHub Auto-Sync</code></li>
+        <li>Expiration: 1 year (atau "No expiration")</li>
+        <li>Repository access: Only select repositories → <code>File-GameHub</code></li>
+        <li>Permissions: <code>Contents</code> → <b>Read and write</b></li>
+        <li>Generate token → copy → paste di sini</li>
+      </ol>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-primary" id="saveSyncBtn" style="background:linear-gradient(135deg,#00cc66,#00ff88);color:#000;">💾 Simpan</button>
+      <button class="btn-secondary" id="testSyncBtn">🧪 Test Sync Sekarang</button>
+      <button class="btn-secondary" onclick="closeModal('ghSyncModal')">Tutup</button>
     </div>
   </div>
 </div>
@@ -1031,7 +1085,12 @@ const STORE = {
   gamesOverride: 'gameHubGamesOverride',
   layout: 'gameHubLayout',
   adminPass: 'gameHubAdminPass',
+  ghPat: 'gameHubGitHubPat',
+  autoSync: 'gameHubAutoSync',
 };
+
+// GitHub repo info (untuk auto-sync)
+const GH_REPO = 'GameXp404/File-GameHub';
 
 const DEFAULT_LAYOUT = {
   brand: 'GameHub',
@@ -1061,6 +1120,8 @@ let state = {
   layout: Object.assign({}, DEFAULT_LAYOUT, JSON.parse(localStorage.getItem(STORE.layout) || '{}')),
   cat: 'all',
   search: '',
+  selectedGames: [],  // game IDs yang ke-check di admin panel
+  autoSync: localStorage.getItem(STORE.autoSync) === 'true',
 };
 
 function persist(key) { localStorage.setItem(STORE[key], JSON.stringify(state[key])); }
@@ -1438,9 +1499,13 @@ function renderAdminPanel() {
   list.innerHTML = '';
   games.forEach((g, i) => {
     const row = document.createElement('div');
-    row.style.cssText = 'display:flex;align-items:center;gap:10px;padding:8px;border-bottom:1px solid #2a2a4a;font-size:13px;';
+    const isSelected = state.selectedGames.includes(g.id);
+    row.style.cssText = 'display:flex;align-items:center;gap:10px;padding:8px;border-bottom:1px solid #2a2a4a;font-size:13px;' + (isSelected ? 'background:rgba(255,102,179,0.1);' : '');
     row.innerHTML = `
-      <div style="width:36px;height:36px;border-radius:6px;background:${g.grad};display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">${g.emoji}</div>
+      <input type="checkbox" class="game-select" data-id="${g.id}" ${isSelected?'checked':''} style="width:auto;cursor:pointer;flex-shrink:0;" />
+      <div style="width:36px;height:36px;border-radius:6px;background:${g.grad};display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;overflow:hidden;">
+        ${g.thumbType==='url'&&g.thumbUrl ? `<img src="${g.thumbUrl}" style="width:100%;height:100%;object-fit:cover;" />` : g.thumbType==='upload'&&g.thumbData ? `<img src="${g.thumbData}" style="width:100%;height:100%;object-fit:cover;" />` : g.emoji}
+      </div>
       <div style="flex:1;min-width:0;">
         <div style="font-weight:600;color:#fff;">${g.title} ${g.soon ? '<span style="color:#999;font-size:11px;">(soon)</span>' : ''}</div>
         <div style="font-size:11px;color:#8a8aaa;">${g.cat} · ${g.url || '(no url)'} · ${g.badge || 'no badge'}</div>
@@ -1448,7 +1513,7 @@ function renderAdminPanel() {
       <button class="btn-secondary" data-idx="${i}" data-act="up" title="Naik" style="padding:6px 8px;font-size:12px;${i===0?'opacity:0.3;':''}" ${i===0?'disabled':''}>↑</button>
       <button class="btn-secondary" data-idx="${i}" data-act="down" title="Turun" style="padding:6px 8px;font-size:12px;${i===games.length-1?'opacity:0.3;':''}" ${i===games.length-1?'disabled':''}>↓</button>
       <button class="btn-secondary" data-idx="${i}" data-act="edit" style="padding:6px 10px;font-size:12px;">✏️ Edit</button>
-      <button class="btn-danger" data-idx="${i}" data-act="del" style="padding:6px 10px;font-size:12px;">🗑️</button>
+      <button class="btn-danger" data-idx="${i}" data-act="del" style="padding:6px 10px;font-size:12px;" title="Hapus game ini">🗑️</button>
     `;
     list.appendChild(row);
   });
@@ -1461,6 +1526,46 @@ function renderAdminPanel() {
       else if (btn.dataset.act === 'down') moveGame(idx, +1);
     };
   });
+  list.querySelectorAll('.game-select').forEach(cb => {
+    cb.onchange = () => {
+      const id = cb.dataset.id;
+      if (cb.checked) state.selectedGames.push(id);
+      else state.selectedGames = state.selectedGames.filter(x => x !== id);
+      updateSelectedUI();
+      renderAdminPanel();
+    };
+  });
+  updateSelectedUI();
+}
+
+function updateSelectedUI() {
+  const n = state.selectedGames.length;
+  $('selectedCount').textContent = n + ' dipilih';
+  $('deleteSelectedBtn').style.display = n > 0 ? 'inline-block' : 'none';
+  $('deleteSelectedBtn').textContent = `🗑️ Hapus Terpilih (${n})`;
+  // sync select-all checkbox
+  const totalGames = getGames().length;
+  $('selectAllGames').checked = n > 0 && n === totalGames;
+  $('selectAllGames').indeterminate = n > 0 && n < totalGames;
+  // Auto-sync status indicator
+  const sync = state.autoSync ? '🔄 Auto-sync GitHub: ON' : '⚪ Auto-sync OFF';
+  $('autoSyncStatus').textContent = sync;
+  $('autoSyncStatus').style.color = state.autoSync ? '#00ff88' : '#8a8aaa';
+}
+
+function deleteSelectedGames() {
+  if (state.selectedGames.length === 0) return;
+  const games = state.gamesOverride ? [...state.gamesOverride] : [...GAMES];
+  const beforeCount = games.length;
+  const deletedTitles = games.filter(g => state.selectedGames.includes(g.id)).map(g => g.title);
+  state.gamesOverride = games.filter(g => !state.selectedGames.includes(g.id));
+  persist('gamesOverride');
+  const deleted = beforeCount - state.gamesOverride.length;
+  state.selectedGames = [];
+  renderAdminPanel();
+  render();
+  toast(`🗑️ ${deleted} game dihapus: ${deletedTitles.slice(0,3).join(', ')}${deletedTitles.length>3?'...':''}`);
+  triggerAutoSync('Hapus ' + deleted + ' game: ' + deletedTitles.join(', '));
 }
 
 function moveGame(idx, dir) {
@@ -1472,6 +1577,7 @@ function moveGame(idx, dir) {
   persist('gamesOverride');
   renderAdminPanel();
   render();
+  triggerAutoSync(`Reorder: ${games[newIdx].title} pindah`);
 }
 
 const POPULAR_TAGS = ['trending','new','originals','viral','hot','populer','easy','offline','multiplayer','single'];
@@ -1632,7 +1738,8 @@ function saveGame() {
     newGame.thumbData = uploadedThumb;
   }
 
-  if (editingGameIdx === -1) games.push(newGame);
+  const isNew = editingGameIdx === -1;
+  if (isNew) games.push(newGame);
   else games[editingGameIdx] = newGame;
 
   state.gamesOverride = games;
@@ -1641,6 +1748,7 @@ function saveGame() {
   renderAdminPanel();
   render();
   toast('✅ Game disimpan: ' + newGame.title);
+  triggerAutoSync((isNew ? 'Tambah' : 'Edit') + ' game: ' + newGame.title);
 }
 
 function duplicateGame() {
@@ -1676,20 +1784,23 @@ function bulkImport() {
     renderAdminPanel();
     render();
     toast(`📥 Import sukses: ${data.length} game (${mode})`);
+    triggerAutoSync(`Bulk import ${data.length} game (${mode})`);
   } catch (e) {
     $('bulkErr').textContent = '❌ ' + e.message;
   }
 }
 
 function deleteGame(idx) {
-  if (!confirm('Hapus game ini?')) return;
+  // No confirm - langsung hapus + auto-sync
   const games = state.gamesOverride ? [...state.gamesOverride] : [...GAMES];
-  games.splice(idx, 1);
+  const removed = games.splice(idx, 1)[0];
   state.gamesOverride = games;
+  state.selectedGames = state.selectedGames.filter(id => id !== removed.id);
   persist('gamesOverride');
   renderAdminPanel();
   render();
-  toast('🗑️ Game dihapus');
+  toast(`🗑️ ${removed.title} dihapus`);
+  triggerAutoSync(`Hapus game: ${removed.title}`);
 }
 
 function resetGames() {
@@ -1871,6 +1982,115 @@ function exportLayout() {
   openModal('exportModal');
 }
 
+// ============ AUTO-SYNC GITHUB ============
+let syncDebounceTimer = null;
+let syncInProgress = false;
+
+function triggerAutoSync(reason) {
+  if (!state.autoSync) return;
+  const pat = localStorage.getItem(STORE.ghPat);
+  if (!pat) {
+    toast('⚠️ Auto-sync ON tapi PAT belum di-set. Buka GitHub Sync.');
+    return;
+  }
+  // Debounce: batch multiple changes dalam 5 detik jadi 1 push
+  clearTimeout(syncDebounceTimer);
+  syncDebounceTimer = setTimeout(() => syncToGitHub(reason, pat), 5000);
+  toast('⏳ Auto-sync queued (push dalam 5s)...');
+}
+
+async function syncToGitHub(reason, pat) {
+  if (syncInProgress) return;
+  syncInProgress = true;
+  pat = pat || localStorage.getItem(STORE.ghPat);
+  if (!pat) { syncInProgress = false; return; }
+  try {
+    toast('🔄 Pushing ke GitHub...');
+    const headers = {
+      Authorization: `Bearer ${pat}`,
+      Accept: 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28'
+    };
+    const getRes = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/index.html`, { headers });
+    if (!getRes.ok) throw new Error('GET failed: ' + getRes.status);
+    const fileInfo = await getRes.json();
+    const currentContent = decodeURIComponent(escape(atob(fileInfo.content.replace(/\n/g, ''))));
+
+    const games = getGames();
+    const gamesStr = generateGamesArrayString(games);
+    const newContent = currentContent.replace(/const GAMES = \[[\s\S]*?\n\];/, gamesStr);
+    if (newContent === currentContent) throw new Error('GAMES array tidak ketemu');
+
+    const putRes = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/index.html`, {
+      method: 'PUT',
+      headers: { ...headers, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: `Admin auto-sync: ${reason}`,
+        content: btoa(unescape(encodeURIComponent(newContent))),
+        sha: fileInfo.sha
+      })
+    });
+    if (!putRes.ok) {
+      const err = await putRes.json();
+      throw new Error('PUT failed: ' + (err.message || putRes.status));
+    }
+    const result = await putRes.json();
+    toast(`✅ Pushed ${result.commit.sha.substring(0,7)} | live ~2 min`);
+    addNotif('🔄', 'Auto-sync sukses', `${reason} | ${result.commit.sha.substring(0,7)}`);
+  } catch (e) {
+    toast('❌ Sync gagal: ' + e.message);
+    console.error('[Sync]', e);
+  } finally {
+    syncInProgress = false;
+  }
+}
+
+function generateGamesArrayString(games) {
+  const lines = games.map(g => {
+    const parts = [`id:'${g.id}'`, `title:${JSON.stringify(g.title)}`, `cat:'${g.cat}'`,
+      `tags:${JSON.stringify(g.tags||[])}`, `emoji:${JSON.stringify(g.emoji||'🎮')}`,
+      `grad:${JSON.stringify(g.grad||'')}`];
+    if (g.url) parts.push(`url:${JSON.stringify(g.url)}`);
+    if (g.badge) parts.push(`badge:'${g.badge}'`);
+    if (g.soon) parts.push('soon:true');
+    if (g.external) parts.push('external:true');
+    if (g.desc) parts.push(`desc:${JSON.stringify(g.desc)}`);
+    if (g.author) parts.push(`author:${JSON.stringify(g.author)}`);
+    if (g.difficulty) parts.push(`difficulty:'${g.difficulty}'`);
+    if (g.players) parts.push(`players:'${g.players}'`);
+    if (g.controls) parts.push(`controls:${JSON.stringify(g.controls)}`);
+    if (g.thumbType && g.thumbType !== 'emoji') parts.push(`thumbType:'${g.thumbType}'`);
+    if (g.thumbUrl) parts.push(`thumbUrl:${JSON.stringify(g.thumbUrl)}`);
+    if (g.thumbData && g.thumbData.length < 50000) parts.push(`thumbData:${JSON.stringify(g.thumbData)}`);
+    return '  { ' + parts.join(', ') + ' },';
+  });
+  return 'const GAMES = [\n' + lines.join('\n') + '\n];';
+}
+
+function openGhSyncModal() {
+  $('ghAutoSyncToggle').checked = state.autoSync;
+  $('ghPatInput').value = localStorage.getItem(STORE.ghPat) || '';
+  closeModal('adminPanel');
+  openModal('ghSyncModal');
+}
+
+function saveGhSync() {
+  state.autoSync = $('ghAutoSyncToggle').checked;
+  localStorage.setItem(STORE.autoSync, state.autoSync);
+  const pat = $('ghPatInput').value.trim();
+  if (pat) localStorage.setItem(STORE.ghPat, pat);
+  closeModal('ghSyncModal');
+  toast(state.autoSync ? '✅ Auto-sync GitHub: ON' : '⚪ Auto-sync OFF');
+  updateSelectedUI();
+}
+
+function testGhSync() {
+  const pat = $('ghPatInput').value.trim();
+  if (!pat) { toast('❌ Isi PAT dulu'); return; }
+  localStorage.setItem(STORE.ghPat, pat);
+  syncToGitHub('Manual test sync', pat);
+}
+
 // Wire admin events
 $('oauthAdmin').addEventListener('click', () => {
   closeModal('loginModal');
@@ -1946,6 +2166,14 @@ $('ge_thumbFile').addEventListener('change', e => {
 $('exportBtn').addEventListener('click', exportGames);
 $('resetGamesBtn').addEventListener('click', resetGames);
 $('clearCookiesBtn').addEventListener('click', clearCookiesPlayer);
+$('ghSyncBtn').addEventListener('click', openGhSyncModal);
+$('saveSyncBtn').addEventListener('click', saveGhSync);
+$('testSyncBtn').addEventListener('click', testGhSync);
+$('deleteSelectedBtn').addEventListener('click', deleteSelectedGames);
+$('selectAllGames').addEventListener('change', e => {
+  state.selectedGames = e.target.checked ? getGames().map(g => g.id) : [];
+  renderAdminPanel();
+});
 $('adminLogoutBtn').addEventListener('click', adminLogout);
 $('copyExportBtn').addEventListener('click', () => {
   $('exportText').select();
