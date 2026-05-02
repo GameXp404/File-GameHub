@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="id"><head>
+<meta charset="UTF-8" /><title>🐦 Flappy Burung</title>
+<link rel="stylesheet" href="game.css" />
+</head><body>
+<a href="../index.html" class="back-to-hub">← Kembali ke Hub</a>
+<div class="game-wrap">
+  <h1>🐦 Flappy Burung</h1>
+  <div class="subtitle">Klik / Spasi untuk lompat. Hindari pipa hijau!</div>
+  <div class="score-row">
+    <div class="score-box">Skor<b id="score">0</b></div>
+    <div class="score-box">Best<b id="best">0</b></div>
+  </div>
+  <canvas id="c" width="400" height="500"></canvas>
+  <div class="message" id="msg">Klik / tekan Spasi untuk mulai</div>
+  <button class="primary" id="restart">🔄 Mulai Ulang</button>
+</div>
+<script>
+const cv=document.getElementById('c'),ctx=cv.getContext('2d');
+const W=400,H=500,GRAV=0.5,JUMP=-8,PIPE_W=60,GAP=140;
+let bird,pipes,score,alive,started,frame;
+function reset(){bird={x:80,y:H/2,vy:0};pipes=[];score=0;alive=true;started=false;frame=0;document.getElementById('msg').textContent='Klik / tekan Spasi untuk mulai';update();}
+function jump(){if(!alive){reset();return;}if(!started){started=true;loop();}bird.vy=JUMP;}
+function spawnPipe(){const top=50+Math.random()*(H-GAP-150);pipes.push({x:W,top,bottom:top+GAP});}
+function loop(){if(!alive)return;frame++;bird.vy+=GRAV;bird.y+=bird.vy;if(frame%80===0)spawnPipe();pipes.forEach(p=>p.x-=2.5);pipes=pipes.filter(p=>p.x+PIPE_W>0);for(const p of pipes){if(bird.x+15>p.x&&bird.x-15<p.x+PIPE_W){if(bird.y-15<p.top||bird.y+15>p.bottom){die();return;}}if(!p.passed&&p.x+PIPE_W<bird.x){p.passed=true;score++;}}if(bird.y>H-15||bird.y<15){die();return;}draw();requestAnimationFrame(loop);}
+function die(){alive=false;const b=Math.max(score,parseInt(localStorage.flappyBest||0));localStorage.flappyBest=b;document.getElementById('best').textContent=b;document.getElementById('msg').textContent='💀 Game Over! Skor: '+score+' (klik / Space untuk ulang)';draw();}
+function draw(){ctx.fillStyle='#70c5ce';ctx.fillRect(0,0,W,H);pipes.forEach(p=>{ctx.fillStyle='#5cb85c';ctx.fillRect(p.x,0,PIPE_W,p.top);ctx.fillRect(p.x,p.bottom,PIPE_W,H-p.bottom);ctx.fillStyle='#3a7d3a';ctx.fillRect(p.x-3,p.top-15,PIPE_W+6,15);ctx.fillRect(p.x-3,p.bottom,PIPE_W+6,15);});ctx.fillStyle='#ddd';ctx.fillRect(0,H-15,W,15);ctx.fillStyle='#ffdd00';ctx.beginPath();ctx.arc(bird.x,bird.y,15,0,Math.PI*2);ctx.fill();ctx.fillStyle='#000';ctx.beginPath();ctx.arc(bird.x+5,bird.y-3,3,0,Math.PI*2);ctx.fill();ctx.fillStyle='#ff8800';ctx.fillRect(bird.x+10,bird.y,8,4);ctx.fillStyle='#fff';ctx.font='bold 36px Arial';ctx.textAlign='center';ctx.fillText(score,W/2,50);document.getElementById('score').textContent=score;}
+function update(){document.getElementById('best').textContent=localStorage.flappyBest||0;draw();}
+cv.addEventListener('click',jump);window.addEventListener('keydown',e=>{if(e.key===' '){e.preventDefault();jump();}});document.getElementById('restart').onclick=()=>{reset();};reset();
+</script></body></html>

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Slot Ultra Demo</title>
+
+<style>
+body {
+  margin:0;
+  background: radial-gradient(#7a0000,#1a0000);
+  font-family: Arial;
+  color: gold;
+  text-align:center;
+}
+
+.slot {
+  width: 520px;
+  margin: 20px auto;
+  padding: 15px;
+  background:#8b0000;
+  border-radius:20px;
+  box-shadow:0 0 30px gold;
+}
+
+.reels {
+  display:flex;
+  gap:5px;
+}
+
+.reel {
+  width:90px;
+  height:270px;
+  overflow:hidden;
+  border:2px solid gold;
+  border-radius:10px;
+  background:#2a0000;
+  position:relative;
+}
+
+.track {
+  position:absolute;
+  width:100%;
+}
+
+.symbol {
+  height:90px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.symbol img {
+  width:70px;
+}
+
+button {
+  margin-top:10px;
+  padding:10px 20px;
+  font-weight:bold;
+  background:gold;
+  border:none;
+  cursor:pointer;
+}
+
+.win {
+  animation: glow 0.8s infinite alternate;
+}
+
+@keyframes glow {
+  from { box-shadow:0 0 5px gold; }
+  to { box-shadow:0 0 20px gold; }
+}
+</style>
+</head>
+
+<body>
+
+<a href="../../index.html" style="position:fixed;top:10px;left:10px;z-index:5000;background:#6b46ff;color:#fff;padding:8px 14px;border-radius:6px;text-decoration:none;font-family:Arial;font-size:13px;border:2px solid #fff;box-shadow:0 2px 10px rgba(0,0,0,0.5);font-weight:600;">← Kembali ke Hub</a>
+
+<h2>🎰 SLOT ULTRA DEMO</h2>
+
+<div class="slot">
+  <div class="reels" id="reels"></div>
+
+  <button onclick="spin()">SPIN</button>
+
+  <div id="result"></div>
+  <div>Saldo: <span id="saldo">2000</span></div>
+  <div>Free Spin: <span id="free">0</span></div>
+</div>
+
+<script>
+const symbols = [
+ "assets/s1.png","assets/s2.png","assets/s3.png",
+ "assets/s4.png","assets/s5.png","assets/s6.png"
+];
+
+const SCATTER = "assets/scatter.png";
+
+let saldo = 2000;
+let freeSpin = 0;
+let reels = [];
+
+const ROW = 3;
+const REEL = 5;
+const SIZE = 90;
+
+// AUDIO
+const ctx = new (window.AudioContext||window.webkitAudioContext)();
+function beep(f){ let o=ctx.createOscillator(); let g=ctx.createGain();
+o.connect(g); g.connect(ctx.destination); o.frequency.value=f; g.gain.value=0.03;
+o.start(); setTimeout(()=>o.stop(),100);}
+
+// INIT
+const reelsDiv = document.getElementById("reels");
+
+for(let i=0;i<REEL;i++){
+  let reel = document.createElement("div");
+  reel.className="reel";
+
+  let track = document.createElement("div");
+  track.className="track";
+
+  reel.appendChild(track);
+  reelsDiv.appendChild(reel);
+
+  reels.push({track, pos:0});
+  fill(track);
+}
+
+function fill(track){
+  track.innerHTML="";
+  for(let i=0;i<10;i++){
+    let d=document.createElement("div");
+    d.className="symbol";
+
+    let img=document.createElement("img");
+    img.src = Math.random()<0.1 ? SCATTER : rand();
+
+    d.appendChild(img);
+    track.appendChild(d);
+  }
+}
+
+function rand(){
+  return symbols[Math.floor(Math.random()*symbols.length)];
+}
+
+// SPIN
+function spin(){
+  if(saldo<50 && freeSpin==0){
+    alert("Saldo habis"); return;
+  }
+
+  if(freeSpin>0){
+    freeSpin--;
+    updateFree();
+  } else {
+    saldo-=50;
+    updateSaldo();
+  }
+
+  document.getElementById("result").innerText="";
+
+  reels.forEach((r,i)=>{
+    animate(r,i*200);
+  });
+
+  setTimeout(checkWin,2000);
+}
+
+// ANIMASI
+function animate(r,delay){
+  setTimeout(()=>{
+    let speed=20;
+    let pos=0;
+
+    let anim=setInterval(()=>{
+      pos+=speed;
+      r.track.style.transform=`translateY(-${pos}px)`;
+
+      if(pos>r.track.scrollHeight-270){
+        fill(r.track);
+        pos=0;
+      }
+    },20);
+
+    setTimeout(()=>{
+      clearInterval(anim);
+    },1200+delay);
+
+  },delay);
+}
+
+// CEK WIN
+function checkWin(){
+  let results=[];
+  let scatterCount=0;
+
+  reels.forEach(r=>{
+    let index = Math.floor(Math.random()*3);
+    let img = r.track.children[index].children[0].src;
+
+    if(img.includes("scatter")) scatterCount++;
+
+    results.push(img);
+  });
+
+  if(scatterCount>=3){
+    freeSpin+=5;
+    updateFree();
+    show("🎁 FREE SPIN!");
+    beep(600);
+    return;
+  }
+
+  let count={};
+  results.forEach(s=>count[s]=(count[s]||0)+1);
+
+  let max=Math.max(...Object.values(count));
+  let win=0;
+
+  if(max>=5){ win=500; show("🔥 JACKPOT"); }
+  else if(max>=3){ win=150; show("✨ MENANG"); }
+  else show("❌");
+
+  saldo+=win;
+  updateSaldo();
+}
+
+function show(t){
+  document.getElementById("result").innerText=t;
+}
+
+function updateSaldo(){
+  document.getElementById("saldo").innerText=saldo;
+}
+
+function updateFree(){
+  document.getElementById("free").innerText=freeSpin;
+}
+</script>
+
+</body>
+</html>

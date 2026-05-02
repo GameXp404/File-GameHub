@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "app.netlify.gamevirtual",
+        "sha256_cert_fingerprints": ["E6:6F:9C:47:22:E4:BF:54:4C:E9:CD:13:E2:E1:A1:F3:66:A2:96:53:14:32:8C:B4:E1:EA:4A:38:BF:F7:CA:0B"]
+      }
+    }]

@@ -21,3 +21,33 @@
   from = "/2048"
   to = "/games/2048.html"
   status = 200
+
+[[redirects]]
+  from = "/slot"
+  to = "/games/slot.html"
+  status = 200
+
+[[redirects]]
+  from = "/caishen"
+  to = "/games/caishen.html"
+  status = 200
+
+[[redirects]]
+  from = "/slot-5reel"
+  to = "/games/slot-5reel/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/slot-ultra"
+  to = "/games/slot-ultra/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/slot-advanced"
+  to = "/games/slot-advanced/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/slot-fruit"
+  to = "/games/slot-fruit/index.html"
+  status = 200

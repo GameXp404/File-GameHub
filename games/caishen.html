@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>🧧 Slot CaiShen Offline</title>
+<link rel="stylesheet" href="game.css" />
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: linear-gradient(#7a0000, #1a0000);
+  color: gold;
+  text-align: center;
+  min-height: 100vh;
+}
+
+h1 {
+  margin-top: 80px;
+}
+
+.slot-box {
+  margin: 30px auto;
+  width: 320px;
+  background: #8b0000;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 0 20px gold;
+}
+
+.reels {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.reel {
+  width: 80px;
+  height: 80px;
+  background: #2a0000;
+  border-radius: 10px;
+  font-size: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid gold;
+}
+
+.spin-btn {
+  background: gold;
+  color: black;
+  border: none;
+  padding: 12px 25px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 14px;
+}
+.spin-btn:hover { filter: brightness(1.1); }
+
+#result {
+  margin-top: 15px;
+  font-size: 18px;
+  min-height: 24px;
+}
+
+.balance {
+  margin-top: 10px;
+  font-size: 16px;
+}
+</style>
+</head>
+
+<body>
+
+<a href="../index.html" class="back-to-hub">← Kembali ke Hub</a>
+
+<h1>财神报喜 🎰</h1>
+
+<div class="slot-box">
+
+  <div class="reels">
+    <div class="reel" id="r1">🧧</div>
+    <div class="reel" id="r2">💰</div>
+    <div class="reel" id="r3">🏮</div>
+  </div>
+
+  <button class="spin-btn" onclick="spin()">SPIN</button>
+
+  <div id="result"></div>
+  <div class="balance">Saldo: <span id="saldo">1000</span></div>
+
+</div>
+
+<script>
+const symbols = ["🧧","💰","🏮","👲","💎","🪙"];
+
+let saldo = 1000;
+
+function spin() {
+  if (saldo <= 0) {
+    alert("Saldo habis!");
+    return;
+  }
+
+  saldo -= 50;
+  updateSaldo();
+
+  let spins = 12;
+
+  let interval = setInterval(() => {
+    setReels();
+    spins--;
+
+    if (spins <= 0) {
+      clearInterval(interval);
+      checkWin();
+    }
+  }, 80);
+}
+
+function setReels() {
+  document.getElementById("r1").innerText = rand();
+  document.getElementById("r2").innerText = rand();
+  document.getElementById("r3").innerText = rand();
+}
+
+function rand() {
+  return symbols[Math.floor(Math.random() * symbols.length)];
+}
+
+function checkWin() {
+  let r1 = r1v = document.getElementById("r1").innerText;
+  let r2 = document.getElementById("r2").innerText;
+  let r3 = document.getElementById("r3").innerText;
+
+  let win = 0;
+
+  if (r1 === r2 && r2 === r3) {
+    win = 300;
+    show("🎉 JACKPOT!");
+  } else if (r1 === r2 || r2 === r3 || r1 === r3) {
+    win = 100;
+    show("✨ Menang!");
+  } else {
+    show("❌ Coba lagi");
+  }
+
+  saldo += win;
+  updateSaldo();
+}
+
+function show(text) {
+  document.getElementById("result").innerText = text;
+}
+
+function updateSaldo() {
+  document.getElementById("saldo").innerText = saldo;
+}
+</script>
+
+</body>
+</html>

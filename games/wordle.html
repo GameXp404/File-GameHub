@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="id"><head>
+<meta charset="UTF-8" /><title>📝 Wordle ID</title>
+<link rel="stylesheet" href="game.css" />
+<style>
+  .board{display:grid;grid-template-rows:repeat(6,52px);gap:6px;justify-content:center;margin:14px auto;}
+  .row{display:grid;grid-template-columns:repeat(5,52px);gap:6px;}
+  .tile{width:52px;height:52px;border:2px solid #444;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:bold;text-transform:uppercase;background:#0f1729;color:#fff;}
+  .tile.filled{border-color:#888;}
+  .tile.green{background:#00cc66;border-color:#00ff88;color:#000;}
+  .tile.yellow{background:#fbbf24;border-color:#f59e0b;color:#000;}
+  .tile.gray{background:#444;border-color:#555;}
+  .keyboard{display:grid;gap:5px;max-width:520px;margin:14px auto;}
+  .kb-row{display:flex;gap:5px;justify-content:center;}
+  .key{background:#666;color:#fff;border:none;padding:12px 10px;font-size:13px;font-weight:bold;cursor:pointer;border-radius:4px;min-width:34px;}
+  .key:hover{background:#888;}
+  .key.green{background:#00cc66;}
+  .key.yellow{background:#fbbf24;color:#000;}
+  .key.gray{background:#222;}
+</style></head><body>
+<a href="../index.html" class="back-to-hub">← Kembali ke Hub</a>
+<div class="game-wrap">
+  <h1>📝 Wordle Indonesia</h1>
+  <div class="subtitle">Tebak kata 5 huruf Bahasa Indonesia. 🟩 huruf benar+posisi, 🟨 ada tapi salah posisi.</div>
+  <div class="score-row">
+    <div class="score-box">Tebakan<b id="tries">0</b>/6</div>
+    <div class="score-box">Best<b id="best">-</b></div>
+  </div>
+  <div class="board" id="board"></div>
+  <div class="keyboard" id="keyboard"></div>
+  <div class="message" id="msg">Ketik 5 huruf, Enter untuk submit</div>
+  <button class="primary" id="restart">🔄 Kata Baru</button>
+</div>
+<script>
+const WORDS=['HUTAN','SUNGAI','GUNUNG','PANTAI','LAUTAN','BUNGA','MAWAR','MELON','PISANG','MANGGA','APEL','JERUK','DURIAN','RAMBU','KOPI','MINUM','MAKAN','TIDUR','BANGUN','BERLARI','BERMAIN','GAMBAR','LUKIS','MUSIK','LAGU','SUARA','WAJAH','MATA','MULUT','TANGAN','TUMIT','PERUT','LIDAH','RUMPUT','POHON','DAUN','BUNGA','BUAH','SAYUR','GARAM','GULA','TEPUNG','PEDAS','MANIS','PAHIT','ASIN','HANGAT','DINGIN','PANAS','SEJUK'];
+let target,row,col,grid,gameOver,letters;
+function init(){target=WORDS[Math.floor(Math.random()*WORDS.length)];row=0;col=0;gameOver=false;grid=Array.from({length:6},()=>Array(5).fill({l:'',c:''}));letters={};document.getElementById('msg').textContent='Ketik 5 huruf, Enter untuk submit';document.getElementById('best').textContent=localStorage.wordleBest||'-';render();}
+function render(){const b=document.getElementById('board');b.innerHTML='';for(let r=0;r<6;r++){const rd=document.createElement('div');rd.className='row';for(let c=0;c<5;c++){const t=document.createElement('div');t.className='tile'+(grid[r][c].l?' filled':'')+(grid[r][c].c?' '+grid[r][c].c:'');t.textContent=grid[r][c].l;rd.appendChild(t);}b.appendChild(rd);}const kb=document.getElementById('keyboard');kb.innerHTML='';['QWERTYUIOP','ASDFGHJKL','ZXCVBNM'].forEach(rowL=>{const rd=document.createElement('div');rd.className='kb-row';for(const l of rowL){const k=document.createElement('button');k.className='key '+(letters[l]||'');k.textContent=l;k.onclick=()=>type(l);rd.appendChild(k);}kb.appendChild(rd);});const enter=document.createElement('button');enter.className='key';enter.textContent='ENTER';enter.style.minWidth='70px';enter.onclick=submit;const back=document.createElement('button');back.className='key';back.textContent='⌫';back.onclick=()=>backspace();const lastRow=kb.lastChild;lastRow.insertBefore(enter,lastRow.firstChild);lastRow.appendChild(back);document.getElementById('tries').textContent=row;}
+function type(l){if(gameOver||col>=5)return;grid[row][col]={l,c:''};col++;render();}
+function backspace(){if(gameOver||col<=0)return;col--;grid[row][col]={l:'',c:''};render();}
+function submit(){if(gameOver||col<5){document.getElementById('msg').textContent='⚠️ Tebak 5 huruf dulu';return;}const guess=grid[row].map(c=>c.l).join('');for(let i=0;i<5;i++){const g=guess[i],t=target[i];if(g===t){grid[row][i]={l:g,c:'green'};letters[g]='green';}else if(target.includes(g)){if(letters[g]!=='green')letters[g]='yellow';grid[row][i]={l:g,c:'yellow'};}else{if(!letters[g])letters[g]='gray';grid[row][i]={l:g,c:'gray'};}}if(guess===target){gameOver=true;document.getElementById('msg').textContent='🎉 Benar dalam '+(row+1)+' tebakan!';const b=parseInt(localStorage.wordleBest||'7');if(row+1<b)localStorage.wordleBest=row+1;}else{row++;col=0;if(row>=6){gameOver=true;document.getElementById('msg').textContent='💀 Habis. Kata: '+target;}}render();}
+window.addEventListener('keydown',e=>{const k=e.key.toUpperCase();if(k==='ENTER')submit();else if(k==='BACKSPACE')backspace();else if(k.length===1&&k>='A'&&k<='Z')type(k);});
+document.getElementById('restart').onclick=init;init();
+</script></body></html>

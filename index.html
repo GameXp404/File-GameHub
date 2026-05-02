@@ -3,10 +3,80 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>🎮 GameHub — Portal Game Pribadi</title>
+<title>🎮 GameHub — Portal Game Online Gratis Indonesia | 15+ Game Browser</title>
+
+<!-- ============ SEO ============ -->
+<meta name="description" content="Portal game online gratis dengan 15+ game: Cash King clicker, Snake, 2048, Slot CaiShen, Memory Match, Tic Tac Toe, dan lainnya. Mainkan langsung di browser tanpa download — desktop & mobile." />
+<meta name="keywords" content="game online gratis, game indonesia, game browser, slot demo gratis, cash king, snake online, 2048, tebak angka, memory match, game tanpa download, game pekanbaru" />
+<meta name="author" content="GameHub" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<meta name="googlebot" content="index, follow" />
+<link rel="canonical" href="https://gamevirtual.netlify.app/" />
+<meta http-equiv="content-language" content="id" />
+
+<!-- ============ Open Graph (Facebook, WhatsApp, LinkedIn) ============ -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="GameHub" />
+<meta property="og:title" content="🎮 GameHub — Portal Game Online Gratis Indonesia" />
+<meta property="og:description" content="Mainkan 15+ game gratis di browser: Cash King, Snake, 2048, Slot, Memory Match, dan lainnya. Tanpa download, langsung main." />
+<meta property="og:url" content="https://gamevirtual.netlify.app/" />
+<meta property="og:image" content="https://gamevirtual.netlify.app/og-image.png" />
+<meta property="og:image:secure_url" content="https://gamevirtual.netlify.app/og-image.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="GameHub - Portal Game Online Gratis" />
+<meta property="og:locale" content="id_ID" />
+<meta property="og:locale:alternate" content="en_US" />
+
+<!-- ============ Twitter Card ============ -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="🎮 GameHub — Portal Game Online Gratis" />
+<meta name="twitter:description" content="15+ game gratis di browser: clicker, slot, puzzle, arcade. Tanpa download, langsung main." />
+<meta name="twitter:image" content="https://gamevirtual.netlify.app/og-image.png" />
+<meta name="twitter:image:alt" content="GameHub Portal" />
+
+<!-- ============ Icons & Manifest ============ -->
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
+<link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png" />
 <link rel="icon" type="image/svg+xml" href="icon.svg" />
+<link rel="apple-touch-icon" href="icons/icon-192.png" />
 <link rel="manifest" href="manifest.json" />
 <meta name="theme-color" content="#6b46ff" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="GameHub" />
+
+<!-- ============ JSON-LD Structured Data ============ -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "GameHub",
+  "alternateName": "Game Hub Indonesia",
+  "url": "https://gamevirtual.netlify.app/",
+  "description": "Portal game online gratis dengan 15+ game playable di browser",
+  "inLanguage": "id-ID",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://gamevirtual.netlify.app/?search={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "GameHub",
+  "url": "https://gamevirtual.netlify.app/",
+  "logo": "https://gamevirtual.netlify.app/icon.svg",
+  "sameAs": []
+}
+</script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body {
@@ -18,12 +88,7 @@
   }
   a { color: inherit; text-decoration: none; }
 
-  /* === LAYOUT === */
-  .layout {
-    display: grid;
-    grid-template-columns: 220px 1fr;
-    min-height: 100vh;
-  }
+  .layout { display: grid; grid-template-columns: 220px 1fr; min-height: 100vh; }
 
   /* === SIDEBAR === */
   .sidebar {
@@ -35,7 +100,6 @@
   }
   .sidebar::-webkit-scrollbar { width: 6px; }
   .sidebar::-webkit-scrollbar-thumb { background: #6b46ff; border-radius: 3px; }
-
   .brand {
     display: flex; align-items: center; gap: 8px;
     padding: 8px 20px 18px;
@@ -48,35 +112,29 @@
     background: linear-gradient(135deg, #ff66b3, #6b46ff);
     width: 32px; height: 32px; border-radius: 8px;
     display: flex; align-items: center; justify-content: center;
-    color: #fff; font-size: 18px;
-    -webkit-text-fill-color: #fff;
+    color: #fff; font-size: 18px; -webkit-text-fill-color: #fff;
   }
-
   .nav-item {
     display: flex; align-items: center; gap: 10px;
     padding: 9px 20px;
-    cursor: pointer;
-    font-size: 14px;
-    color: #b8b8d4;
+    cursor: pointer; font-size: 14px; color: #b8b8d4;
     border-left: 3px solid transparent;
     transition: all 0.15s;
   }
   .nav-item:hover { background: #1c2748; color: #fff; }
   .nav-item.active {
-    background: #1c2748;
-    color: #ff66b3;
-    border-left-color: #ff66b3;
-    font-weight: 600;
+    background: #1c2748; color: #ff66b3;
+    border-left-color: #ff66b3; font-weight: 600;
   }
   .nav-item .icon { width: 20px; text-align: center; font-size: 15px; }
-  .nav-divider {
-    height: 1px; background: #2a2a4a;
-    margin: 8px 16px;
+  .nav-item .nav-count {
+    margin-left: auto; background: #6b46ff; color: #fff;
+    border-radius: 10px; padding: 1px 8px; font-size: 11px;
   }
+  .nav-divider { height: 1px; background: #2a2a4a; margin: 8px 16px; }
 
-  /* === MAIN === */
+  /* === TOPBAR === */
   main { padding: 0; }
-
   .topbar {
     position: sticky; top: 0;
     background: #16213e;
@@ -85,34 +143,17 @@
     display: flex; align-items: center; gap: 16px;
     z-index: 50;
   }
-  .topbar .menu-btn {
-    background: none; border: none; color: #fff;
-    font-size: 20px; cursor: pointer;
-    display: none;
-  }
-  .search-wrap {
-    flex: 1; max-width: 600px; margin: 0 auto;
-    position: relative;
-  }
+  .topbar .menu-btn { background: none; border: none; color: #fff; font-size: 20px; cursor: pointer; display: none; }
+  .search-wrap { flex: 1; max-width: 600px; margin: 0 auto; position: relative; }
   .search-wrap input {
-    width: 100%;
-    background: #0f1729;
-    border: 1px solid #2a2a4a;
-    color: #fff;
-    padding: 10px 16px 10px 40px;
-    border-radius: 24px;
-    font-size: 14px;
-    outline: none;
+    width: 100%; background: #0f1729;
+    border: 1px solid #2a2a4a; color: #fff;
+    padding: 10px 16px 10px 40px; border-radius: 24px;
+    font-size: 14px; outline: none;
   }
   .search-wrap input:focus { border-color: #6b46ff; }
-  .search-wrap::before {
-    content: '🔍'; position: absolute;
-    left: 14px; top: 50%; transform: translateY(-50%);
-    pointer-events: none; opacity: 0.6;
-  }
-  .top-actions {
-    display: flex; gap: 8px; align-items: center;
-  }
+  .search-wrap::before { content: '🔍'; position: absolute; left: 14px; top: 50%; transform: translateY(-50%); pointer-events: none; opacity: 0.6; }
+  .top-actions { display: flex; gap: 8px; align-items: center; position: relative; }
   .icon-btn {
     background: #2a2a4a; border: none; color: #fff;
     width: 36px; height: 36px; border-radius: 50%;
@@ -123,28 +164,66 @@
   .icon-btn:hover { background: #3a3a5a; }
   .icon-btn .dot {
     position: absolute; top: 4px; right: 4px;
-    width: 8px; height: 8px; background: #ff3030;
-    border-radius: 50%;
+    width: 10px; height: 10px; background: #ff3030;
+    border-radius: 50%; border: 2px solid #16213e;
+    font-size: 0;
   }
   .login-btn {
     background: #6b46ff; color: #fff; border: none;
     padding: 8px 20px; border-radius: 20px;
     font-weight: 600; font-size: 13px; cursor: pointer;
+    display: flex; align-items: center; gap: 6px;
   }
   .login-btn:hover { background: #5535dd; }
+  .user-pill {
+    background: #2a2a4a; color: #fff; border: 2px solid #6b46ff;
+    padding: 4px 14px 4px 4px; border-radius: 24px;
+    font-size: 13px; cursor: pointer; display: none;
+    align-items: center; gap: 8px;
+  }
+  .user-pill.show { display: flex; }
+  .user-avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: linear-gradient(135deg, #ff66b3, #6b46ff);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 13px;
+  }
+
+  /* === DROPDOWN === */
+  .dropdown {
+    position: absolute; top: 50px; right: 0;
+    background: #16213e; border: 1px solid #2a2a4a;
+    border-radius: 8px; min-width: 280px; max-width: 360px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+    display: none; z-index: 100;
+  }
+  .dropdown.show { display: block; }
+  .dropdown-head {
+    padding: 12px 16px;
+    border-bottom: 1px solid #2a2a4a;
+    font-weight: 700; font-size: 14px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .dropdown-body { max-height: 360px; overflow-y: auto; }
+  .dropdown-item {
+    padding: 10px 16px; font-size: 13px;
+    border-bottom: 1px solid #1c2748;
+    display: flex; align-items: center; gap: 10px;
+    color: #b8b8d4;
+  }
+  .dropdown-item:hover { background: #1c2748; color: #fff; cursor: pointer; }
+  .dropdown-item .time { font-size: 11px; opacity: 0.6; margin-left: auto; }
+  .dropdown-item .ico { font-size: 20px; }
+  .dropdown-empty { padding: 20px; text-align: center; opacity: 0.6; font-size: 13px; }
+  .dropdown-clear {
+    background: none; border: none; color: #ff66b3;
+    font-size: 11px; cursor: pointer;
+  }
 
   /* === SECTIONS === */
-  section {
-    padding: 24px;
-    max-width: 1400px;
-  }
-  .section-head {
-    margin-bottom: 16px;
-  }
-  .section-head h1 {
-    font-size: 22px; margin-bottom: 4px;
-    color: #fff;
-  }
+  section { padding: 24px; max-width: 1400px; }
+  .section-head { margin-bottom: 16px; }
+  .section-head h1 { font-size: 22px; margin-bottom: 4px; color: #fff; }
   .section-head p { color: #8a8aaa; font-size: 13px; }
 
   /* === GAME GRID === */
@@ -155,75 +234,186 @@
   }
   .card {
     aspect-ratio: 1 / 1;
-    border-radius: 10px;
-    overflow: hidden;
-    cursor: pointer;
-    position: relative;
+    border-radius: 10px; overflow: hidden;
+    cursor: pointer; position: relative;
     background: #2a2a4a;
     transition: transform 0.15s, box-shadow 0.15s;
     border: 2px solid transparent;
+    display: block;
   }
-  .card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 30px rgba(107, 70, 255, 0.4);
-    border-color: #6b46ff;
-  }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(107, 70, 255, 0.4); border-color: #6b46ff; }
   .card.disabled { opacity: 0.5; cursor: not-allowed; }
   .card.disabled:hover { transform: none; box-shadow: none; border-color: transparent; }
 
   .card-thumb {
     width: 100%; height: 100%;
     display: flex; align-items: center; justify-content: center;
-    font-size: 64px;
-    background-size: cover;
+    font-size: 64px; background-size: cover;
     text-shadow: 0 4px 10px rgba(0,0,0,0.6);
-    position: relative;
+    position: relative; pointer-events: none;
   }
   .card-thumb::after {
     content: ''; position: absolute; inset: 0;
     background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.85) 100%);
+    pointer-events: none;
   }
   .card-overlay {
     position: absolute; bottom: 0; left: 0; right: 0;
-    padding: 8px 10px;
-    color: #fff; z-index: 2;
+    padding: 8px 10px; color: #fff; z-index: 2;
+    pointer-events: none;
   }
-  .card-title {
-    font-size: 13px; font-weight: 700;
-    text-shadow: 0 1px 4px #000;
-    line-height: 1.2;
-  }
+  .card-title { font-size: 13px; font-weight: 700; text-shadow: 0 1px 4px #000; line-height: 1.2; }
   .card-cat { font-size: 10px; opacity: 0.85; text-transform: uppercase; }
   .badge {
     position: absolute; top: 6px; left: 6px;
     background: #6b46ff; color: #fff;
     padding: 2px 8px; border-radius: 10px;
     font-size: 10px; font-weight: 700;
-    z-index: 2;
-    text-transform: uppercase;
+    z-index: 2; text-transform: uppercase;
+    pointer-events: none;
   }
   .badge.top { background: #ffaa00; color: #000; }
   .badge.new { background: #ff3030; }
   .badge.originals { background: #6b46ff; }
   .badge.soon { background: #555; }
-
-  /* === EMPTY === */
-  .empty {
-    text-align: center; padding: 60px 20px;
-    color: #8a8aaa;
+  .fav-btn {
+    position: absolute; top: 6px; right: 6px;
+    background: rgba(0,0,0,0.6); border: none;
+    width: 30px; height: 30px; border-radius: 50%;
+    cursor: pointer; font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 3;
+    transition: transform 0.1s, background 0.15s;
   }
+  .fav-btn:hover { background: rgba(0,0,0,0.85); transform: scale(1.15); }
+  .fav-btn.faved { background: rgba(255, 51, 153, 0.9); }
+  .empty { text-align: center; padding: 60px 20px; color: #8a8aaa; }
   .empty .icon { font-size: 64px; margin-bottom: 12px; }
 
-  /* === MOBILE === */
+  /* === MODAL === */
+  .modal-bg {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.85);
+    display: none; z-index: 1000;
+    align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .modal-bg.show { display: flex; }
+  .modal {
+    background: #16213e; color: #fff;
+    border: 2px solid #6b46ff;
+    border-radius: 12px;
+    max-width: 440px; width: 100%;
+    padding: 24px;
+    box-shadow: 0 0 60px rgba(107, 70, 255, 0.5);
+  }
+  .modal h2 {
+    font-size: 22px;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #ff66b3, #6b46ff);
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
+    text-align: center;
+  }
+  .modal .modal-sub {
+    text-align: center; color: #8a8aaa;
+    font-size: 13px; margin-bottom: 20px;
+  }
+  .form-row { margin-bottom: 14px; }
+  .form-row label {
+    display: block; font-size: 12px; color: #b8b8d4;
+    margin-bottom: 4px; text-transform: uppercase;
+  }
+  .form-row input {
+    width: 100%; background: #0f1729;
+    border: 1px solid #2a2a4a; color: #fff;
+    padding: 10px 12px; border-radius: 6px;
+    font-size: 14px; outline: none;
+  }
+  .form-row input:focus { border-color: #6b46ff; }
+  .form-row .err { color: #ff3030; font-size: 11px; margin-top: 4px; min-height: 14px; }
+  .modal-actions { display: flex; gap: 10px; margin-top: 8px; }
+  .btn-primary {
+    flex: 1; background: linear-gradient(135deg, #ff66b3, #6b46ff);
+    color: #fff; border: none; padding: 12px;
+    border-radius: 6px; cursor: pointer;
+    font-weight: 600; font-size: 14px;
+  }
+  .btn-primary:hover { filter: brightness(1.1); }
+  .btn-secondary {
+    background: #2a2a4a; color: #fff; border: 1px solid #6b46ff;
+    padding: 12px 20px; border-radius: 6px;
+    cursor: pointer; font-size: 14px;
+  }
+  .btn-danger {
+    background: #ff3030; color: #fff; border: none;
+    padding: 10px 18px; border-radius: 6px;
+    cursor: pointer; font-size: 13px; font-weight: 600;
+  }
+  .oauth-row { display: flex; gap: 8px; margin-bottom: 14px; }
+  .oauth-btn {
+    flex: 1; background: #fff; color: #333; border: none;
+    padding: 10px; border-radius: 6px; cursor: pointer;
+    font-size: 13px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .oauth-btn:hover { background: #f0f0f0; }
+  .divider {
+    text-align: center; position: relative;
+    margin: 16px 0; color: #8a8aaa; font-size: 12px;
+  }
+  .divider::before, .divider::after {
+    content: ''; position: absolute; top: 50%;
+    width: 40%; height: 1px; background: #2a2a4a;
+  }
+  .divider::before { left: 0; }
+  .divider::after { right: 0; }
+
+  /* === PROFILE MODAL === */
+  .profile-head {
+    text-align: center; padding-bottom: 16px;
+    border-bottom: 1px solid #2a2a4a;
+    margin-bottom: 16px;
+  }
+  .profile-avatar {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: linear-gradient(135deg, #ff66b3, #6b46ff);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 12px;
+    font-size: 32px; font-weight: 700;
+  }
+  .profile-name { font-size: 20px; font-weight: 700; }
+  .profile-email { color: #8a8aaa; font-size: 13px; }
+  .profile-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+  .stat-card {
+    background: #0f1729; border: 1px solid #2a2a4a;
+    padding: 12px; border-radius: 6px; text-align: center;
+  }
+  .stat-card b { display: block; font-size: 22px; color: #ff66b3; }
+  .stat-card span { font-size: 11px; color: #8a8aaa; text-transform: uppercase; }
+
+  /* === TOAST === */
+  .toast-wrap { position: fixed; bottom: 20px; right: 20px; z-index: 2000; pointer-events: none; }
+  .toast {
+    background: linear-gradient(135deg, #6b46ff, #16213e);
+    color: #fff; border: 2px solid #ff66b3;
+    border-radius: 8px; padding: 12px 18px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    margin-top: 8px;
+    animation: tin 0.3s, tout 0.3s 2.7s forwards;
+    font-size: 13px; min-width: 240px;
+  }
+  @keyframes tin { from { transform: translateX(120%); } to { transform: translateX(0); } }
+  @keyframes tout { to { transform: translateX(120%); opacity: 0; } }
+
   @media (max-width: 768px) {
     .layout { grid-template-columns: 1fr; }
-    .sidebar {
-      position: fixed; top: 0; left: -240px; width: 240px;
-      transition: left 0.3s; z-index: 100;
-    }
+    .sidebar { position: fixed; top: 0; left: -240px; width: 240px; transition: left 0.3s; z-index: 100; }
     .sidebar.open { left: 0; }
     .topbar .menu-btn { display: block; }
     .grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+    .login-btn { padding: 8px 12px; }
+    .login-btn .login-text { display: none; }
   }
 </style>
 </head>
@@ -231,14 +421,14 @@
 
 <div class="layout">
 
-  <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
     <a class="brand" href="#"><span class="brand-icon">🎮</span> GameHub</a>
-
     <div class="nav-item active" data-cat="all"><span class="icon">🏠</span> Beranda</div>
     <div class="nav-item" data-cat="trending"><span class="icon">⭐</span> Sedang Tren</div>
     <div class="nav-item" data-cat="new"><span class="icon">🆕</span> Baru</div>
     <div class="nav-item" data-cat="originals"><span class="icon">🎯</span> Originals</div>
+    <div class="nav-item" data-cat="favorites"><span class="icon">❤️</span> Favorit <span class="nav-count" id="favCount">0</span></div>
+    <div class="nav-item" data-cat="recent"><span class="icon">🕒</span> Baru Dimainkan</div>
     <div class="nav-divider"></div>
     <div class="nav-item" data-cat="action"><span class="icon">⚔️</span> Aksi</div>
     <div class="nav-item" data-cat="arcade"><span class="icon">🕹️</span> Arcade</div>
@@ -250,24 +440,59 @@
     <div class="nav-item" data-cat="strategy"><span class="icon">🛡️</span> Strategi</div>
     <div class="nav-item" data-cat="trivia"><span class="icon">🎲</span> Trivia</div>
     <div class="nav-item" data-cat="reflex"><span class="icon">⚡</span> Refleks</div>
+
+    <div class="nav-divider"></div>
+    <div style="padding:10px 16px 8px;font-size:11px;color:#8a8aaa;text-transform:uppercase;font-weight:700;">📥 Download App</div>
+    <div style="padding:0 16px 16px;display:flex;flex-direction:column;gap:6px;">
+      <button id="installPwaBtn" style="display:none;background:linear-gradient(135deg,#ff66b3,#6b46ff);color:#fff;border:none;padding:8px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:600;">📲 Install as App</button>
+      <a id="playStoreBadge" href="#" style="background:#000;color:#fff;border:1px solid #444;padding:8px 10px;border-radius:6px;font-size:11px;text-decoration:none;display:flex;align-items:center;gap:8px;">
+        <span style="font-size:20px;">▶️</span>
+        <span><span style="font-size:9px;opacity:0.7;display:block;">DAPATKAN DI</span><b>Google Play</b></span>
+      </a>
+      <a id="appStoreBadge" href="#" style="background:#000;color:#fff;border:1px solid #444;padding:8px 10px;border-radius:6px;font-size:11px;text-decoration:none;display:flex;align-items:center;gap:8px;">
+        <span style="font-size:20px;">🍎</span>
+        <span><span style="font-size:9px;opacity:0.7;display:block;">DOWNLOAD DI</span><b>App Store</b></span>
+      </a>
+    </div>
   </aside>
 
   <main>
-    <!-- TOPBAR -->
     <div class="topbar">
       <button class="menu-btn" id="menuBtn">☰</button>
       <div class="search-wrap">
         <input type="text" id="search" placeholder="Cari game dan kategori" />
       </div>
       <div class="top-actions">
-        <button class="icon-btn" title="Notifikasi">🔔<span class="dot"></span></button>
-        <button class="icon-btn" title="Favorit">❤️</button>
-        <button class="icon-btn" title="Profile">👤</button>
-        <button class="login-btn">Masuk</button>
+        <button class="icon-btn" id="notifBtn" title="Notifikasi">🔔<span class="dot" id="notifDot"></span></button>
+        <button class="icon-btn" id="favBtn" title="Favorit">❤️</button>
+        <button class="icon-btn" id="profileBtn" title="Profile" style="display:none;">👤</button>
+        <button class="icon-btn" id="adminBtn" title="Admin Panel" style="display:none;background:#ff66b3;">🛠️</button>
+        <button class="login-btn" id="loginBtn"><span>👤</span><span class="login-text">Masuk</span></button>
+        <div class="user-pill" id="userPill">
+          <div class="user-avatar" id="userAvatar">A</div>
+          <span id="userName">User</span>
+        </div>
+
+        <!-- Notification dropdown -->
+        <div class="dropdown" id="notifDrop">
+          <div class="dropdown-head">
+            🔔 Notifikasi
+            <button class="dropdown-clear" id="clearNotif">Hapus semua</button>
+          </div>
+          <div class="dropdown-body" id="notifList"></div>
+        </div>
+
+        <!-- Profile dropdown -->
+        <div class="dropdown" id="profileDrop">
+          <div class="dropdown-head">👤 Akun Saya</div>
+          <div class="dropdown-body">
+            <div class="dropdown-item" id="viewProfile">🪪 Lihat Profil Lengkap</div>
+            <div class="dropdown-item" id="logoutBtn">🚪 Keluar</div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- HERO SECTION -->
     <section>
       <div class="section-head">
         <h1 id="sectionTitle">Game Sedang Tren</h1>
@@ -275,13 +500,451 @@
       </div>
       <div class="grid" id="grid"></div>
     </section>
-
   </main>
 </div>
 
+<!-- LOGIN MODAL -->
+<div class="modal-bg" id="loginModal">
+  <div class="modal">
+    <h2>🎮 Masuk ke GameHub</h2>
+    <p class="modal-sub">Login untuk simpan favorit, statistik, dan progress</p>
+
+    <div class="oauth-row">
+      <button class="oauth-btn" id="oauthGoogle">🟢 Google</button>
+      <button class="oauth-btn" id="oauthGuest">👤 Guest</button>
+      <button class="oauth-btn" id="oauthAdmin" style="background:#ff66b3;color:#fff;">🛠️ Admin</button>
+    </div>
+    <div class="divider">atau pakai email</div>
+
+    <div class="form-row">
+      <label>Nama</label>
+      <input type="text" id="inpName" placeholder="Nama tampilan kamu" maxlength="30" />
+    </div>
+    <div class="form-row">
+      <label>Email (opsional)</label>
+      <input type="email" id="inpEmail" placeholder="email@example.com" />
+      <div class="err" id="errLogin"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-primary" id="doLogin">Masuk</button>
+      <button class="btn-secondary" onclick="closeModal('loginModal')">Batal</button>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE MODAL -->
+<div class="modal-bg" id="profileModal">
+  <div class="modal">
+    <div class="profile-head">
+      <div class="profile-avatar" id="pAvatar">A</div>
+      <div class="profile-name" id="pName">User</div>
+      <div class="profile-email" id="pEmail"></div>
+    </div>
+    <div class="profile-stats">
+      <div class="stat-card"><b id="sGames">0</b><span>Total Main</span></div>
+      <div class="stat-card"><b id="sFavs">0</b><span>Favorit</span></div>
+      <div class="stat-card"><b id="sDays">0</b><span>Hari Ikut</span></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" style="flex:1;" onclick="closeModal('profileModal')">Tutup</button>
+      <button class="btn-danger" id="doLogout">🚪 Keluar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN LOGIN MODAL -->
+<div class="modal-bg" id="adminLoginModal">
+  <div class="modal">
+    <h2>🛠️ Admin Login</h2>
+    <p class="modal-sub">Khusus untuk owner site — kelola daftar game & layout</p>
+    <div class="form-row">
+      <label>Username</label>
+      <input type="text" id="adminUser" placeholder="admin" autocomplete="off" value="admin" />
+    </div>
+    <div class="form-row">
+      <label>Password</label>
+      <input type="password" id="adminPass" placeholder="••••••••" autocomplete="off" />
+      <div class="err" id="adminErr"></div>
+    </div>
+    <div class="form-row">
+      <label>Nama Tampilan (opsional)</label>
+      <input type="text" id="adminName" placeholder="Admin / Owner / Nama Anda" autocomplete="off" />
+    </div>
+    <div class="modal-actions">
+      <button class="btn-primary" id="doAdminLogin" style="background:linear-gradient(135deg, #ff66b3, #cc3380);">🔐 Masuk Admin</button>
+      <button class="btn-secondary" onclick="closeModal('adminLoginModal')">Batal</button>
+    </div>
+    <p style="text-align:center;font-size:11px;color:#666;margin-top:12px;" id="adminHint">
+      💡 Default: username <b style="color:#ff66b3;">admin</b> / password <b style="color:#ff66b3;">admin123</b>
+    </p>
+  </div>
+</div>
+
+<!-- ADMIN PANEL MODAL -->
+<div class="modal-bg" id="adminPanel">
+  <div class="modal" style="max-width:920px;">
+    <h2>🛠️ Admin Panel — Kelola Game</h2>
+    <p class="modal-sub">Edit lokal disimpan di browser. Klik <b>Export</b> untuk dapat kode → paste ke source code untuk perubahan permanen.</p>
+
+    <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
+      <button class="btn-primary" id="addGameBtn" style="flex:0;">➕ Tambah Game</button>
+      <button class="btn-primary" id="bulkImportBtn" style="flex:0;background:linear-gradient(135deg,#00cc66,#00d4ff);">📥 Bulk Import</button>
+      <button class="btn-primary" id="layoutBtn" style="flex:0;background:linear-gradient(135deg,#00d4ff,#6b46ff);">🎨 Layout Manual</button>
+      <button class="btn-primary" id="changePassBtn" style="flex:0;background:linear-gradient(135deg,#ffaa00,#ff3030);">🔑 Ganti Password</button>
+      <button class="btn-secondary" id="exportBtn">📋 Export JSON</button>
+      <button class="btn-secondary" id="resetGamesBtn">↩️ Reset Games</button>
+      <button class="btn-secondary" id="adminLogoutBtn" style="margin-left:auto;border-color:#ff3030;color:#ff6666;">🚪 Keluar Admin</button>
+    </div>
+
+    <div id="adminGameList" style="max-height:50vh;overflow-y:auto;background:#0f1729;border-radius:6px;padding:8px;"></div>
+
+    <div class="modal-actions" style="margin-top:14px;">
+      <button class="btn-secondary" style="flex:1;" onclick="closeModal('adminPanel')">Tutup</button>
+    </div>
+  </div>
+</div>
+
+<!-- GANTI PASSWORD MODAL -->
+<div class="modal-bg" id="changePassModal">
+  <div class="modal">
+    <h2>🔑 Ganti Password Admin</h2>
+    <p class="modal-sub">Password baru tersimpan di browser ini. Klik <b>Export</b> untuk dapat kode permanen.</p>
+
+    <div class="form-row">
+      <label>Password Lama</label>
+      <input type="password" id="oldPass" autocomplete="off" />
+    </div>
+    <div class="form-row">
+      <label>Password Baru (min 4 karakter)</label>
+      <input type="password" id="newPass" autocomplete="off" />
+    </div>
+    <div class="form-row">
+      <label>Konfirmasi Password Baru</label>
+      <input type="password" id="newPass2" autocomplete="off" />
+      <div class="err" id="passErr"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-primary" id="savePassBtn" style="background:linear-gradient(135deg,#ffaa00,#ff3030);">💾 Simpan Password</button>
+      <button class="btn-secondary" id="exportPassBtn">📋 Export</button>
+      <button class="btn-secondary" id="resetPassBtn">↩️ Reset Default</button>
+      <button class="btn-secondary" onclick="closeModal('changePassModal')">Tutup</button>
+    </div>
+
+    <div style="background:#0f1729;border:1px solid #ffaa00;padding:10px;border-radius:6px;margin-top:14px;font-size:12px;color:#ffaa00;">
+      ⚠️ <b>Catatan keamanan:</b><br>
+      • Password tersimpan di localStorage browser ini saja (per browser)<br>
+      • Browser lain (HP, laptop kantor) masih pakai password default<br>
+      • Untuk universal, klik <b>Export</b> → paste ke <code>ADMIN_PASS</code> di source code → re-deploy
+    </div>
+  </div>
+</div>
+
+<!-- LAYOUT MANUAL MODAL -->
+<div class="modal-bg" id="layoutModal">
+  <div class="modal" style="max-width:680px;">
+    <h2>🎨 Layout Manual</h2>
+    <p class="modal-sub">Edit tampilan hub. Perubahan langsung terlihat. Klik Simpan untuk persisten.</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div class="form-row"><label>Brand / Nama Site</label><input type="text" id="ly_brand" /></div>
+      <div class="form-row"><label>Ukuran Card (px)</label><input type="number" id="ly_card" min="100" max="300" /></div>
+    </div>
+
+    <div class="form-row"><label>Judul Section</label><input type="text" id="ly_title" /></div>
+    <div class="form-row"><label>Subtitle Section</label><input type="text" id="ly_sub" /></div>
+
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;">
+      <div class="form-row"><label>Pink/Accent</label><input type="color" id="ly_accent" style="height:42px;cursor:pointer;" /></div>
+      <div class="form-row"><label>Ungu/Primary</label><input type="color" id="ly_primary" style="height:42px;cursor:pointer;" /></div>
+      <div class="form-row"><label>Background</label><input type="color" id="ly_bg" style="height:42px;cursor:pointer;" /></div>
+      <div class="form-row"><label>Sidebar</label><input type="color" id="ly_sidebar" style="height:42px;cursor:pointer;" /></div>
+    </div>
+
+    <div class="form-row">
+      <label>Visibilitas Tombol Topbar</label>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;font-size:13px;">
+        <label><input type="checkbox" id="ly_login" /> Tombol Masuk</label>
+        <label><input type="checkbox" id="ly_notif" /> Tombol Notifikasi</label>
+        <label><input type="checkbox" id="ly_fav" /> Tombol Favorit</label>
+      </div>
+    </div>
+
+    <div style="background:rgba(0,204,102,0.08);border-left:3px solid #00cc66;padding:10px;border-radius:4px;margin-bottom:12px;">
+      <div style="font-size:11px;color:#00cc66;text-transform:uppercase;font-weight:700;margin-bottom:8px;">📥 Link Download App</div>
+      <div class="form-row">
+        <label><input type="checkbox" id="ly_showDl" /> Tampilkan section Download di sidebar</label>
+      </div>
+      <div class="form-row"><label>Google Play URL (kosongkan = tampilkan modal "coming soon")</label><input type="text" id="ly_playUrl" placeholder="https://play.google.com/store/apps/details?id=..." /></div>
+      <div class="form-row"><label>App Store URL</label><input type="text" id="ly_appUrl" placeholder="https://apps.apple.com/app/..." /></div>
+    </div>
+
+    <div class="form-row">
+      <label>Custom CSS (advanced)</label>
+      <textarea id="ly_css" placeholder=".card { border-radius: 20px; }" style="width:100%;height:100px;background:#0f1729;color:#00ff88;border:1px solid #2a2a4a;padding:10px;font-family:'Courier New',monospace;font-size:12px;border-radius:6px;"></textarea>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-primary" id="saveLayoutBtn">💾 Simpan Layout</button>
+      <button class="btn-secondary" id="resetLayoutBtn">↩️ Reset Default</button>
+      <button class="btn-secondary" id="exportLayoutBtn">📋 Export</button>
+      <button class="btn-secondary" onclick="closeModal('layoutModal')">Tutup</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN GAME EDIT MODAL (ENHANCED) -->
+<div class="modal-bg" id="gameEditModal">
+  <div class="modal" style="max-width:960px;">
+    <h2 id="gameEditTitle">✏️ Edit Game</h2>
+
+    <div style="display:grid;grid-template-columns:1fr 280px;gap:18px;">
+
+      <!-- LEFT: FORM -->
+      <div style="overflow-y:auto;max-height:65vh;padding-right:6px;">
+
+        <!-- BASIC -->
+        <div style="background:rgba(255,102,179,0.08);border-left:3px solid #ff66b3;padding:10px;border-radius:4px;margin-bottom:12px;">
+          <div style="font-size:11px;color:#ff66b3;text-transform:uppercase;font-weight:700;margin-bottom:8px;">📝 Info Dasar</div>
+          <div class="form-row">
+            <label>Judul Game *</label>
+            <input type="text" id="ge_title" placeholder="Cash King" />
+          </div>
+          <div class="form-row">
+            <label>ID (slug, auto-generate dari judul) *
+              <button type="button" id="ge_slugBtn" style="background:#6b46ff;color:#fff;border:none;padding:2px 8px;border-radius:4px;font-size:11px;cursor:pointer;margin-left:6px;">🔄 Auto</button>
+            </label>
+            <input type="text" id="ge_id" placeholder="cash-king" />
+          </div>
+          <div class="form-row">
+            <label>Deskripsi singkat</label>
+            <textarea id="ge_desc" placeholder="Game clicker bertema moneysite dengan 4 tema..." style="width:100%;background:#0f1729;color:#fff;border:1px solid #2a2a4a;padding:10px;border-radius:6px;font-size:13px;height:60px;font-family:Arial;"></textarea>
+          </div>
+        </div>
+
+        <!-- THUMBNAIL -->
+        <div style="background:rgba(0,212,255,0.08);border-left:3px solid #00d4ff;padding:10px;border-radius:4px;margin-bottom:12px;">
+          <div style="font-size:11px;color:#00d4ff;text-transform:uppercase;font-weight:700;margin-bottom:8px;">🎨 Tampilan Card</div>
+          <div class="form-row">
+            <label>Tipe Thumbnail</label>
+            <select id="ge_thumbType" style="width:100%;background:#0f1729;color:#fff;border:1px solid #2a2a4a;padding:10px;border-radius:6px;font-size:14px;">
+              <option value="emoji">🎨 Emoji + Gradient (default)</option>
+              <option value="url">🌐 Image URL</option>
+              <option value="upload">📤 Upload PNG</option>
+            </select>
+          </div>
+
+          <div id="ge_emojiBlock">
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+              <div class="form-row">
+                <label>Emoji</label>
+                <input type="text" id="ge_emoji" maxlength="3" placeholder="💰" style="font-size:22px;text-align:center;" />
+              </div>
+              <div class="form-row">
+                <label>Warna 1</label>
+                <input type="color" id="ge_color1" value="#ff66b3" style="height:42px;cursor:pointer;width:100%;" />
+              </div>
+              <div class="form-row">
+                <label>Warna 2</label>
+                <input type="color" id="ge_color2" value="#6b46ff" style="height:42px;cursor:pointer;width:100%;" />
+              </div>
+            </div>
+            <div style="font-size:11px;color:#8a8aaa;margin-bottom:8px;">Quick emoji:
+              <span class="quick-emoji" data-e="💰">💰</span>
+              <span class="quick-emoji" data-e="🎰">🎰</span>
+              <span class="quick-emoji" data-e="🃏">🃏</span>
+              <span class="quick-emoji" data-e="🐍">🐍</span>
+              <span class="quick-emoji" data-e="🔢">🔢</span>
+              <span class="quick-emoji" data-e="🧠">🧠</span>
+              <span class="quick-emoji" data-e="⚡">⚡</span>
+              <span class="quick-emoji" data-e="🎮">🎮</span>
+              <span class="quick-emoji" data-e="🎯">🎯</span>
+              <span class="quick-emoji" data-e="🏆">🏆</span>
+              <span class="quick-emoji" data-e="🎲">🎲</span>
+              <span class="quick-emoji" data-e="♟️">♟️</span>
+            </div>
+          </div>
+
+          <div id="ge_urlBlock" style="display:none;">
+            <div class="form-row">
+              <label>URL Gambar (https://...)</label>
+              <input type="text" id="ge_thumbUrl" placeholder="https://example.com/image.png" />
+            </div>
+          </div>
+
+          <div id="ge_uploadBlock" style="display:none;">
+            <div class="form-row">
+              <label>Upload PNG/JPG (max 100KB)</label>
+              <input type="file" id="ge_thumbFile" accept="image/png,image/jpeg" style="width:100%;color:#fff;" />
+              <div id="ge_uploadStatus" style="font-size:11px;color:#8a8aaa;margin-top:4px;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CATEGORY & METADATA -->
+        <div style="background:rgba(255,170,0,0.08);border-left:3px solid #ffaa00;padding:10px;border-radius:4px;margin-bottom:12px;">
+          <div style="font-size:11px;color:#ffaa00;text-transform:uppercase;font-weight:700;margin-bottom:8px;">🏷️ Klasifikasi</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <div class="form-row">
+              <label>Kategori *</label>
+              <select id="ge_cat" style="width:100%;background:#0f1729;color:#fff;border:1px solid #2a2a4a;padding:10px;border-radius:6px;font-size:14px;">
+                <option value="action">⚔️ action</option><option value="arcade">🕹️ arcade</option>
+                <option value="card">🃏 card</option><option value="word">📝 word</option>
+                <option value="clicker">👆 clicker</option><option value="board">♟️ board</option>
+                <option value="puzzle">🧩 puzzle</option><option value="strategy">🛡️ strategy</option>
+                <option value="trivia">🎲 trivia</option><option value="reflex">⚡ reflex</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label>Badge</label>
+              <select id="ge_badge" style="width:100%;background:#0f1729;color:#fff;border:1px solid #2a2a4a;padding:10px;border-radius:6px;font-size:14px;">
+                <option value="">(tidak ada)</option><option value="top">🟡 TOP</option>
+                <option value="new">🔴 NEW</option><option value="originals">🟣 ORIGINALS</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <label>Tags (klik untuk toggle)</label>
+            <div id="ge_tagPills" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px;"></div>
+            <input type="text" id="ge_tags" placeholder="atau ketik manual: trending,viral,gampang" style="font-size:12px;" />
+          </div>
+        </div>
+
+        <!-- GAMEPLAY -->
+        <div style="background:rgba(107,70,255,0.1);border-left:3px solid #6b46ff;padding:10px;border-radius:4px;margin-bottom:12px;">
+          <div style="font-size:11px;color:#a98cff;text-transform:uppercase;font-weight:700;margin-bottom:8px;">🎮 Gameplay</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <div class="form-row">
+              <label>Tingkat Kesulitan</label>
+              <select id="ge_difficulty" style="width:100%;background:#0f1729;color:#fff;border:1px solid #2a2a4a;padding:10px;border-radius:6px;font-size:14px;">
+                <option value="">- pilih -</option>
+                <option value="easy">🟢 Mudah</option>
+                <option value="medium">🟡 Sedang</option>
+                <option value="hard">🔴 Sulit</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label>Jumlah Pemain</label>
+              <select id="ge_players" style="width:100%;background:#0f1729;color:#fff;border:1px solid #2a2a4a;padding:10px;border-radius:6px;font-size:14px;">
+                <option value="">- pilih -</option>
+                <option value="1">👤 1 Pemain</option>
+                <option value="2">👥 2 Pemain</option>
+                <option value="1-vs-cpu">🤖 vs CPU</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <label>Kontrol</label>
+            <div style="display:flex;gap:14px;flex-wrap:wrap;font-size:13px;">
+              <label><input type="checkbox" id="ge_ctl_kb" style="width:auto;" /> ⌨️ Keyboard</label>
+              <label><input type="checkbox" id="ge_ctl_mouse" style="width:auto;" /> 🖱️ Mouse</label>
+              <label><input type="checkbox" id="ge_ctl_touch" style="width:auto;" /> 👆 Touch (mobile)</label>
+              <label><input type="checkbox" id="ge_ctl_gamepad" style="width:auto;" /> 🎮 Gamepad</label>
+            </div>
+          </div>
+          <div class="form-row">
+            <label>Author / Credit</label>
+            <input type="text" id="ge_author" placeholder="GameHub Team / Nama Anda" />
+          </div>
+        </div>
+
+        <!-- LINK -->
+        <div style="background:rgba(0,204,102,0.08);border-left:3px solid #00cc66;padding:10px;border-radius:4px;margin-bottom:12px;">
+          <div style="font-size:11px;color:#00cc66;text-transform:uppercase;font-weight:700;margin-bottom:8px;">🔗 Link & Status</div>
+          <div class="form-row">
+            <label>URL Game *</label>
+            <input type="text" id="ge_url" placeholder="games/xxx.html atau https://..." />
+          </div>
+          <div style="display:flex;gap:18px;flex-wrap:wrap;font-size:13px;">
+            <label><input type="checkbox" id="ge_external" style="width:auto;" /> 🌐 External link (buka tab baru)</label>
+            <label><input type="checkbox" id="ge_soon" style="width:auto;" /> ⏳ Coming Soon (disabled)</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: LIVE PREVIEW -->
+      <div>
+        <div style="font-size:11px;color:#8a8aaa;text-transform:uppercase;font-weight:700;margin-bottom:8px;">👁️ Preview Card</div>
+        <div id="ge_preview" style="aspect-ratio:1/1;border-radius:10px;overflow:hidden;position:relative;background:#2a2a4a;border:2px solid #6b46ff;"></div>
+        <div style="margin-top:12px;font-size:12px;color:#8a8aaa;">
+          <b style="color:#fff;">Lokasi file game:</b><br>
+          <code style="color:#00d4ff;font-size:11px;word-break:break-all;" id="ge_filePath">games/xxx.html</code>
+          <br><br>
+          <b style="color:#fff;">Catatan:</b><br>
+          • Pastikan file game sudah dibuat di folder yang sesuai<br>
+          • Untuk eksternal, centang "External link"<br>
+          • Upload thumbnail max 100KB (di-base64 ke localStorage)
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-primary" id="saveGameBtn">💾 Simpan</button>
+      <button class="btn-secondary" id="dupGameBtn">📋 Duplikat</button>
+      <button class="btn-secondary" onclick="closeModal('gameEditModal')">Batal</button>
+    </div>
+  </div>
+</div>
+
+<style>
+.quick-emoji { display:inline-block; padding:2px 6px; cursor:pointer; border-radius:4px; font-size:18px; transition:background 0.1s; }
+.quick-emoji:hover { background:rgba(255,102,179,0.3); }
+.tag-pill { padding:4px 10px; background:#2a2a4a; color:#b8b8d4; border-radius:12px; font-size:11px; cursor:pointer; border:1px solid transparent; }
+.tag-pill.active { background:linear-gradient(135deg,#ff66b3,#6b46ff); color:#fff; border-color:#fff; }
+</style>
+
+<!-- BULK IMPORT MODAL -->
+<div class="modal-bg" id="bulkImportModal">
+  <div class="modal" style="max-width:720px;">
+    <h2>📥 Bulk Import Games (JSON)</h2>
+    <p class="modal-sub">Paste array JSON. Tiap object minimal harus punya <code>id</code>, <code>title</code>, <code>cat</code>.</p>
+    <div class="form-row">
+      <label>JSON Array</label>
+      <textarea id="bulkJson" placeholder='[{"id":"my-game","title":"My Game","cat":"arcade","emoji":"🎮","grad":"linear-gradient(135deg, #ff66b3, #6b46ff)","url":"games/my-game.html","badge":"new"}]' style="width:100%;height:240px;background:#0f1729;color:#00ff88;border:1px solid #2a2a4a;padding:10px;font-family:'Courier New',monospace;font-size:12px;border-radius:6px;"></textarea>
+      <div class="err" id="bulkErr"></div>
+    </div>
+    <div style="display:flex;gap:6px;margin-bottom:10px;font-size:12px;">
+      <button class="btn-secondary" id="bulkLoadCurrent" style="padding:6px 12px;font-size:12px;">📋 Load Daftar Sekarang</button>
+      <label style="display:inline-flex;align-items:center;gap:4px;cursor:pointer;color:#b8b8d4;"><input type="radio" name="bulkMode" value="merge" checked /> Merge (tambah)</label>
+      <label style="display:inline-flex;align-items:center;gap:4px;cursor:pointer;color:#b8b8d4;"><input type="radio" name="bulkMode" value="replace" /> Replace (ganti semua)</label>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-primary" id="doBulkImport">📥 Import</button>
+      <button class="btn-secondary" onclick="closeModal('bulkImportModal')">Batal</button>
+    </div>
+  </div>
+</div>
+
+<!-- EXPORT MODAL -->
+<div class="modal-bg" id="exportModal">
+  <div class="modal" style="max-width:800px;">
+    <h2>📋 Export GAMES Array</h2>
+    <p class="modal-sub">Copy kode di bawah, paste menggantikan <code>const GAMES = [...]</code> di file <code>index.html</code> baris ~472, lalu re-deploy ke Netlify.</p>
+    <textarea id="exportText" style="width:100%;height:300px;background:#0f1729;color:#00ff88;border:1px solid #2a2a4a;padding:10px;font-family:'Courier New',monospace;font-size:12px;border-radius:6px;"></textarea>
+    <div class="modal-actions">
+      <button class="btn-primary" id="copyExportBtn">📋 Copy ke Clipboard</button>
+      <button class="btn-secondary" onclick="closeModal('exportModal')">Tutup</button>
+    </div>
+  </div>
+</div>
+
+<!-- DOWNLOAD APP MODAL -->
+<div class="modal-bg" id="downloadModal">
+  <div class="modal" style="max-width:560px;">
+    <h2 id="dlTitle">📲 Install GameHub</h2>
+    <p class="modal-sub" id="dlBody"></p>
+
+    <div id="dlContent"></div>
+
+    <div class="modal-actions">
+      <button class="btn-secondary" style="flex:1;" onclick="closeModal('downloadModal')">Tutup</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
 <script>
 const GAMES = [
-  // Real playable games
   { id:'cash-king', title:'Cash King', cat:'clicker', tags:['trending','originals','top'], emoji:'💰',
     grad:'linear-gradient(135deg, #1a7a1a, #ffd700)', url:'games/cash-king.html', badge:'top' },
   { id:'snake', title:'Snake Classic', cat:'arcade', tags:['trending','arcade'], emoji:'🐍',
@@ -300,16 +963,31 @@ const GAMES = [
     grad:'linear-gradient(135deg, #00cc66, #00d4ff)', url:'games/reaction.html', badge:'new' },
   { id:'guess', title:'Tebak Angka', cat:'trivia', tags:['trivia','puzzle'], emoji:'🔮',
     grad:'linear-gradient(135deg, #4a0080, #ff66b3)', url:'games/guess.html', badge:'' },
-
-  // Coming soon placeholders to fill grid
-  { id:'tetris',  title:'Block Drop',     cat:'puzzle',   tags:[],          emoji:'🟦', grad:'linear-gradient(135deg, #1e40af, #00d4ff)', soon:true, badge:'soon' },
+  { id:'slot', title:'Mini Slot', cat:'arcade', tags:['arcade','trending'], emoji:'🎰',
+    grad:'linear-gradient(135deg, #ffd700, #b8000c)', url:'games/slot.html', badge:'new' },
+  { id:'caishen', title:'Slot CaiShen 财神', cat:'arcade', tags:['arcade','trending'], emoji:'🧧',
+    grad:'linear-gradient(135deg, #ffd700, #7a0000)', url:'games/caishen.html', badge:'new' },
+  { id:'slot-5reel', title:'Slot 5 Reel CaiShen', cat:'arcade', tags:['arcade','new'], emoji:'🎰',
+    grad:'linear-gradient(135deg, #ffd700, #1a0000)', url:'games/slot-5reel/index.html', badge:'new' },
+  { id:'slot-ultra', title:'Slot Ultra Demo', cat:'arcade', tags:['arcade','new'], emoji:'🪙',
+    grad:'linear-gradient(135deg, #ff66b3, #7a0000)', url:'games/slot-ultra/index.html', badge:'new' },
+  { id:'slot-advanced', title:'Slot Advanced (5 paylines)', cat:'arcade', tags:['arcade','trending','new'], emoji:'🃏',
+    grad:'linear-gradient(135deg, #ffd700, #b8000c)', url:'games/slot-advanced/index.html', badge:'new' },
+  { id:'slot-fruit', title:'Slot Fruit Sloty', cat:'arcade', tags:['arcade','new'], emoji:'🍒',
+    grad:'linear-gradient(135deg, #ff3030, #ffaa00)', url:'games/slot-fruit/index.html', badge:'new' },
+  { id:'slot-5x6', title:'Slot Demo 5x6', cat:'arcade', tags:['arcade','trending','new'], emoji:'🎰',
+    grad:'linear-gradient(135deg, #ff00cc, #3333ff)', url:'games/slot-5x6/index.html', badge:'new' },
+  // Real games (sebelumnya placeholder, sudah dibangun!)
+  { id:'tetris',  title:'Block Drop (Tetris)', cat:'puzzle',   tags:['puzzle','new','trending'], emoji:'🟦', grad:'linear-gradient(135deg, #1e40af, #00d4ff)', url:'games/tetris.html', badge:'new' },
+  { id:'wordle',  title:'Wordle Indonesia',    cat:'word',     tags:['word','new'], emoji:'📝', grad:'linear-gradient(135deg, #2a5a2a, #00cc66)', url:'games/wordle.html', badge:'new' },
+  { id:'pong',    title:'Pong vs CPU',         cat:'arcade',   tags:['arcade','new'], emoji:'🏓', grad:'linear-gradient(135deg, #16213e, #00ffff)', url:'games/pong.html', badge:'new' },
+  { id:'flappy',  title:'Flappy Burung',       cat:'reflex',   tags:['reflex','new','trending'], emoji:'🐦', grad:'linear-gradient(135deg, #00d4ff, #ffd700)', url:'games/flappy.html', badge:'new' },
+  { id:'mine',    title:'Minesweeper',         cat:'puzzle',   tags:['puzzle','new'], emoji:'💣', grad:'linear-gradient(135deg, #555, #2a2a4a)', url:'games/minesweeper.html', badge:'new' },
+  { id:'hangman', title:'Hangman Indonesia',   cat:'word',     tags:['word','new','trending'], emoji:'🪢', grad:'linear-gradient(135deg, #6b46ff, #ff66b3)', url:'games/hangman.html', badge:'new' },
+  // Masih placeholder
   { id:'chess',   title:'Catur Mini',     cat:'board',    tags:['board'],   emoji:'♟️', grad:'linear-gradient(135deg, #2a2a4a, #6b46ff)', soon:true, badge:'soon' },
   { id:'sudoku',  title:'Sudoku',         cat:'puzzle',   tags:['puzzle'],  emoji:'🔢', grad:'linear-gradient(135deg, #d97706, #ffaa00)', soon:true, badge:'soon' },
-  { id:'wordle',  title:'Wordle ID',      cat:'word',     tags:['word'],    emoji:'📝', grad:'linear-gradient(135deg, #2a5a2a, #00cc66)', soon:true, badge:'soon' },
-  { id:'pong',    title:'Pong',           cat:'arcade',   tags:['arcade'],  emoji:'🏓', grad:'linear-gradient(135deg, #16213e, #00ffff)', soon:true, badge:'soon' },
-  { id:'flappy',  title:'Flappy Burung',  cat:'reflex',   tags:['reflex'],  emoji:'🐦', grad:'linear-gradient(135deg, #00d4ff, #ffd700)', soon:true, badge:'soon' },
   { id:'racing',  title:'Drag Race',      cat:'action',   tags:['action'],  emoji:'🏎️', grad:'linear-gradient(135deg, #b8000c, #ffaa00)', soon:true, badge:'soon' },
-  { id:'mine',    title:'Minesweeper',    cat:'puzzle',   tags:['puzzle'],  emoji:'💣', grad:'linear-gradient(135deg, #555, #2a2a4a)', soon:true, badge:'soon' },
   { id:'crypto',  title:'Crypto Trader',  cat:'strategy', tags:['strategy'],emoji:'📈', grad:'linear-gradient(135deg, #ff00ff, #00ffff)', soon:true, badge:'soon' },
   { id:'farm',    title:'Idle Farm',      cat:'clicker',  tags:['clicker'], emoji:'🌾', grad:'linear-gradient(135deg, #4a8a2a, #ffd700)', soon:true, badge:'soon' },
   { id:'tower',   title:'Tower Defense',  cat:'strategy', tags:['strategy'],emoji:'🏰', grad:'linear-gradient(135deg, #2a2a4a, #ff66b3)', soon:true, badge:'soon' },
@@ -318,15 +996,13 @@ const GAMES = [
   { id:'cards',   title:'Solitaire',      cat:'card',     tags:['card'],    emoji:'🃏', grad:'linear-gradient(135deg, #b8000c, #000)', soon:true, badge:'soon' },
 ];
 
-const $ = id => document.getElementById(id);
-let currentCat = 'all';
-let currentSearch = '';
-
 const TITLES = {
   all: 'Game Sedang Tren',
   trending: 'Sedang Tren',
   new: 'Baru Ditambahkan',
   originals: 'GameHub Originals',
+  favorites: '❤️ Game Favorit',
+  recent: '🕒 Baru Dimainkan',
   action: 'Game Aksi',
   arcade: 'Game Arcade',
   card: 'Game Kartu',
@@ -339,62 +1015,996 @@ const TITLES = {
   reflex: 'Game Refleks',
 };
 
+const $ = id => document.getElementById(id);
+// ============ ADMIN CREDENTIALS ============
+// EDIT INI untuk ganti password admin (jangan share repo!)
+const ADMIN_USER = 'admin';
+const ADMIN_PASS = 'admin123';
+
+const STORE = {
+  user: 'gameHubUser',
+  favs: 'gameHubFavs',
+  activity: 'gameHubActivity',
+  notifs: 'gameHubNotifs',
+  isAdmin: 'gameHubIsAdmin',
+  gamesOverride: 'gameHubGamesOverride',
+  layout: 'gameHubLayout',
+  adminPass: 'gameHubAdminPass',
+};
+
+const DEFAULT_LAYOUT = {
+  brand: 'GameHub',
+  sectionTitle: 'Game Sedang Tren',
+  sectionSub: 'Mainkan Game Favorit Pengguna Kami. Ini adalah Game Paling Populer di GameHub dan Diperbarui Secara Berkala',
+  accentColor: '#ff66b3',
+  primaryColor: '#6b46ff',
+  bgColor: '#0f1729',
+  sidebarColor: '#16213e',
+  customCss: '',
+  showLogin: true,
+  showNotif: true,
+  showFav: true,
+  cardSize: 150,
+  playStoreUrl: '',  // kosong = belum ada (tampilkan info modal)
+  appStoreUrl: '',
+  showDownloadSection: true,
+};
+
+let state = {
+  user: JSON.parse(localStorage.getItem(STORE.user) || 'null'),
+  favs: JSON.parse(localStorage.getItem(STORE.favs) || '[]'),
+  activity: JSON.parse(localStorage.getItem(STORE.activity) || '[]'),
+  notifs: JSON.parse(localStorage.getItem(STORE.notifs) || '[]'),
+  isAdmin: localStorage.getItem(STORE.isAdmin) === 'true',
+  gamesOverride: JSON.parse(localStorage.getItem(STORE.gamesOverride) || 'null'),
+  layout: Object.assign({}, DEFAULT_LAYOUT, JSON.parse(localStorage.getItem(STORE.layout) || '{}')),
+  cat: 'all',
+  search: '',
+};
+
+function persist(key) { localStorage.setItem(STORE[key], JSON.stringify(state[key])); }
+function getGames() { return state.gamesOverride || GAMES; }
+function getLayout() { return state.layout; }
+
+function applyLayout() {
+  const L = getLayout();
+  document.documentElement.style.setProperty('--accent-pink', L.accentColor);
+  document.documentElement.style.setProperty('--accent-purple', L.primaryColor);
+  document.body.style.background = L.bgColor;
+  const sidebar = document.querySelector('.sidebar'); if (sidebar) sidebar.style.background = L.sidebarColor;
+  const topbar = document.querySelector('.topbar'); if (topbar) topbar.style.background = L.sidebarColor;
+  // brand text
+  const brand = document.querySelector('.brand');
+  if (brand) brand.innerHTML = `<span class="brand-icon">🎮</span> ${L.brand}`;
+  // section text
+  if ($('sectionTitle') && state.cat === 'all') $('sectionTitle').textContent = L.sectionTitle;
+  if ($('sectionSub') && state.cat === 'all') $('sectionSub').textContent = L.sectionSub;
+  // visibility
+  if ($('loginBtn')) $('loginBtn').style.display = (L.showLogin && !state.user) ? 'flex' : 'none';
+  if ($('notifBtn')) $('notifBtn').style.display = L.showNotif ? 'flex' : 'none';
+  if ($('favBtn'))   $('favBtn').style.display = L.showFav ? 'flex' : 'none';
+  // grid card size
+  const grid = document.querySelector('.grid');
+  if (grid) grid.style.gridTemplateColumns = `repeat(auto-fill, minmax(${L.cardSize}px, 1fr))`;
+  // custom css
+  let st = document.getElementById('customCssTag');
+  if (!st) { st = document.createElement('style'); st.id = 'customCssTag'; document.head.appendChild(st); }
+  st.textContent = L.customCss;
+  // Download section visibility
+  const dlSection = document.querySelector('.sidebar > .nav-divider:last-of-type');
+  if (dlSection) {
+    const showDl = L.showDownloadSection !== false;
+    dlSection.style.display = showDl ? 'block' : 'none';
+    dlSection.nextElementSibling.style.display = showDl ? 'block' : 'none';
+    dlSection.nextElementSibling.nextElementSibling.style.display = showDl ? 'flex' : 'none';
+  }
+}
+
+function toast(msg) {
+  const el = document.createElement('div');
+  el.className = 'toast'; el.textContent = msg;
+  $('toastWrap').appendChild(el);
+  setTimeout(() => el.remove(), 3100);
+}
+
+function timeAgo(ts) {
+  const d = Date.now() - ts;
+  if (d < 60000) return 'baru saja';
+  if (d < 3600000) return Math.floor(d/60000) + ' menit lalu';
+  if (d < 86400000) return Math.floor(d/3600000) + ' jam lalu';
+  return Math.floor(d/86400000) + ' hari lalu';
+}
+
+// ============ FAVORITES ============
+function isFav(id) { return state.favs.includes(id); }
+function toggleFav(id, gameTitle) {
+  if (isFav(id)) {
+    state.favs = state.favs.filter(x => x !== id);
+    toast('💔 Dihapus dari favorit: ' + gameTitle);
+  } else {
+    state.favs.push(id);
+    toast('❤️ Ditambah ke favorit: ' + gameTitle);
+    addNotif('❤️', 'Favorit baru', `Kamu menambahkan ${gameTitle} ke favorit`);
+  }
+  persist('favs');
+  render();
+  $('favCount').textContent = state.favs.length;
+}
+
+// ============ ACTIVITY / NOTIFICATIONS ============
+function logPlay(game) {
+  state.activity.unshift({ gameId: game.id, title: game.title, ts: Date.now() });
+  if (state.activity.length > 50) state.activity = state.activity.slice(0, 50);
+  persist('activity');
+  addNotif('🎮', 'Game dimainkan', `Kamu membuka ${game.title}`);
+}
+function addNotif(icon, title, body) {
+  state.notifs.unshift({ icon, title, body, ts: Date.now(), read: false });
+  if (state.notifs.length > 30) state.notifs = state.notifs.slice(0, 30);
+  persist('notifs');
+  updateNotifDot();
+}
+function updateNotifDot() {
+  const unread = state.notifs.filter(n => !n.read).length;
+  $('notifDot').style.display = unread > 0 ? 'block' : 'none';
+}
+function renderNotifs() {
+  const list = $('notifList');
+  if (!state.notifs.length) {
+    list.innerHTML = '<div class="dropdown-empty">Belum ada notifikasi.<br>Mainkan game untuk memulai!</div>';
+    return;
+  }
+  list.innerHTML = state.notifs.map(n => `
+    <div class="dropdown-item">
+      <span class="ico">${n.icon}</span>
+      <div style="flex:1; min-width:0;">
+        <div style="color:#fff; font-weight:600;">${n.title}</div>
+        <div style="font-size:11px; opacity:0.8;">${n.body}</div>
+      </div>
+      <span class="time">${timeAgo(n.ts)}</span>
+    </div>
+  `).join('');
+}
+
+// ============ AUTH ============
+function login(name, email, source) {
+  if (!name || !name.trim()) { $('errLogin').textContent = 'Nama tidak boleh kosong'; return false; }
+  state.user = {
+    name: name.trim(),
+    email: (email || '').trim(),
+    source: source || 'email',
+    joinedAt: Date.now(),
+  };
+  persist('user');
+  closeModal('loginModal');
+  updateAuthUI();
+  toast(`👋 Selamat datang, ${state.user.name}!`);
+  addNotif('🎉', 'Login berhasil', `Selamat datang di GameHub, ${state.user.name}!`);
+  return true;
+}
+function logout() {
+  state.user = null;
+  persist('user');
+  closeModal('profileModal');
+  updateAuthUI();
+  toast('👋 Sampai jumpa!');
+}
+function updateAuthUI() {
+  if (state.user) {
+    $('loginBtn').style.display = 'none';
+    $('userPill').classList.add('show');
+    $('profileBtn').style.display = 'flex';
+    const isAdmin = !!state.user.isAdmin;
+    $('userName').innerHTML = state.user.name + (isAdmin ? ' <span style="background:#ff66b3;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;margin-left:4px;">🛠️ ADMIN</span>' : '');
+    $('userAvatar').textContent = state.user.name[0].toUpperCase();
+    $('userAvatar').style.background = isAdmin ? 'linear-gradient(135deg, #ff66b3, #cc3380)' : 'linear-gradient(135deg, #ff66b3, #6b46ff)';
+  } else {
+    $('loginBtn').style.display = 'flex';
+    $('userPill').classList.remove('show');
+    $('profileBtn').style.display = 'none';
+  }
+}
+
+// ============ MODAL ============
+window.closeModal = id => $(id).classList.remove('show');
+function openModal(id) {
+  // close all dropdowns first
+  document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('show'));
+  $(id).classList.add('show');
+}
+
+// ============ RENDER ============
+function getFiltered() {
+  return getGames().filter(g => {
+    let catMatch = true;
+    if (state.cat === 'all') catMatch = true;
+    else if (state.cat === 'favorites') catMatch = state.favs.includes(g.id);
+    else if (state.cat === 'recent') {
+      const recentIds = [...new Set(state.activity.map(a => a.gameId))].slice(0, 20);
+      catMatch = recentIds.includes(g.id);
+    }
+    else catMatch = g.cat === state.cat || g.tags.includes(state.cat);
+    let sMatch = !state.search || g.title.toLowerCase().includes(state.search) || g.cat.includes(state.search);
+    return catMatch && sMatch;
+  });
+}
 function render() {
   const grid = $('grid');
   grid.innerHTML = '';
-  const filtered = GAMES.filter(g => {
-    let catMatch = currentCat === 'all' || g.cat === currentCat || g.tags.includes(currentCat);
-    let searchMatch = !currentSearch || g.title.toLowerCase().includes(currentSearch) || g.cat.includes(currentSearch);
-    return catMatch && searchMatch;
-  });
+  const filtered = getFiltered();
 
   if (!filtered.length) {
-    grid.innerHTML = '<div class="empty" style="grid-column:1/-1;"><div class="icon">🔍</div>Tidak ada game cocok dengan filter ini.</div>';
+    let msg = 'Tidak ada game cocok dengan filter ini.';
+    if (state.cat === 'favorites') msg = 'Belum ada game favorit. Klik 🤍 di game card untuk menambah!';
+    if (state.cat === 'recent') msg = 'Belum ada game yang dimainkan. Pilih game dulu!';
+    grid.innerHTML = `<div class="empty" style="grid-column:1/-1;"><div class="icon">🎮</div>${msg}</div>`;
     return;
   }
 
   for (const g of filtered) {
     const card = document.createElement(g.soon ? 'div' : 'a');
     card.className = 'card' + (g.soon ? ' disabled' : '');
-    if (!g.soon) card.href = g.url;
+    if (!g.soon) {
+      card.href = g.url;
+      if (g.external) card.target = '_blank';
+      card.addEventListener('click', () => logPlay(g));
+    }
+    const faved = isFav(g.id);
+    // build thumbnail based on type
+    let thumbHtml;
+    if (g.thumbType === 'url' && g.thumbUrl) {
+      thumbHtml = `<div class="card-thumb" style="background:url('${g.thumbUrl}') center/cover;"></div>`;
+    } else if (g.thumbType === 'upload' && g.thumbData) {
+      thumbHtml = `<div class="card-thumb" style="background:url('${g.thumbData}') center/cover;"></div>`;
+    } else {
+      thumbHtml = `<div class="card-thumb" style="background:${g.grad};">${g.emoji}</div>`;
+    }
+    const titleAttr = g.desc ? ` title="${g.desc.replace(/"/g, '&quot;')}"` : '';
     card.innerHTML = `
       ${g.badge ? `<span class="badge ${g.badge}">${g.soon ? 'Segera' : g.badge}</span>` : ''}
-      <div class="card-thumb" style="background:${g.grad};">${g.emoji}</div>
-      <div class="card-overlay">
-        <div class="card-title">${g.title}</div>
+      ${!g.soon ? `<button class="fav-btn ${faved ? 'faved' : ''}" data-id="${g.id}" data-title="${g.title}" title="Favorit">${faved ? '❤️' : '🤍'}</button>` : ''}
+      ${thumbHtml}
+      <div class="card-overlay"${titleAttr}>
+        <div class="card-title">${g.title}${g.external ? ' ↗' : ''}</div>
         <div class="card-cat">${g.cat}${g.soon ? ' • coming soon' : ''}</div>
       </div>
     `;
     grid.appendChild(card);
   }
+
+  // wire fav buttons
+  grid.querySelectorAll('.fav-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleFav(btn.dataset.id, btn.dataset.title);
+    });
+  });
 }
 
+// ============ EVENT WIRING ============
 // Sidebar nav
 for (const item of document.querySelectorAll('.nav-item')) {
   item.addEventListener('click', () => {
     document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
     item.classList.add('active');
-    currentCat = item.dataset.cat;
-    $('sectionTitle').textContent = TITLES[currentCat] || 'Semua Game';
-    $('sectionSub').textContent = currentCat === 'all'
+    state.cat = item.dataset.cat;
+    $('sectionTitle').textContent = TITLES[state.cat] || 'Semua Game';
+    $('sectionSub').textContent = state.cat === 'all'
       ? 'Mainkan Game Favorit Pengguna Kami. Ini adalah Game Paling Populer di GameHub dan Diperbarui Secara Berkala'
-      : `Menampilkan game kategori: ${TITLES[currentCat]?.toLowerCase() || currentCat}`;
+      : `Menampilkan game kategori: ${(TITLES[state.cat]||state.cat).toLowerCase()}`;
     render();
-    // close mobile sidebar
     $('sidebar').classList.remove('open');
   });
 }
 
 // Search
-$('search').addEventListener('input', e => {
-  currentSearch = e.target.value.trim().toLowerCase();
-  render();
-});
+$('search').addEventListener('input', e => { state.search = e.target.value.trim().toLowerCase(); render(); });
 
 // Mobile menu
 $('menuBtn').addEventListener('click', () => $('sidebar').classList.toggle('open'));
 
+// Topbar buttons
+$('loginBtn').addEventListener('click', () => openModal('loginModal'));
+
+$('notifBtn').addEventListener('click', e => {
+  e.stopPropagation();
+  $('profileDrop').classList.remove('show');
+  const d = $('notifDrop');
+  const wasShown = d.classList.contains('show');
+  d.classList.toggle('show');
+  if (!wasShown) {
+    renderNotifs();
+    state.notifs.forEach(n => n.read = true);
+    persist('notifs');
+    updateNotifDot();
+  }
+});
+
+$('favBtn').addEventListener('click', () => {
+  // jump to favorites category
+  document.querySelector('.nav-item[data-cat="favorites"]').click();
+});
+
+$('profileBtn').addEventListener('click', e => {
+  e.stopPropagation();
+  $('notifDrop').classList.remove('show');
+  $('profileDrop').classList.toggle('show');
+});
+
+$('userPill').addEventListener('click', () => openProfileModal());
+
+$('viewProfile').addEventListener('click', () => {
+  $('profileDrop').classList.remove('show');
+  openProfileModal();
+});
+
+$('logoutBtn').addEventListener('click', () => { $('profileDrop').classList.remove('show'); logout(); });
+$('doLogout').addEventListener('click', logout);
+$('clearNotif').addEventListener('click', e => {
+  e.stopPropagation();
+  state.notifs = []; persist('notifs');
+  renderNotifs(); updateNotifDot();
+});
+
+// Login modal
+$('doLogin').addEventListener('click', () => login($('inpName').value, $('inpEmail').value, 'email'));
+$('inpName').addEventListener('keypress', e => { if (e.key === 'Enter') $('doLogin').click(); });
+$('oauthGoogle').addEventListener('click', () => {
+  // simulated — real OAuth needs backend. Use user's email if remembered or prompt.
+  const name = prompt('Untuk demo: ketik nama tampilan kamu');
+  if (name) login(name, '', 'google');
+});
+$('oauthGuest').addEventListener('click', () => {
+  const guestName = 'Guest_' + Math.floor(Math.random()*9999);
+  login(guestName, '', 'guest');
+});
+
+// Close dropdowns/modals on outside click
+document.addEventListener('click', e => {
+  if (!e.target.closest('.dropdown') && !e.target.closest('#notifBtn') && !e.target.closest('#profileBtn')) {
+    document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('show'));
+  }
+});
+for (const m of document.querySelectorAll('.modal-bg')) {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('show'); });
+}
+
+// ============ PROFILE ============
+function openProfileModal() {
+  if (!state.user) { openModal('loginModal'); return; }
+  $('pAvatar').textContent = state.user.name[0].toUpperCase();
+  $('pName').textContent = state.user.name;
+  $('pEmail').textContent = state.user.email || `Login via ${state.user.source}`;
+  $('sGames').textContent = state.activity.length;
+  $('sFavs').textContent = state.favs.length;
+  const days = Math.max(1, Math.floor((Date.now() - state.user.joinedAt) / 86400000));
+  $('sDays').textContent = days;
+  openModal('profileModal');
+}
+
+// ============ ADMIN ============
+function getCurrentPass() {
+  // Check localStorage override first (admin changed it), fallback ke default
+  return localStorage.getItem(STORE.adminPass) || ADMIN_PASS;
+}
+function adminLogin(user, pass, displayName) {
+  if (user === ADMIN_USER && pass === getCurrentPass()) {
+    state.isAdmin = true;
+    localStorage.setItem(STORE.isAdmin, 'true');
+    // Auto-populate user identity dengan badge admin
+    state.user = {
+      name: (displayName || '').trim() || user,  // pakai display name, fallback ke username
+      email: '',
+      source: 'admin',
+      isAdmin: true,
+      joinedAt: state.user?.joinedAt || Date.now(),
+    };
+    persist('user');
+    closeModal('adminLoginModal');
+    closeModal('loginModal');
+    updateAuthUI();
+    updateAdminUI();
+    toast(`🛠️ Admin login: ${state.user.name}`);
+    addNotif('🛠️', 'Admin Login', `Login sebagai admin (${state.user.name})`);
+    return true;
+  }
+  $('adminErr').textContent = '❌ Username/password salah';
+  return false;
+}
+function adminLogout() {
+  state.isAdmin = false;
+  localStorage.setItem(STORE.isAdmin, 'false');
+  // Logout user juga kalau dia admin (bukan user normal)
+  if (state.user && state.user.isAdmin) {
+    state.user = null;
+    persist('user');
+  }
+  closeModal('adminPanel');
+  updateAuthUI();
+  updateAdminUI();
+  toast('👋 Admin logout');
+}
+function updateAdminUI() {
+  $('adminBtn').style.display = state.isAdmin ? 'flex' : 'none';
+}
+
+let editingGameIdx = -1;  // -1 = new game
+
+function renderAdminPanel() {
+  const games = getGames();
+  const list = $('adminGameList');
+  list.innerHTML = '';
+  games.forEach((g, i) => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;gap:10px;padding:8px;border-bottom:1px solid #2a2a4a;font-size:13px;';
+    row.innerHTML = `
+      <div style="width:36px;height:36px;border-radius:6px;background:${g.grad};display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">${g.emoji}</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-weight:600;color:#fff;">${g.title} ${g.soon ? '<span style="color:#999;font-size:11px;">(soon)</span>' : ''}</div>
+        <div style="font-size:11px;color:#8a8aaa;">${g.cat} · ${g.url || '(no url)'} · ${g.badge || 'no badge'}</div>
+      </div>
+      <button class="btn-secondary" data-idx="${i}" data-act="up" title="Naik" style="padding:6px 8px;font-size:12px;${i===0?'opacity:0.3;':''}" ${i===0?'disabled':''}>↑</button>
+      <button class="btn-secondary" data-idx="${i}" data-act="down" title="Turun" style="padding:6px 8px;font-size:12px;${i===games.length-1?'opacity:0.3;':''}" ${i===games.length-1?'disabled':''}>↓</button>
+      <button class="btn-secondary" data-idx="${i}" data-act="edit" style="padding:6px 10px;font-size:12px;">✏️ Edit</button>
+      <button class="btn-danger" data-idx="${i}" data-act="del" style="padding:6px 10px;font-size:12px;">🗑️</button>
+    `;
+    list.appendChild(row);
+  });
+  list.querySelectorAll('button[data-act]').forEach(btn => {
+    btn.onclick = () => {
+      const idx = parseInt(btn.dataset.idx);
+      if (btn.dataset.act === 'edit') openGameEdit(idx);
+      else if (btn.dataset.act === 'del') deleteGame(idx);
+      else if (btn.dataset.act === 'up') moveGame(idx, -1);
+      else if (btn.dataset.act === 'down') moveGame(idx, +1);
+    };
+  });
+}
+
+function moveGame(idx, dir) {
+  const games = state.gamesOverride ? [...state.gamesOverride] : [...GAMES];
+  const newIdx = idx + dir;
+  if (newIdx < 0 || newIdx >= games.length) return;
+  [games[idx], games[newIdx]] = [games[newIdx], games[idx]];
+  state.gamesOverride = games;
+  persist('gamesOverride');
+  renderAdminPanel();
+  render();
+}
+
+const POPULAR_TAGS = ['trending','new','originals','viral','hot','populer','easy','offline','multiplayer','single'];
+let uploadedThumb = null;  // base64 untuk upload
+
+function slugify(s) {
+  return s.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').substring(0, 40);
+}
+function gradFromColors(c1, c2) {
+  return `linear-gradient(135deg, ${c1}, ${c2})`;
+}
+function colorsFromGrad(grad) {
+  // extract two #hex from "linear-gradient(135deg, #aaa, #bbb)"
+  const m = (grad || '').match(/#([0-9a-fA-F]{3,6})/g);
+  return [m?.[0] || '#ff66b3', m?.[1] || '#6b46ff'];
+}
+
+function openGameEdit(idx) {
+  editingGameIdx = idx;
+  const g = idx === -1
+    ? { id:'', title:'', cat:'arcade', tags:[], emoji:'🎮', grad:'linear-gradient(135deg, #ff66b3, #6b46ff)', url:'games/new.html', badge:'' }
+    : getGames()[idx];
+  $('gameEditTitle').textContent = idx === -1 ? '➕ Tambah Game Baru' : '✏️ Edit Game: ' + g.title;
+  $('ge_id').value = g.id || '';
+  $('ge_title').value = g.title || '';
+  $('ge_desc').value = g.desc || '';
+  $('ge_emoji').value = g.emoji || '🎮';
+  $('ge_cat').value = g.cat || 'arcade';
+  $('ge_url').value = g.url || '';
+  $('ge_badge').value = g.badge || '';
+  $('ge_soon').checked = !!g.soon;
+  $('ge_external').checked = !!g.external;
+  $('ge_tags').value = (g.tags || []).filter(t => !POPULAR_TAGS.includes(t)).join(',');
+  $('ge_difficulty').value = g.difficulty || '';
+  $('ge_players').value = g.players || '';
+  $('ge_author').value = g.author || '';
+  // controls checkboxes
+  const ctl = g.controls || [];
+  $('ge_ctl_kb').checked = ctl.includes('keyboard');
+  $('ge_ctl_mouse').checked = ctl.includes('mouse');
+  $('ge_ctl_touch').checked = ctl.includes('touch');
+  $('ge_ctl_gamepad').checked = ctl.includes('gamepad');
+  // colors
+  const [c1, c2] = colorsFromGrad(g.grad);
+  $('ge_color1').value = c1;
+  $('ge_color2').value = c2;
+  // thumb type
+  $('ge_thumbType').value = g.thumbType || 'emoji';
+  $('ge_thumbUrl').value = g.thumbUrl || '';
+  uploadedThumb = g.thumbData || null;
+  $('ge_uploadStatus').textContent = uploadedThumb ? '✅ Thumbnail tersimpan' : '';
+  // tag pills
+  renderTagPills(g.tags || []);
+  toggleThumbBlocks();
+  updatePreview();
+  openModal('gameEditModal');
+}
+
+function renderTagPills(activeTags) {
+  const container = $('ge_tagPills');
+  container.innerHTML = '';
+  POPULAR_TAGS.forEach(t => {
+    const pill = document.createElement('span');
+    pill.className = 'tag-pill' + (activeTags.includes(t) ? ' active' : '');
+    pill.textContent = t;
+    pill.dataset.tag = t;
+    pill.onclick = () => {
+      pill.classList.toggle('active');
+      updatePreview();
+    };
+    container.appendChild(pill);
+  });
+}
+
+function getActiveTags() {
+  const pills = [...$('ge_tagPills').querySelectorAll('.tag-pill.active')].map(p => p.dataset.tag);
+  const custom = $('ge_tags').value.split(',').map(t => t.trim()).filter(Boolean);
+  return [...new Set([...pills, ...custom])];
+}
+
+function toggleThumbBlocks() {
+  const t = $('ge_thumbType').value;
+  $('ge_emojiBlock').style.display  = t === 'emoji'  ? 'block' : 'none';
+  $('ge_urlBlock').style.display    = t === 'url'    ? 'block' : 'none';
+  $('ge_uploadBlock').style.display = t === 'upload' ? 'block' : 'none';
+  updatePreview();
+}
+
+function updatePreview() {
+  const title = $('ge_title').value || '(Judul)';
+  const cat = $('ge_cat').value;
+  const emoji = $('ge_emoji').value || '🎮';
+  const c1 = $('ge_color1').value;
+  const c2 = $('ge_color2').value;
+  const grad = gradFromColors(c1, c2);
+  const badge = $('ge_badge').value;
+  const soon = $('ge_soon').checked;
+  const thumbType = $('ge_thumbType').value;
+  const url = $('ge_url').value || 'games/new.html';
+
+  let thumbHtml;
+  if (thumbType === 'url' && $('ge_thumbUrl').value) {
+    thumbHtml = `<div style="width:100%;height:100%;background:url('${$('ge_thumbUrl').value}') center/cover;"></div>`;
+  } else if (thumbType === 'upload' && uploadedThumb) {
+    thumbHtml = `<div style="width:100%;height:100%;background:url('${uploadedThumb}') center/cover;"></div>`;
+  } else {
+    thumbHtml = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:64px;background:${grad};text-shadow:0 4px 10px rgba(0,0,0,0.6);position:relative;">${emoji}<div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(0,0,0,0.85) 100%);"></div></div>`;
+  }
+
+  $('ge_preview').innerHTML = `
+    ${badge ? `<span style="position:absolute;top:6px;left:6px;background:${badge==='top'?'#ffaa00':badge==='new'?'#ff3030':'#6b46ff'};color:${badge==='top'?'#000':'#fff'};padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;text-transform:uppercase;z-index:2;">${soon?'Segera':badge}</span>` : ''}
+    ${thumbHtml}
+    <div style="position:absolute;bottom:0;left:0;right:0;padding:8px 10px;color:#fff;z-index:2;">
+      <div style="font-size:13px;font-weight:700;text-shadow:0 1px 4px #000;">${title}</div>
+      <div style="font-size:10px;opacity:0.85;text-transform:uppercase;">${cat}${soon ? ' • coming soon' : ''}</div>
+    </div>
+  `;
+  $('ge_filePath').textContent = url;
+}
+
+function saveGame() {
+  if (!$('ge_title').value.trim()) { alert('Judul wajib diisi'); return; }
+  if (!$('ge_id').value.trim()) $('ge_id').value = slugify($('ge_title').value);
+
+  const games = state.gamesOverride ? [...state.gamesOverride] : [...GAMES];
+  const ctl = [];
+  if ($('ge_ctl_kb').checked) ctl.push('keyboard');
+  if ($('ge_ctl_mouse').checked) ctl.push('mouse');
+  if ($('ge_ctl_touch').checked) ctl.push('touch');
+  if ($('ge_ctl_gamepad').checked) ctl.push('gamepad');
+
+  const newGame = {
+    id: $('ge_id').value.trim(),
+    title: $('ge_title').value.trim(),
+    cat: $('ge_cat').value,
+    url: $('ge_url').value.trim(),
+    emoji: $('ge_emoji').value.trim() || '🎮',
+    grad: gradFromColors($('ge_color1').value, $('ge_color2').value),
+    tags: getActiveTags(),
+  };
+  // optional fields (hanya disertakan kalau ada nilai)
+  if ($('ge_desc').value.trim()) newGame.desc = $('ge_desc').value.trim();
+  if ($('ge_badge').value) newGame.badge = $('ge_badge').value;
+  if ($('ge_soon').checked) newGame.soon = true;
+  if ($('ge_external').checked) newGame.external = true;
+  if ($('ge_difficulty').value) newGame.difficulty = $('ge_difficulty').value;
+  if ($('ge_players').value) newGame.players = $('ge_players').value;
+  if (ctl.length) newGame.controls = ctl;
+  if ($('ge_author').value.trim()) newGame.author = $('ge_author').value.trim();
+
+  // thumbnail metadata
+  const tType = $('ge_thumbType').value;
+  if (tType === 'url' && $('ge_thumbUrl').value) {
+    newGame.thumbType = 'url';
+    newGame.thumbUrl = $('ge_thumbUrl').value;
+  } else if (tType === 'upload' && uploadedThumb) {
+    newGame.thumbType = 'upload';
+    newGame.thumbData = uploadedThumb;
+  }
+
+  if (editingGameIdx === -1) games.push(newGame);
+  else games[editingGameIdx] = newGame;
+
+  state.gamesOverride = games;
+  persist('gamesOverride');
+  closeModal('gameEditModal');
+  renderAdminPanel();
+  render();
+  toast('✅ Game disimpan: ' + newGame.title);
+}
+
+function duplicateGame() {
+  if (editingGameIdx === -1) { alert('Simpan dulu sebelum duplikat'); return; }
+  const games = state.gamesOverride ? [...state.gamesOverride] : [...GAMES];
+  const orig = games[editingGameIdx];
+  const copy = JSON.parse(JSON.stringify(orig));
+  copy.id = orig.id + '-copy';
+  copy.title = orig.title + ' (Copy)';
+  games.splice(editingGameIdx + 1, 0, copy);
+  state.gamesOverride = games;
+  persist('gamesOverride');
+  closeModal('gameEditModal');
+  renderAdminPanel();
+  render();
+  toast('📋 Game diduplikat');
+}
+
+function bulkImport() {
+  const txt = $('bulkJson').value.trim();
+  const mode = document.querySelector('input[name="bulkMode"]:checked').value;
+  $('bulkErr').textContent = '';
+  try {
+    const data = JSON.parse(txt);
+    if (!Array.isArray(data)) throw new Error('Harus array JSON');
+    for (const g of data) {
+      if (!g.id || !g.title || !g.cat) throw new Error('Setiap object butuh id, title, cat');
+    }
+    const current = state.gamesOverride || [...GAMES];
+    state.gamesOverride = mode === 'replace' ? data : [...current, ...data];
+    persist('gamesOverride');
+    closeModal('bulkImportModal');
+    renderAdminPanel();
+    render();
+    toast(`📥 Import sukses: ${data.length} game (${mode})`);
+  } catch (e) {
+    $('bulkErr').textContent = '❌ ' + e.message;
+  }
+}
+
+function deleteGame(idx) {
+  if (!confirm('Hapus game ini?')) return;
+  const games = state.gamesOverride ? [...state.gamesOverride] : [...GAMES];
+  games.splice(idx, 1);
+  state.gamesOverride = games;
+  persist('gamesOverride');
+  renderAdminPanel();
+  render();
+  toast('🗑️ Game dihapus');
+}
+
+function resetGames() {
+  if (!confirm('Reset ke daftar game default? Semua perubahan lokal hilang.')) return;
+  state.gamesOverride = null;
+  localStorage.removeItem(STORE.gamesOverride);
+  renderAdminPanel();
+  render();
+  toast('↩️ Direset ke default');
+}
+
+function exportGames() {
+  const games = getGames();
+  const lines = games.map(g => {
+    const parts = [`id:'${g.id}'`, `title:'${g.title.replace(/'/g, "\\'")}'`, `cat:'${g.cat}'`,
+      `tags:${JSON.stringify(g.tags || [])}`, `emoji:'${g.emoji}'`, `grad:'${g.grad}'`];
+    if (g.url) parts.push(`url:'${g.url}'`);
+    if (g.badge) parts.push(`badge:'${g.badge}'`);
+    if (g.soon) parts.push(`soon:true`);
+    return '  { ' + parts.join(', ') + ' },';
+  });
+  $('exportText').value = 'const GAMES = [\n' + lines.join('\n') + '\n];';
+  openModal('exportModal');
+}
+
+// ============ GANTI PASSWORD ============
+function openChangePass() {
+  $('oldPass').value = '';
+  $('newPass').value = '';
+  $('newPass2').value = '';
+  $('passErr').textContent = '';
+  closeModal('adminPanel');
+  openModal('changePassModal');
+}
+function savePass() {
+  const oldP = $('oldPass').value;
+  const newP = $('newPass').value;
+  const newP2 = $('newPass2').value;
+  const err = $('passErr');
+  err.textContent = '';
+  if (oldP !== getCurrentPass()) { err.textContent = '❌ Password lama salah'; return; }
+  if (newP.length < 4) { err.textContent = '❌ Password baru minimal 4 karakter'; return; }
+  if (newP !== newP2) { err.textContent = '❌ Konfirmasi tidak cocok'; return; }
+  if (newP === oldP) { err.textContent = '❌ Password baru sama dengan yang lama'; return; }
+  localStorage.setItem(STORE.adminPass, newP);
+  closeModal('changePassModal');
+  toast('🔑 Password berhasil diganti!');
+  addNotif('🔑', 'Password Diganti', 'Password admin berhasil diubah');
+}
+function resetPass() {
+  if (!confirm('Reset password ke default (admin123)?')) return;
+  localStorage.removeItem(STORE.adminPass);
+  closeModal('changePassModal');
+  toast('↩️ Password direset ke default');
+}
+function exportPass() {
+  const cur = getCurrentPass();
+  const txt = `// Paste ini menggantikan baris ADMIN_PASS di index.html (sekitar baris 542):\nconst ADMIN_PASS = '${cur.replace(/'/g, "\\'")}';\n\n// Atau biar admin login user/pass tetap bisa dikonfigurasi:\nconst ADMIN_USER = '${ADMIN_USER}';\nconst ADMIN_PASS = '${cur.replace(/'/g, "\\'")}';`;
+  $('exportText').value = txt;
+  closeModal('changePassModal');
+  openModal('exportModal');
+}
+
+// ============ LAYOUT MANUAL ============
+function openLayoutModal() {
+  const L = getLayout();
+  $('ly_brand').value = L.brand;
+  $('ly_card').value = L.cardSize;
+  $('ly_title').value = L.sectionTitle;
+  $('ly_sub').value = L.sectionSub;
+  $('ly_accent').value = L.accentColor;
+  $('ly_primary').value = L.primaryColor;
+  $('ly_bg').value = L.bgColor;
+  $('ly_sidebar').value = L.sidebarColor;
+  $('ly_login').checked = L.showLogin;
+  $('ly_notif').checked = L.showNotif;
+  $('ly_fav').checked = L.showFav;
+  $('ly_css').value = L.customCss;
+  $('ly_playUrl').value = L.playStoreUrl || '';
+  $('ly_appUrl').value = L.appStoreUrl || '';
+  $('ly_showDl').checked = L.showDownloadSection !== false;
+  openModal('layoutModal');
+  // live preview while editing
+  ['ly_brand','ly_card','ly_title','ly_sub','ly_accent','ly_primary','ly_bg','ly_sidebar','ly_login','ly_notif','ly_fav','ly_css','ly_playUrl','ly_appUrl','ly_showDl'].forEach(id => {
+    $(id).oninput = livePreviewLayout;
+    $(id).onchange = livePreviewLayout;
+  });
+}
+function readLayoutForm() {
+  return {
+    brand: $('ly_brand').value || 'GameHub',
+    cardSize: parseInt($('ly_card').value) || 150,
+    sectionTitle: $('ly_title').value,
+    sectionSub: $('ly_sub').value,
+    accentColor: $('ly_accent').value,
+    primaryColor: $('ly_primary').value,
+    bgColor: $('ly_bg').value,
+    sidebarColor: $('ly_sidebar').value,
+    showLogin: $('ly_login').checked,
+    showNotif: $('ly_notif').checked,
+    showFav: $('ly_fav').checked,
+    customCss: $('ly_css').value,
+    playStoreUrl: $('ly_playUrl').value.trim(),
+    appStoreUrl: $('ly_appUrl').value.trim(),
+    showDownloadSection: $('ly_showDl').checked,
+  };
+}
+function livePreviewLayout() {
+  state.layout = readLayoutForm();
+  applyLayout();
+}
+function saveLayout() {
+  state.layout = readLayoutForm();
+  persist('layout');
+  applyLayout();
+  closeModal('layoutModal');
+  toast('🎨 Layout tersimpan');
+}
+function resetLayout() {
+  if (!confirm('Reset semua pengaturan layout ke default?')) return;
+  state.layout = Object.assign({}, DEFAULT_LAYOUT);
+  localStorage.removeItem(STORE.layout);
+  applyLayout();
+  openLayoutModal();
+  toast('↩️ Layout direset');
+}
+function exportLayout() {
+  const txt = 'const DEFAULT_LAYOUT = ' + JSON.stringify(state.layout, null, 2) + ';';
+  $('exportText').value = txt;
+  closeModal('layoutModal');
+  openModal('exportModal');
+}
+
+// Wire admin events
+$('oauthAdmin').addEventListener('click', () => {
+  closeModal('loginModal');
+  // Update hint kalau password sudah diganti
+  const isCustom = !!localStorage.getItem(STORE.adminPass);
+  $('adminHint').innerHTML = isCustom
+    ? '🔑 Password Anda sudah diganti dari default. Lupa? Klik <a href="#" onclick="if(confirm(\'Reset ke admin123?\')){localStorage.removeItem(STORE.adminPass);location.reload();}return false;" style="color:#ff66b3;">Reset</a>'
+    : '💡 Default: username <b style="color:#ff66b3;">admin</b> / password <b style="color:#ff66b3;">admin123</b>';
+  openModal('adminLoginModal');
+});
+$('layoutBtn').addEventListener('click', () => { closeModal('adminPanel'); openLayoutModal(); });
+$('changePassBtn').addEventListener('click', openChangePass);
+$('savePassBtn').addEventListener('click', savePass);
+$('resetPassBtn').addEventListener('click', resetPass);
+$('exportPassBtn').addEventListener('click', exportPass);
+$('newPass2').addEventListener('keypress', e => { if (e.key === 'Enter') savePass(); });
+$('saveLayoutBtn').addEventListener('click', saveLayout);
+$('resetLayoutBtn').addEventListener('click', resetLayout);
+$('exportLayoutBtn').addEventListener('click', exportLayout);
+$('doAdminLogin').addEventListener('click', () => adminLogin($('adminUser').value, $('adminPass').value, $('adminName').value));
+$('adminPass').addEventListener('keypress', e => { if (e.key === 'Enter') $('doAdminLogin').click(); });
+$('adminBtn').addEventListener('click', () => { renderAdminPanel(); openModal('adminPanel'); });
+$('addGameBtn').addEventListener('click', () => openGameEdit(-1));
+$('saveGameBtn').addEventListener('click', saveGame);
+$('dupGameBtn').addEventListener('click', duplicateGame);
+$('bulkImportBtn').addEventListener('click', () => { closeModal('adminPanel'); openModal('bulkImportModal'); });
+$('doBulkImport').addEventListener('click', bulkImport);
+$('bulkLoadCurrent').addEventListener('click', () => {
+  $('bulkJson').value = JSON.stringify(getGames(), null, 2);
+});
+// Live preview wiring
+['ge_title','ge_emoji','ge_color1','ge_color2','ge_cat','ge_badge','ge_soon','ge_url','ge_thumbUrl','ge_desc'].forEach(id => {
+  $(id).addEventListener('input', updatePreview);
+  $(id).addEventListener('change', updatePreview);
+});
+$('ge_thumbType').addEventListener('change', toggleThumbBlocks);
+// Quick emoji picker
+document.querySelectorAll('.quick-emoji').forEach(el => {
+  el.addEventListener('click', () => { $('ge_emoji').value = el.dataset.e; updatePreview(); });
+});
+// Auto slug button
+$('ge_slugBtn').addEventListener('click', () => {
+  $('ge_id').value = slugify($('ge_title').value);
+});
+// Auto slug as you type title (only if id empty)
+$('ge_title').addEventListener('input', () => {
+  if (!$('ge_id').value || $('ge_id').dataset.autoFilled === '1') {
+    $('ge_id').value = slugify($('ge_title').value);
+    $('ge_id').dataset.autoFilled = '1';
+  }
+});
+$('ge_id').addEventListener('input', () => { $('ge_id').dataset.autoFilled = '0'; });
+// File upload (base64)
+$('ge_thumbFile').addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (file.size > 100 * 1024) { $('ge_uploadStatus').textContent = '❌ File > 100KB. Gunakan PNG yang lebih kecil.'; return; }
+  const reader = new FileReader();
+  reader.onload = () => {
+    uploadedThumb = reader.result;
+    $('ge_uploadStatus').textContent = `✅ ${file.name} (${(file.size/1024).toFixed(1)} KB)`;
+    updatePreview();
+  };
+  reader.readAsDataURL(file);
+});
+$('exportBtn').addEventListener('click', exportGames);
+$('resetGamesBtn').addEventListener('click', resetGames);
+$('adminLogoutBtn').addEventListener('click', adminLogout);
+$('copyExportBtn').addEventListener('click', () => {
+  $('exportText').select();
+  navigator.clipboard.writeText($('exportText').value).then(() => toast('📋 Tersalin ke clipboard!'));
+});
+
+// ============ SERVICE WORKER REGISTRATION ============
+if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg => console.log('[SW] registered:', reg.scope))
+      .catch(err => console.warn('[SW] registration failed:', err));
+  });
+}
+
+// ============ DOWNLOAD APP / PWA ============
+let pwaPrompt = null;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  pwaPrompt = e;
+  $('installPwaBtn').style.display = 'block';
+});
+window.addEventListener('appinstalled', () => {
+  pwaPrompt = null;
+  $('installPwaBtn').style.display = 'none';
+  toast('🎉 GameHub berhasil diinstall sebagai aplikasi!');
+});
+
+$('installPwaBtn').addEventListener('click', async () => {
+  if (!pwaPrompt) return openDownloadModal('pwa');
+  pwaPrompt.prompt();
+  const { outcome } = await pwaPrompt.userChoice;
+  if (outcome === 'accepted') {
+    toast('📲 Installing...');
+    pwaPrompt = null;
+    $('installPwaBtn').style.display = 'none';
+  }
+});
+
+function openDownloadModal(type) {
+  const L = getLayout();
+  let title, body, content;
+  if (type === 'play') {
+    title = '▶️ Google Play Store';
+    if (L.playStoreUrl) {
+      window.open(L.playStoreUrl, '_blank');
+      return;
+    }
+    body = 'GameHub belum tersedia di Google Play Store. Sementara, install sebagai PWA atau pakai browser.';
+    content = `
+      <div style="background:#0f1729;padding:14px;border-radius:6px;margin-bottom:10px;">
+        <div style="font-weight:700;color:#ff66b3;margin-bottom:8px;">🚀 Cara install sebagai app sekarang:</div>
+        <div style="font-size:13px;line-height:1.6;color:#b8b8d4;">
+          <b>Android Chrome:</b> Menu (⋮) → "Install app" / "Add to Home screen"<br>
+          <b>iOS Safari:</b> Share → "Add to Home Screen"<br>
+          <b>Desktop Edge:</b> Address bar → ikon install (⊕)<br>
+          <b>Desktop Chrome:</b> Address bar → ikon install
+        </div>
+      </div>
+      <details style="background:#1a1a2e;padding:10px;border-radius:6px;font-size:12px;">
+        <summary style="cursor:pointer;color:#00d4ff;font-weight:700;">📚 Cara publish ke Google Play (untuk admin)</summary>
+        <div style="margin-top:10px;line-height:1.7;color:#b8b8d4;">
+          <ol style="padding-left:20px;">
+            <li>Buka <a href="https://www.pwabuilder.com/" target="_blank" style="color:#ff66b3;">PWABuilder.com</a> (gratis, by Microsoft)</li>
+            <li>Paste URL: <code>https://gamevirtual.netlify.app/</code></li>
+            <li>Klik <b>"Package for Stores"</b> → pilih <b>"Android"</b></li>
+            <li>Download <code>.aab</code> file (Android App Bundle)</li>
+            <li>Daftar <a href="https://play.google.com/console" target="_blank" style="color:#ff66b3;">Google Play Console</a> (\$25 one-time fee)</li>
+            <li>Upload .aab → isi metadata (nama, deskripsi, screenshot, ikon) → Submit for review</li>
+            <li>Tunggu review 1-7 hari → live di Play Store</li>
+            <li>Copy URL Play Store, paste ke Admin → Layout → "Google Play URL"</li>
+          </ol>
+        </div>
+      </details>
+    `;
+  } else if (type === 'app') {
+    title = '🍎 Apple App Store';
+    if (L.appStoreUrl) { window.open(L.appStoreUrl, '_blank'); return; }
+    body = 'GameHub belum tersedia di App Store.';
+    content = `
+      <div style="background:#0f1729;padding:14px;border-radius:6px;">
+        <div style="font-weight:700;color:#ff66b3;margin-bottom:8px;">📱 Install di iOS:</div>
+        <div style="font-size:13px;line-height:1.6;color:#b8b8d4;">
+          <b>iOS Safari:</b> Share button → "Add to Home Screen"<br><br>
+          <small>Untuk publish ke App Store butuh akun Apple Developer (\$99/tahun) + Mac.</small>
+        </div>
+      </div>
+    `;
+  } else {
+    title = '📲 Install GameHub';
+    body = 'Install GameHub sebagai aplikasi di device Anda.';
+    content = `
+      <div style="background:#0f1729;padding:14px;border-radius:6px;">
+        <div style="font-size:13px;line-height:1.7;color:#b8b8d4;">
+          Klik tombol install di address bar browser Anda, atau menu Browser → "Install GameHub".
+        </div>
+      </div>
+    `;
+  }
+  $('dlTitle').textContent = title;
+  $('dlBody').textContent = body;
+  $('dlContent').innerHTML = content;
+  openModal('downloadModal');
+}
+
+$('playStoreBadge').addEventListener('click', e => { e.preventDefault(); openDownloadModal('play'); });
+$('appStoreBadge').addEventListener('click', e => { e.preventDefault(); openDownloadModal('app'); });
+
+// ============ INIT ============
+updateAuthUI();
+updateAdminUI();
+$('favCount').textContent = state.favs.length;
+updateNotifDot();
 render();
+applyLayout();
 </script>
 </body>
 </html>

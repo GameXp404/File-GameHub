@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="id"><head>
+<meta charset="UTF-8" /><title>🏓 Pong</title>
+<link rel="stylesheet" href="game.css" />
+</head><body>
+<a href="../index.html" class="back-to-hub">← Kembali ke Hub</a>
+<div class="game-wrap">
+  <h1>🏓 Pong</h1>
+  <div class="subtitle">↑ ↓ atau geser mouse untuk gerakkan paddle. First to 5!</div>
+  <div class="score-row">
+    <div class="score-box">Kamu<b id="ps">0</b></div>
+    <div class="score-box">CPU<b id="cs">0</b></div>
+  </div>
+  <canvas id="c" width="600" height="380"></canvas>
+  <div class="message" id="msg">Klik canvas untuk mulai</div>
+  <button class="primary" id="restart">🔄 Mulai Ulang</button>
+</div>
+<script>
+const cv=document.getElementById('c'),ctx=cv.getContext('2d');const W=600,H=380;
+let pY,cY,bx,by,bvx,bvy,ps,cs,running;
+function reset(){pY=H/2-30;cY=H/2-30;bx=W/2;by=H/2;bvx=4*(Math.random()<0.5?1:-1);bvy=(Math.random()*4-2);ps=cs=0;running=false;draw();update();}
+function start(){running=true;document.getElementById('msg').textContent='GO!';loop();}
+function loop(){if(!running)return;by+=bvy;bx+=bvx;if(by<5||by>H-5)bvy=-bvy;if(bx<20&&by>pY&&by<pY+60){bvx=Math.abs(bvx)*1.05;bvy+=(by-(pY+30))*0.1;}if(bx>W-20&&by>cY&&by<cY+60){bvx=-Math.abs(bvx)*1.05;bvy+=(by-(cY+30))*0.1;}cY+=(by-cY-30)*0.07;cY=Math.max(0,Math.min(H-60,cY));if(bx<0){cs++;point();return;}if(bx>W){ps++;point();return;}draw();update();requestAnimationFrame(loop);}
+function point(){update();if(ps>=5||cs>=5){running=false;document.getElementById('msg').textContent=ps>=5?'🎉 Kamu Menang!':'💀 CPU Menang!';return;}bx=W/2;by=H/2;bvx=4*(Math.random()<0.5?1:-1);bvy=Math.random()*4-2;loop();}
+function draw(){ctx.fillStyle='#0a0e22';ctx.fillRect(0,0,W,H);ctx.strokeStyle='#444';ctx.setLineDash([8,8]);ctx.beginPath();ctx.moveTo(W/2,0);ctx.lineTo(W/2,H);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#ff66b3';ctx.fillRect(10,pY,8,60);ctx.fillStyle='#6b46ff';ctx.fillRect(W-18,cY,8,60);ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(bx,by,6,0,Math.PI*2);ctx.fill();}
+function update(){document.getElementById('ps').textContent=ps;document.getElementById('cs').textContent=cs;}
+window.addEventListener('keydown',e=>{if(e.key==='ArrowUp')pY-=20;if(e.key==='ArrowDown')pY+=20;pY=Math.max(0,Math.min(H-60,pY));});cv.addEventListener('mousemove',e=>{const r=cv.getBoundingClientRect();pY=e.clientY-r.top-30;pY=Math.max(0,Math.min(H-60,pY));});cv.addEventListener('click',()=>{if(!running)start();});document.getElementById('restart').onclick=reset;reset();
+</script></body></html>

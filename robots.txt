@@ -1,0 +1,11 @@
+# GameHub - robots.txt
+# https://gamevirtual.netlify.app/
+
+User-agent: *
+Allow: /
+
+# Block admin paths from indexing (jika ada nanti)
+Disallow: /admin/
+
+# Sitemap location
+Sitemap: https://gamevirtual.netlify.app/sitemap.xml

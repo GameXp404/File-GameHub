@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="id"><head>
+<meta charset="UTF-8" /><title>🪢 Hangman ID</title>
+<link rel="stylesheet" href="game.css" />
+<style>
+  .word{font-size:38px;letter-spacing:14px;font-family:'Courier New',monospace;color:#ff66b3;margin:20px 0;font-weight:bold;}
+  .keyboard{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;max-width:480px;margin:14px auto;}
+  .key{background:#2a2a4a;color:#fff;border:2px solid #6b46ff;padding:10px;font-size:14px;font-weight:bold;cursor:pointer;border-radius:4px;}
+  .key:hover:not(:disabled){background:#6b46ff;}
+  .key:disabled{opacity:0.3;cursor:not-allowed;}
+  .key.correct{background:#00cc66;border-color:#00ff88;}
+  .key.wrong{background:#b8000c;border-color:#ff3030;}
+  .hangman{font-family:'Courier New',monospace;color:#fff;font-size:18px;line-height:1.2;white-space:pre;background:#0f1729;padding:14px;border-radius:6px;display:inline-block;border:2px solid #6b46ff;}
+</style></head><body>
+<a href="../index.html" class="back-to-hub">← Kembali ke Hub</a>
+<div class="game-wrap">
+  <h1>🪢 Hangman Indonesia</h1>
+  <div class="subtitle">Tebak kata Bahasa Indonesia. 6 salah = kalah!</div>
+  <div class="score-row">
+    <div class="score-box">Salah<b id="wrong">0</b>/6</div>
+    <div class="score-box">Menang<b id="wins">0</b></div>
+    <div class="score-box">Kalah<b id="losses">0</b></div>
+  </div>
+  <div class="hangman" id="hangman"></div>
+  <div class="word" id="word"></div>
+  <div class="keyboard" id="keyboard"></div>
+  <div class="message" id="msg"></div>
+  <button class="primary" id="restart">🔄 Kata Baru</button>
+</div>
+<script>
+const WORDS=['JAKARTA','SURABAYA','BANDUNG','MEDAN','PEKANBARU','SEMARANG','BALI','LOMBOK','BORNEO','SUMATRA','GARUDA','RENDANG','GUDEG','BATIK','GAMELAN','WAYANG','MERAH','PUTIH','KEMERDEKAAN','PROKLAMASI','PANCASILA','BHINNEKA','NUSANTARA','MAJAPAHIT','SRIWIJAYA','MONAS','BOROBUDUR','PRAMBANAN','KRAKATAU','TANGKUBAN','KOMODO','ORANGUTAN','BADAK','HARIMAU','GAJAH','CENDRAWASIH','MERPATI','GULAI','SOTO','BAKSO','SATE','GORENG','NASI','MIE','RUJAK','LONTONG'];
+const HANGMAN=[' ____\n |  |\n |\n |\n |\n_|_',' ____\n |  |\n |  O\n |\n |\n_|_',' ____\n |  |\n |  O\n |  |\n |\n_|_',' ____\n |  |\n |  O\n | /|\n |\n_|_',' ____\n |  |\n |  O\n | /|\\\n |\n_|_',' ____\n |  |\n |  O\n | /|\\\n | /\n_|_',' ____\n |  |\n |  O\n | /|\\\n | / \\\n_|_'];
+let scores=JSON.parse(localStorage.hangmanScores||'{"w":0,"l":0}');
+let word,guessed,wrong;
+function init(){word=WORDS[Math.floor(Math.random()*WORDS.length)];guessed=new Set();wrong=0;document.getElementById('msg').textContent='';document.getElementById('wrong').textContent=0;render();}
+function render(){const wd=word.split('').map(l=>guessed.has(l)?l:'_').join(' ');document.getElementById('word').textContent=wd;document.getElementById('hangman').textContent=HANGMAN[wrong];document.getElementById('wins').textContent=scores.w;document.getElementById('losses').textContent=scores.l;const kb=document.getElementById('keyboard');kb.innerHTML='';for(const c of 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'){const b=document.createElement('button');b.className='key';b.textContent=c;if(guessed.has(c)){b.disabled=true;b.classList.add(word.includes(c)?'correct':'wrong');}b.onclick=()=>guess(c);kb.appendChild(b);}if(!wd.includes('_')){scores.w++;localStorage.hangmanScores=JSON.stringify(scores);document.getElementById('msg').textContent='🎉 Menang!';return;}if(wrong>=6){scores.l++;localStorage.hangmanScores=JSON.stringify(scores);document.getElementById('msg').textContent='💀 Kalah! Kata: '+word;}}
+function guess(c){if(guessed.has(c)||wrong>=6||!word.split('').some(l=>!guessed.has(l)))return;guessed.add(c);if(!word.includes(c)){wrong++;document.getElementById('wrong').textContent=wrong;}render();}
+window.addEventListener('keydown',e=>{const c=e.key.toUpperCase();if(c.length===1&&c>='A'&&c<='Z')guess(c);});
+document.getElementById('restart').onclick=init;init();
+</script></body></html>

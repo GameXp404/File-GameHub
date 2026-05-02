@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Slot Demo 5 Reel (Offline)</title>
+
+<style>
+:root{
+  --bg1:#7a0000; --bg2:#1a0000; --gold:#ffd700; --panel:#8b0000; --deep:#2a0000;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; font-family:system-ui,Arial; color:var(--gold);
+  background: radial-gradient(circle at 50% 10%, var(--bg1), var(--bg2));
+}
+.wrap{max-width:560px;margin:10px auto 20px;padding:10px}
+.title{font-weight:800;text-align:center;letter-spacing:.5px}
+
+.slot{
+  margin-top:10px; padding:14px; border-radius:18px;
+  background:linear-gradient(#8b0000,#5a0000);
+  box-shadow:0 0 30px rgba(255,215,0,.35), inset 0 0 20px rgba(0,0,0,.4);
+}
+
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.badge{background:#3b0000;border:1px solid var(--gold);padding:6px 10px;border-radius:999px;font-weight:700}
+
+.reels{display:flex;gap:8px;justify-content:space-between}
+.reel{
+  width:18%; height:110px; overflow:hidden; border-radius:12px;
+  border:2px solid var(--gold); background:var(--deep); position:relative;
+}
+.track{position:absolute;left:0;top:0;width:100%}
+.symbol{
+  height:110px; display:flex; align-items:center; justify-content:center;
+  font-size:42px; filter:drop-shadow(0 2px 2px #000);
+}
+
+/* win glow */
+.winGlow{
+  animation: glow 1s ease-in-out infinite alternate;
+}
+@keyframes glow{
+  from{box-shadow:0 0 6px rgba(255,215,0,.6), inset 0 0 8px rgba(255,215,0,.2)}
+  to{box-shadow:0 0 16px rgba(255,215,0,1), inset 0 0 14px rgba(255,215,0,.35)}
+}
+
+.controls{
+  margin-top:12px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;
+}
+.btn{
+  border:none; border-radius:10px; padding:12px; font-weight:800; cursor:pointer;
+}
+.spin{background:var(--gold); color:#111}
+.auto{background:#ff9f1a; color:#111}
+.stop{background:#ff4d4f; color:#fff}
+
+.panel{
+  margin-top:10px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;
+}
+.card{
+  background:#3b0000;border:1px solid var(--gold);border-radius:10px;padding:8px;text-align:center
+}
+.small{font-size:12px;opacity:.85}
+
+.footer{margin-top:10px;text-align:center;font-size:12px;opacity:.8}
+</style>
+</head>
+
+<body>
+<a href="../../index.html" style="position:fixed;top:10px;left:10px;z-index:5000;background:#6b46ff;color:#fff;padding:8px 14px;border-radius:6px;text-decoration:none;font-family:Arial;font-size:13px;border:2px solid #fff;box-shadow:0 2px 10px rgba(0,0,0,0.5);font-weight:600;">← Kembali ke Hub</a>
+<div class="wrap">
+  <div class="title">财神报喜 – DEMO 5 REEL 🎰</div>
+
+  <div class="slot">
+    <div class="topbar">
+      <div class="badge">Saldo: <span id="bal">2000</span></div>
+      <div class="badge">Bet: <span id="bet">50</span></div>
+      <div class="badge">Win: <span id="win">0</span></div>
+    </div>
+
+    <div class="reels" id="reels"></div>
+
+    <div class="controls">
+      <button class="btn spin" id="spinBtn">SPIN</button>
+      <button class="btn auto" id="autoBtn">AUTO x10</button>
+      <button class="btn stop" id="stopBtn">STOP</button>
+    </div>
+
+    <div class="panel">
+      <div class="card"><div class="small">Payline</div><b>1 (tengah)</b></div>
+      <div class="card"><div class="small">Match ≥3</div><b>Menang</b></div>
+      <div class="card"><div class="small">Jackpot</div><b>5 Sama</b></div>
+    </div>
+
+    <div class="footer">Demo offline untuk hiburan. Tidak ada transaksi nyata.</div>
+  </div>
+</div>
+
+<script>
+/** ====== CONFIG ====== **/
+const SYMBOLS = ["🧧","💰","🏮","👲","💎","🪙","🎎"];
+const REEL_COUNT = 5;
+const ROW_H = 110; // px
+const LOOP_LEN = 20; // jumlah symbol per reel (loop)
+const SPIN_TIME_BASE = 900; // ms
+const SPIN_TIME_STEP = 180; // delay antar reel
+const BET = 50;
+
+/** ====== STATE ====== **/
+let balance = 2000;
+let winNow = 0;
+let isSpinning = false;
+let autoLeft = 0;
+let rafs = []; // requestAnimationFrame ids
+
+/** ====== AUDIO (offline via WebAudio) ====== **/
+const ctx = new (window.AudioContext||window.webkitAudioContext)();
+function beep(freq=440, dur=0.08, type='sine', gain=0.02){
+  const o = ctx.createOscillator(); const g = ctx.createGain();
+  o.type = type; o.frequency.value = freq;
+  o.connect(g); g.connect(ctx.destination);
+  g.gain.value = gain;
+  o.start();
+  setTimeout(()=>o.stop(), dur*1000);
+}
+function sfxSpin(){ beep(220,0.06,'square',0.02); }
+function sfxStop(){ beep(120,0.05,'triangle',0.02); }
+function sfxWin(){ [440,660,880].forEach((f,i)=>setTimeout(()=>beep(f,0.12,'sine',0.03), i*80)); }
+
+/** ====== BUILD UI ====== **/
+const reelsEl = document.getElementById('reels');
+const reelEls = [];
+for(let i=0;i<REEL_COUNT;i++){
+  const r = document.createElement('div'); r.className='reel';
+  const t = document.createElement('div'); t.className='track';
+  r.appendChild(t); reelsEl.appendChild(r);
+  reelEls.push({root:r, track:t, pos:0, speed:0, running:false});
+  fillTrack(t);
+}
+function fillTrack(track){
+  track.innerHTML='';
+  for(let i=0;i<LOOP_LEN;i++){
+    const d=document.createElement('div');
+    d.className='symbol';
+    d.textContent = rand();
+    track.appendChild(d);
+  }
+}
+function rand(){ return SYMBOLS[Math.floor(Math.random()*SYMBOLS.length)]; }
+
+/** ====== ANIMATION ====== **/
+function spin(){
+  if(isSpinning) return;
+  if(balance < BET) return alert('Saldo tidak cukup');
+  isSpinning = true;
+  winNow = 0; setWin(0);
+  balance -= BET; setBal(balance);
+
+  // start each reel with delay
+  reelEls.forEach((r,idx)=>{
+    setTimeout(()=>startReel(r), idx*SPIN_TIME_STEP);
+    setTimeout(()=>stopReel(r), SPIN_TIME_BASE + idx*SPIN_TIME_STEP);
+  });
+
+  // finalize
+  const totalTime = SPIN_TIME_BASE + (REEL_COUNT-1)*SPIN_TIME_STEP + 200;
+  setTimeout(()=>{
+    isSpinning = false;
+    evaluate();
+    if(autoLeft>0){ autoLeft--; spin(); }
+  }, totalTime);
+}
+
+function startReel(r){
+  r.running = true;
+  r.speed = 18 + Math.random()*6; // px per frame
+  loop(r);
+  sfxSpin();
+}
+
+function loop(r){
+  const step = ()=>{
+    if(!r.running) return;
+    r.pos += r.speed;
+    if(r.pos >= ROW_H*(LOOP_LEN-1)){
+      // recycle
+      fillTrack(r.track);
+      r.pos = 0;
+    }
+    r.track.style.transform = `translateY(${-r.pos}px)`;
+    const id = requestAnimationFrame(step);
+    rafs.push(id);
+  };
+  step();
+}
+
+function stopReel(r){
+  // decelerate
+  const start = performance.now();
+  const dur = 220 + Math.random()*120;
+  const startSpeed = r.speed;
+
+  function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
+
+  function decel(now){
+    const t = Math.min(1, (now-start)/dur);
+    r.speed = startSpeed * (1 - easeOutCubic(t));
+    if(t < 1){
+      const id = requestAnimationFrame(decel); rafs.push(id);
+    }else{
+      r.running = false;
+      // snap to nearest row (center line)
+      const idx = Math.round(r.pos / ROW_H);
+      r.pos = idx * ROW_H;
+      r.track.style.transform = `translateY(${-r.pos}px)`;
+      sfxStop();
+    }
+  }
+  requestAnimationFrame(decel);
+}
+
+/** ====== RESULT ====== **/
+function getCenterSymbols(){
+  // ambil symbol pada posisi tengah (row ke-1 index 1) ~ karena kita hanya 1 row tampilan
+  return reelEls.map(r=>{
+    const idx = Math.round(r.pos/ROW_H);
+    const node = r.track.children[idx];
+    return node ? node.textContent : rand();
+  });
+}
+
+function evaluate(){
+  const res = getCenterSymbols();
+  const count = {};
+  res.forEach(s=>count[s]=(count[s]||0)+1);
+  const max = Math.max(...Object.values(count));
+
+  let win = 0; let msg='';
+  if(max === 5){ win = 800; msg='🔥 MEGA JACKPOT!'; }
+  else if(max === 4){ win = 300; msg='✨ BIG WIN!'; }
+  else if(max === 3){ win = 120; msg='👍 MENANG!'; }
+  else { msg='❌ Coba lagi'; }
+
+  setWin(win); winNow = win;
+  balance += win; setBal(balance);
+
+  highlight(res);
+  if(win>0) sfxWin();
+}
+
+function highlight(res){
+  // clear
+  reelEls.forEach(r=>r.root.classList.remove('winGlow'));
+  // cari simbol terbanyak
+  const freq = {};
+  res.forEach(s=>freq[s]=(freq[s]||0)+1);
+  const target = Object.keys(freq).sort((a,b)=>freq[b]-freq[a])[0];
+  if(freq[target] < 3) return;
+
+  reelEls.forEach((r,i)=>{
+    if(res[i]===target) r.root.classList.add('winGlow');
+  });
+}
+
+/** ====== UI BIND ====== **/
+const spinBtn = document.getElementById('spinBtn');
+const autoBtn = document.getElementById('autoBtn');
+const stopBtn = document.getElementById('stopBtn');
+
+spinBtn.onclick = ()=>{ ctx.resume(); spin(); };
+autoBtn.onclick = ()=>{ ctx.resume(); if(isSpinning) return; autoLeft = 10; spin(); };
+stopBtn.onclick = ()=>{
+  autoLeft = 0;
+  reelEls.forEach(r=> r.running=false);
+  isSpinning = false;
+};
+
+function setBal(v){ document.getElementById('bal').textContent = v; }
+function setWin(v){ document.getElementById('win').textContent = v; }
+
+/** ====== INIT ====== **/
+setBal(balance); setWin(0);
+</script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="id"><head>
+<meta charset="UTF-8" /><title>💣 Minesweeper</title>
+<link rel="stylesheet" href="game.css" />
+<style>
+  .grid{display:inline-grid;grid-template-columns:repeat(9,32px);gap:2px;background:#444;padding:4px;border-radius:6px;}
+  .cell{width:32px;height:32px;background:#666;border:2px outset #888;cursor:pointer;font-weight:bold;font-size:16px;display:flex;align-items:center;justify-content:center;color:#fff;user-select:none;}
+  .cell.open{background:#222;border:1px solid #444;cursor:default;}
+  .cell.mine{background:#b8000c;}
+  .cell.flag{background:#444;}
+  .c1{color:#3b82f6}.c2{color:#22c55e}.c3{color:#ef4444}.c4{color:#a855f7}.c5{color:#f97316}.c6{color:#06b6d4}.c7{color:#ec4899}.c8{color:#fbbf24}
+</style></head><body>
+<a href="../index.html" class="back-to-hub">← Kembali ke Hub</a>
+<div class="game-wrap">
+  <h1>💣 Minesweeper</h1>
+  <div class="subtitle">Klik buka sel. Klik kanan untuk flag 🚩. Hindari 10 ranjau!</div>
+  <div class="score-row">
+    <div class="score-box">Mines<b id="mines">10</b></div>
+    <div class="score-box">Flagged<b id="flagged">0</b></div>
+    <div class="score-box">Time<b id="time">0</b></div>
+  </div>
+  <div class="grid" id="grid"></div>
+  <div class="message" id="msg">Klik sel untuk mulai</div>
+  <button class="primary" id="restart">🔄 Game Baru</button>
+</div>
+<script>
+const SIZE=9,MINES=10;let grid,opened,flags,gameOver,timer,seconds,started;
+function init(){grid=Array.from({length:SIZE},()=>Array(SIZE).fill(0));opened=Array.from({length:SIZE},()=>Array(SIZE).fill(false));flags=Array.from({length:SIZE},()=>Array(SIZE).fill(false));gameOver=false;started=false;seconds=0;clearInterval(timer);document.getElementById('time').textContent='0';document.getElementById('flagged').textContent='0';document.getElementById('msg').textContent='Klik sel untuk mulai';let placed=0;while(placed<MINES){const r=Math.floor(Math.random()*SIZE),c=Math.floor(Math.random()*SIZE);if(grid[r][c]===0){grid[r][c]=-1;placed++;}}for(let r=0;r<SIZE;r++)for(let c=0;c<SIZE;c++){if(grid[r][c]===-1)continue;let n=0;for(let dr=-1;dr<=1;dr++)for(let dc=-1;dc<=1;dc++){const nr=r+dr,nc=c+dc;if(nr>=0&&nr<SIZE&&nc>=0&&nc<SIZE&&grid[nr][nc]===-1)n++;}grid[r][c]=n;}render();}
+function render(){const el=document.getElementById('grid');el.innerHTML='';for(let r=0;r<SIZE;r++)for(let c=0;c<SIZE;c++){const d=document.createElement('div');d.className='cell';if(opened[r][c]){d.classList.add('open');if(grid[r][c]===-1){d.classList.add('mine');d.textContent='💣';}else if(grid[r][c]>0){d.textContent=grid[r][c];d.classList.add('c'+grid[r][c]);}}else if(flags[r][c]){d.classList.add('flag');d.textContent='🚩';}d.onclick=()=>open(r,c);d.oncontextmenu=e=>{e.preventDefault();flag(r,c);};el.appendChild(d);}}
+function open(r,c){if(gameOver||opened[r][c]||flags[r][c])return;if(!started){started=true;timer=setInterval(()=>{seconds++;document.getElementById('time').textContent=seconds;},1000);}opened[r][c]=true;if(grid[r][c]===-1){gameOver=true;clearInterval(timer);for(let i=0;i<SIZE;i++)for(let j=0;j<SIZE;j++)if(grid[i][j]===-1)opened[i][j]=true;document.getElementById('msg').textContent='💀 BOOM! Klik Game Baru';render();return;}if(grid[r][c]===0){for(let dr=-1;dr<=1;dr++)for(let dc=-1;dc<=1;dc++){const nr=r+dr,nc=c+dc;if(nr>=0&&nr<SIZE&&nc>=0&&nc<SIZE&&!opened[nr][nc])open(nr,nc);}}render();checkWin();}
+function flag(r,c){if(gameOver||opened[r][c])return;flags[r][c]=!flags[r][c];const n=flags.flat().filter(v=>v).length;document.getElementById('flagged').textContent=n;render();}
+function checkWin(){let opened_count=0;for(let r=0;r<SIZE;r++)for(let c=0;c<SIZE;c++)if(opened[r][c]&&grid[r][c]!==-1)opened_count++;if(opened_count===SIZE*SIZE-MINES){gameOver=true;clearInterval(timer);document.getElementById('msg').textContent=`🎉 Menang dalam ${seconds} detik!`;}}
+document.getElementById('restart').onclick=init;init();
+</script></body></html>
