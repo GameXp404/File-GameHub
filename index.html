@@ -102,37 +102,79 @@
   .sidebar::-webkit-scrollbar { width: 6px; }
   .sidebar::-webkit-scrollbar-thumb { background: #6b46ff; border-radius: 3px; }
   .brand {
-    display: flex; align-items: center; gap: 8px;
-    padding: 8px 20px 18px;
-    font-size: 22px; font-weight: 800;
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 14px 18px;
+    margin: 0 8px;
+    font-size: 22px; font-weight: 900;
     background: linear-gradient(135deg, #ff66b3, #6b46ff);
     -webkit-background-clip: text; background-clip: text;
     color: transparent;
   }
   .brand-icon {
     background: linear-gradient(135deg, #ff66b3, #6b46ff);
-    width: 32px; height: 32px; border-radius: 8px;
+    width: 38px; height: 38px; border-radius: 10px;
     display: flex; align-items: center; justify-content: center;
-    color: #fff; font-size: 18px; -webkit-text-fill-color: #fff;
+    color: #fff; font-size: 20px; -webkit-text-fill-color: #fff;
+    box-shadow: 0 4px 12px rgba(255, 102, 179, 0.4);
   }
+  /* Sidebar nav-item = gradient pill button (seperti tombol "Mulai Main") */
   .nav-item {
     display: flex; align-items: center; gap: 10px;
-    padding: 9px 20px;
-    cursor: pointer; font-size: 14px; color: #b8b8d4;
-    border-left: 3px solid transparent;
-    transition: all 0.15s;
+    padding: 10px 14px;
+    margin: 4px 10px;
+    cursor: pointer; font-size: 13px; color: #fff;
+    background: linear-gradient(135deg, var(--nav-c1, #6b46ff), var(--nav-c2, #ff66b3));
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 0.15s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
   }
-  .nav-item:hover { background: #1c2748; color: #fff; }
+  .nav-item:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+    filter: brightness(1.1);
+  }
   .nav-item.active {
-    background: #1c2748; color: #ff66b3;
-    border-left-color: #ff66b3; font-weight: 600;
+    border-color: #fff;
+    box-shadow: 0 0 0 2px var(--nav-c2, #ff66b3), 0 4px 14px rgba(0,0,0,0.5);
+    transform: translateY(-1px);
   }
-  .nav-item .icon { width: 20px; text-align: center; font-size: 15px; }
+  .nav-item .icon {
+    width: 28px; height: 28px; flex-shrink: 0;
+    background: rgba(255,255,255,0.2);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  }
   .nav-item .nav-count {
-    margin-left: auto; background: #6b46ff; color: #fff;
-    border-radius: 10px; padding: 1px 8px; font-size: 11px;
+    margin-left: auto;
+    background: rgba(0,0,0,0.4); color: #fff;
+    border-radius: 10px; padding: 2px 8px; font-size: 11px;
+    font-weight: 700;
   }
   .nav-divider { height: 1px; background: #2a2a4a; margin: 8px 16px; }
+
+  /* Per-menu gradients */
+  .nav-item[data-cat="all"]        { --nav-c1: #6b46ff; --nav-c2: #ff66b3; }
+  .nav-item[data-cat="trending"]   { --nav-c1: #f59e0b; --nav-c2: #ef4444; }
+  .nav-item[data-cat="new"]        { --nav-c1: #10b981; --nav-c2: #14b8a6; }
+  .nav-item[data-cat="originals"]  { --nav-c1: #8b5cf6; --nav-c2: #ec4899; }
+  .nav-item[data-cat="favorites"]  { --nav-c1: #ec4899; --nav-c2: #f43f5e; }
+  .nav-item[data-cat="recent"]     { --nav-c1: #06b6d4; --nav-c2: #0ea5e9; }
+  .nav-item[data-cat="action"]     { --nav-c1: #ef4444; --nav-c2: #f97316; }
+  .nav-item[data-cat="arcade"]     { --nav-c1: #6366f1; --nav-c2: #8b5cf6; }
+  .nav-item[data-cat="card"]       { --nav-c1: #b91c1c; --nav-c2: #dc2626; }
+  .nav-item[data-cat="word"]       { --nav-c1: #2a5a2a; --nav-c2: #00cc66; }
+  .nav-item[data-cat="clicker"]    { --nav-c1: #ffd700; --nav-c2: #f59e0b; }
+  .nav-item[data-cat="board"]      { --nav-c1: #2a2a4a; --nav-c2: #6b46ff; }
+  .nav-item[data-cat="puzzle"]     { --nav-c1: #d97706; --nav-c2: #ffaa00; }
+  .nav-item[data-cat="strategy"]   { --nav-c1: #7c3aed; --nav-c2: #a855f7; }
+  .nav-item[data-cat="trivia"]     { --nav-c1: #0891b2; --nav-c2: #06b6d4; }
+  .nav-item[data-cat="reflex"]     { --nav-c1: #fbbf24; --nav-c2: #f59e0b; }
 
   /* === TOPBAR === */
   main { padding: 0; }
