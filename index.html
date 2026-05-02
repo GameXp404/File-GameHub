@@ -463,6 +463,10 @@
       <div class="search-wrap">
         <input type="text" id="search" placeholder="Cari game dan kategori" />
       </div>
+      <div id="liveClock" style="background:#0f1729;border:1px solid #6b46ff;border-radius:8px;padding:6px 12px;font-family:'Courier New',monospace;text-align:right;line-height:1.2;min-width:140px;">
+        <div id="clockTime" style="color:#ff66b3;font-size:14px;font-weight:bold;letter-spacing:1px;">--:--:--</div>
+        <div id="clockDate" style="color:#8a8aaa;font-size:10px;">--, -- --- ---- - WIB</div>
+      </div>
       <div class="top-actions">
         <button class="icon-btn" id="notifBtn" title="Notifikasi">🔔<span class="dot" id="notifDot"></span></button>
         <button class="icon-btn" id="favBtn" title="Favorit">❤️</button>
@@ -492,6 +496,21 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- HERO BANNER (customizable, admin-editable) -->
+    <div id="heroBanner" style="margin:20px 24px 0;border-radius:14px;overflow:hidden;position:relative;min-height:200px;background:linear-gradient(135deg,#16213e,#0f1729);border:1px solid #2a2a4a;display:flex;align-items:center;justify-content:center;padding:30px;">
+      <div id="heroBannerBg" style="position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 0.3s;"></div>
+      <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(15,23,41,0.85) 100%);"></div>
+      <div style="position:relative;z-index:2;text-align:center;max-width:800px;">
+        <h1 id="heroTitle" style="font-size:42px;font-weight:900;background:linear-gradient(135deg,#ff66b3,#6b46ff);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:8px;line-height:1.1;">🎮 Selamat Datang di GameHub</h1>
+        <p id="heroSubtitle" style="color:#b8b8d4;font-size:16px;margin-bottom:14px;">22+ Game Online Gratis · No Download · Langsung Main</p>
+        <div id="heroButtons" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+          <button id="heroBtn1" style="background:linear-gradient(135deg,#ff66b3,#6b46ff);color:#fff;border:none;padding:10px 22px;border-radius:8px;font-weight:700;cursor:pointer;font-size:14px;">▶️ Mulai Main</button>
+          <button id="heroBtn2" style="background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.3);padding:10px 22px;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px;">📲 Install App</button>
+        </div>
+      </div>
+      <button id="editHeroBtn" style="display:none;position:absolute;top:10px;right:10px;background:#ff66b3;color:#fff;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:700;z-index:3;">✏️ Edit Banner</button>
     </div>
 
     <section>
@@ -618,6 +637,54 @@
       <p style="text-align:center;font-size:11px;color:#8a8aaa;margin-top:10px;">
         Sudah punya akun? <a href="#" id="switchToLogin" style="color:#ff66b3;">Login di sini</a>
       </p>
+    </div>
+  </div>
+</div>
+
+<!-- HERO BANNER EDIT MODAL (admin-only) -->
+<div class="modal-bg" id="heroEditModal">
+  <div class="modal" style="max-width:600px;">
+    <h2>✏️ Edit Hero Banner</h2>
+    <p class="modal-sub">Customize judul, subtitle, gambar background, dan tombol CTA banner depan.</p>
+
+    <div class="form-row">
+      <label>Judul Utama</label>
+      <input type="text" id="hb_title" maxlength="100" />
+    </div>
+    <div class="form-row">
+      <label>Subtitle</label>
+      <input type="text" id="hb_subtitle" maxlength="200" />
+    </div>
+    <div class="form-row">
+      <label>URL Gambar Background (opsional, kosongkan = pakai gradient default)</label>
+      <input type="text" id="hb_bg" placeholder="https://example.com/banner.jpg atau .gif" />
+      <div style="font-size:11px;color:#8a8aaa;margin-top:4px;">💡 Saran: gambar landscape 1920x600px atau lebih besar</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <div class="form-row">
+        <label>Tombol 1 - Teks</label>
+        <input type="text" id="hb_btn1text" placeholder="▶️ Mulai Main" maxlength="40" />
+      </div>
+      <div class="form-row">
+        <label>Tombol 1 - Link</label>
+        <input type="text" id="hb_btn1url" placeholder="games/cash-king.html atau https://..." />
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <div class="form-row">
+        <label>Tombol 2 - Teks</label>
+        <input type="text" id="hb_btn2text" placeholder="📲 Install App" maxlength="40" />
+      </div>
+      <div class="form-row">
+        <label>Tombol 2 - Link</label>
+        <input type="text" id="hb_btn2url" placeholder="URL atau kosongkan" />
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-primary" id="saveHeroBtn">💾 Simpan</button>
+      <button class="btn-secondary" id="resetHeroBtn">↩️ Reset Default</button>
+      <button class="btn-secondary" onclick="closeModal('heroEditModal')">Batal</button>
     </div>
   </div>
 </div>
@@ -2819,12 +2886,122 @@ function openWidgetEdit(idx) {
   toast(idx === -1 ? '✅ Widget ditambah' : '✅ Widget diupdate');
 }
 
+// ============ LIVE CLOCK ============
+function tickClock() {
+  const now = new Date();
+  // Format ke WIB (Jakarta time)
+  const time = now.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit', second:'2-digit', timeZone:'Asia/Jakarta', hour12:false });
+  const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+  const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+  const wib = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Jakarta' }));
+  const dateStr = `${days[wib.getDay()]}, ${wib.getDate()} ${months[wib.getMonth()]} ${wib.getFullYear()} - WIB`;
+  if ($('clockTime')) $('clockTime').textContent = time;
+  if ($('clockDate')) $('clockDate').textContent = dateStr;
+}
+setInterval(tickClock, 1000);
+
+// ============ HERO BANNER ============
+const HERO_STORE = 'gameHubHeroBanner';
+const DEFAULT_HERO = {
+  title: '🎮 Selamat Datang di GameHub',
+  subtitle: '22+ Game Online Gratis · No Download · Langsung Main',
+  bg: '',
+  btn1text: '▶️ Mulai Main',
+  btn1url: 'games/cash-king.html',
+  btn2text: '📲 Install App',
+  btn2url: ''
+};
+
+function getHero() {
+  return Object.assign({}, DEFAULT_HERO, JSON.parse(localStorage.getItem(HERO_STORE) || '{}'));
+}
+function saveHero(h) { localStorage.setItem(HERO_STORE, JSON.stringify(h)); }
+
+function applyHero() {
+  const h = getHero();
+  if ($('heroTitle')) $('heroTitle').textContent = h.title;
+  if ($('heroSubtitle')) $('heroSubtitle').textContent = h.subtitle;
+  if ($('heroBtn1')) {
+    $('heroBtn1').textContent = h.btn1text;
+    $('heroBtn1').onclick = () => { if (h.btn1url) window.open(h.btn1url, h.btn1url.startsWith('http') ? '_blank' : '_self'); };
+    $('heroBtn1').style.display = h.btn1text ? 'inline-block' : 'none';
+  }
+  if ($('heroBtn2')) {
+    $('heroBtn2').textContent = h.btn2text;
+    $('heroBtn2').onclick = () => { if (h.btn2url) window.open(h.btn2url, h.btn2url.startsWith('http') ? '_blank' : '_self'); };
+    $('heroBtn2').style.display = h.btn2text ? 'inline-block' : 'none';
+  }
+  const bg = $('heroBannerBg');
+  if (bg) {
+    if (h.bg) {
+      bg.style.backgroundImage = `url('${h.bg}')`;
+      bg.style.opacity = '0.7';
+    } else {
+      bg.style.backgroundImage = '';
+      bg.style.opacity = '0';
+    }
+  }
+  // Show edit button only for admin
+  if ($('editHeroBtn')) $('editHeroBtn').style.display = state.isAdmin ? 'block' : 'none';
+}
+
+function openHeroEdit() {
+  const h = getHero();
+  $('hb_title').value = h.title;
+  $('hb_subtitle').value = h.subtitle;
+  $('hb_bg').value = h.bg;
+  $('hb_btn1text').value = h.btn1text;
+  $('hb_btn1url').value = h.btn1url;
+  $('hb_btn2text').value = h.btn2text;
+  $('hb_btn2url').value = h.btn2url;
+  openModal('heroEditModal');
+}
+
+function saveHeroEdit() {
+  const h = {
+    title: $('hb_title').value || DEFAULT_HERO.title,
+    subtitle: $('hb_subtitle').value || DEFAULT_HERO.subtitle,
+    bg: $('hb_bg').value.trim(),
+    btn1text: $('hb_btn1text').value,
+    btn1url: $('hb_btn1url').value,
+    btn2text: $('hb_btn2text').value,
+    btn2url: $('hb_btn2url').value
+  };
+  saveHero(h);
+  applyHero();
+  closeModal('heroEditModal');
+  toast('✅ Hero banner diupdate');
+  if (typeof triggerAutoSync === 'function') triggerAutoSync('Edit hero banner');
+}
+
+function resetHero() {
+  if (!confirm('Reset banner ke default?')) return;
+  localStorage.removeItem(HERO_STORE);
+  applyHero();
+  closeModal('heroEditModal');
+  toast('↩️ Banner direset');
+}
+
+// Wire hero events
+$('editHeroBtn')?.addEventListener('click', openHeroEdit);
+$('saveHeroBtn')?.addEventListener('click', saveHeroEdit);
+$('resetHeroBtn')?.addEventListener('click', resetHero);
+
+// Update hero edit button visibility when admin status changes
+const oldUpdateAdminUI = updateAdminUI;
+window.updateAdminUI = function() {
+  oldUpdateAdminUI();
+  applyHero();
+};
+
 // ============ INIT ============
 updateAuthUI();
 updateAdminUI();
 renderChatMessages();
 updateChatGate();
 renderFloatingWidgets();
+tickClock();
+applyHero();
 $('chatLoginBtn')?.addEventListener('click', () => openModal('loginModal'));
 $('chatSendBtn')?.addEventListener('click', postChatMessage);
 $('chatInput')?.addEventListener('keypress', e => { if (e.key === 'Enter') postChatMessage(); });
