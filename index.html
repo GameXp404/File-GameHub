@@ -904,9 +904,20 @@
 
         <!-- LINK -->
         <div style="background:rgba(0,204,102,0.08);border-left:3px solid #00cc66;padding:10px;border-radius:4px;margin-bottom:12px;">
-          <div style="font-size:11px;color:#00cc66;text-transform:uppercase;font-weight:700;margin-bottom:8px;">🔗 Link & Status</div>
+          <div style="font-size:11px;color:#00cc66;text-transform:uppercase;font-weight:700;margin-bottom:8px;">🔗 Link & Tipe Game</div>
           <div class="form-row">
-            <label>URL Game *</label>
+            <label>Tipe Game</label>
+            <select id="ge_type" style="width:100%;background:#0f1729;color:#fff;border:1px solid #2a2a4a;padding:10px;border-radius:6px;font-size:14px;">
+              <option value="web">🌐 Web Game (HTML5, langsung main di browser)</option>
+              <option value="steam">🎮 Steam (launch via steam:// protocol)</option>
+              <option value="cloud">☁️ Cloud Gaming (Xbox, GeForce Now, Boosteroid)</option>
+              <option value="download">⬇️ Download / Install (.exe, .apk, installer)</option>
+              <option value="launcher">🚀 Other Launcher (Epic, Battle.net, Origin, dll)</option>
+            </select>
+            <div id="ge_typeHelp" style="font-size:11px;color:#8a8aaa;margin-top:4px;"></div>
+          </div>
+          <div class="form-row">
+            <label id="ge_urlLabel">URL Game *</label>
             <input type="text" id="ge_url" placeholder="games/xxx.html atau https://..." />
           </div>
           <div style="display:flex;gap:18px;flex-wrap:wrap;font-size:13px;">
@@ -1322,8 +1333,12 @@ function render() {
       thumbHtml = `<div class="card-thumb" style="background:${g.grad};">${g.emoji}</div>`;
     }
     const titleAttr = g.desc ? ` title="${g.desc.replace(/"/g, '&quot;')}"` : '';
+    // Icon untuk tipe game (non-web)
+    const TYPE_ICONS = { steam: '🎮', cloud: '☁️', download: '⬇️', launcher: '🚀' };
+    const typeIcon = g.gameType && TYPE_ICONS[g.gameType] ? `<span style="position:absolute;top:6px;right:42px;background:rgba(0,0,0,0.75);color:#fff;padding:2px 6px;border-radius:10px;font-size:11px;z-index:2;" title="${g.gameType}">${TYPE_ICONS[g.gameType]}</span>` : '';
     card.innerHTML = `
       ${g.badge ? `<span class="badge ${g.badge}">${g.soon ? 'Segera' : g.badge}</span>` : ''}
+      ${typeIcon}
       ${!g.soon ? `<button class="fav-btn ${faved ? 'faved' : ''}" data-id="${g.id}" data-title="${g.title}" title="Favorit">${faved ? '❤️' : '🤍'}</button>` : ''}
       ${thumbHtml}
       <div class="card-overlay"${titleAttr}>
@@ -1610,6 +1625,8 @@ function openGameEdit(idx) {
   $('ge_badge').value = g.badge || '';
   $('ge_soon').checked = !!g.soon;
   $('ge_external').checked = !!g.external;
+  $('ge_type').value = g.gameType || 'web';
+  updateTypeHelp();
   $('ge_tags').value = (g.tags || []).filter(t => !POPULAR_TAGS.includes(t)).join(',');
   $('ge_difficulty').value = g.difficulty || '';
   $('ge_players').value = g.players || '';
@@ -1664,6 +1681,41 @@ function toggleThumbBlocks() {
   $('ge_urlBlock').style.display    = t === 'url'    ? 'block' : 'none';
   $('ge_uploadBlock').style.display = t === 'upload' ? 'block' : 'none';
   updatePreview();
+}
+
+const TYPE_HELP = {
+  web: '✅ HTML5 game di-host di project. URL: <code>games/nama.html</code> atau <code>https://...</code>',
+  steam: '🎮 Format URL: <code>steam://run/271590</code> (271590 = Steam App ID GTA V). Cari ID di steamdb.info. <b>User WAJIB punya Steam ter-install + game owned.</b>',
+  cloud: '☁️ URL ke cloud gaming service. Contoh:<br>Xbox: <code>https://www.xbox.com/play/games/gta-v/9P5LTPR67SHN</code><br>GeForce Now: <code>https://play.geforcenow.com/games/...</code>',
+  download: '⬇️ URL ke file installer atau halaman download. Contoh: <code>https://store.epicgames.com/.../free-game</code>',
+  launcher: '🚀 Protocol launcher. Contoh:<br>Epic: <code>com.epicgames.launcher://store/...</code><br>Battle.net: <code>battlenet://WoW</code>'
+};
+
+function updateTypeHelp() {
+  const type = $('ge_type').value;
+  $('ge_typeHelp').innerHTML = TYPE_HELP[type] || '';
+  // Auto-set external for non-web types
+  if (type !== 'web') {
+    $('ge_external').checked = true;
+  }
+  // Update URL label
+  const labels = {
+    web: 'URL Game / Path lokal *',
+    steam: 'Steam Protocol URL *',
+    cloud: 'Cloud Gaming URL *',
+    download: 'Download URL *',
+    launcher: 'Launcher Protocol URL *'
+  };
+  $('ge_urlLabel').textContent = labels[type] || 'URL *';
+  // Update placeholder
+  const placeholders = {
+    web: 'games/xxx.html atau https://...',
+    steam: 'steam://run/271590',
+    cloud: 'https://www.xbox.com/play/games/...',
+    download: 'https://example.com/installer.exe',
+    launcher: 'com.epicgames.launcher://store/...'
+  };
+  $('ge_url').placeholder = placeholders[type] || '';
 }
 
 function updatePreview() {
@@ -1723,6 +1775,7 @@ function saveGame() {
   if ($('ge_badge').value) newGame.badge = $('ge_badge').value;
   if ($('ge_soon').checked) newGame.soon = true;
   if ($('ge_external').checked) newGame.external = true;
+  if ($('ge_type').value && $('ge_type').value !== 'web') newGame.gameType = $('ge_type').value;
   if ($('ge_difficulty').value) newGame.difficulty = $('ge_difficulty').value;
   if ($('ge_players').value) newGame.players = $('ge_players').value;
   if (ctl.length) newGame.controls = ctl;
@@ -2062,6 +2115,7 @@ function generateGamesArrayString(games) {
     if (g.thumbType && g.thumbType !== 'emoji') parts.push(`thumbType:'${g.thumbType}'`);
     if (g.thumbUrl) parts.push(`thumbUrl:${JSON.stringify(g.thumbUrl)}`);
     if (g.thumbData && g.thumbData.length < 50000) parts.push(`thumbData:${JSON.stringify(g.thumbData)}`);
+    if (g.gameType && g.gameType !== 'web') parts.push(`gameType:'${g.gameType}'`);
     return '  { ' + parts.join(', ') + ' },';
   });
   return 'const GAMES = [\n' + lines.join('\n') + '\n];';
@@ -2127,6 +2181,7 @@ $('bulkLoadCurrent').addEventListener('click', () => {
   $(id).addEventListener('change', updatePreview);
 });
 $('ge_thumbType').addEventListener('change', toggleThumbBlocks);
+$('ge_type').addEventListener('change', updateTypeHelp);
 // Quick emoji picker
 document.querySelectorAll('.quick-emoji').forEach(el => {
   el.addEventListener('click', () => { $('ge_emoji').value = el.dataset.e; updatePreview(); });
