@@ -592,7 +592,8 @@
       <button class="btn-primary" id="layoutBtn" style="flex:0;background:linear-gradient(135deg,#00d4ff,#6b46ff);">🎨 Layout Manual</button>
       <button class="btn-primary" id="changePassBtn" style="flex:0;background:linear-gradient(135deg,#ffaa00,#ff3030);">🔑 Ganti Password</button>
       <button class="btn-secondary" id="exportBtn">📋 Export JSON</button>
-      <button class="btn-secondary" id="resetGamesBtn">↩️ Reset Games</button>
+      <button class="btn-secondary" id="clearCookiesBtn" style="border-color:#00d4ff;color:#00d4ff;" title="Hapus data login, favorit, riwayat main, skor — TIDAK menghapus game">🍪 Hapus Cookies Player</button>
+      <button class="btn-secondary" id="resetGamesBtn" style="border-color:#ff3030;color:#ff6666;" title="⚠️ HAPUS semua game yang ditambah via admin, kembali ke daftar default">⚠️ Reset Daftar Game</button>
       <button class="btn-secondary" id="adminLogoutBtn" style="margin-left:auto;border-color:#ff3030;color:#ff6666;">🚪 Keluar Admin</button>
     </div>
 
@@ -1692,12 +1693,60 @@ function deleteGame(idx) {
 }
 
 function resetGames() {
-  if (!confirm('Reset ke daftar game default? Semua perubahan lokal hilang.')) return;
+  const msg = '⚠️ PERHATIAN — Tindakan ini akan:\n\n' +
+    '✗ Menghapus SEMUA game yang Anda tambah via admin\n' +
+    '✗ Mengembalikan daftar ke default (sesuai source code)\n\n' +
+    'TIDAK menghapus:\n' +
+    '✓ Layout settings (warna, brand, dll)\n' +
+    '✓ Login admin\n' +
+    '✓ Cookies player (favorit, riwayat)\n\n' +
+    'Lanjut RESET DAFTAR GAME ke default?';
+  if (!confirm(msg)) return;
   state.gamesOverride = null;
   localStorage.removeItem(STORE.gamesOverride);
   renderAdminPanel();
   render();
-  toast('↩️ Direset ke default');
+  toast('⚠️ Daftar game direset ke default source');
+}
+
+function clearCookiesPlayer() {
+  const msg = '🍪 Hapus Cookies Player?\n\n' +
+    'Akan dihapus:\n' +
+    '✗ Login user (kalau ada)\n' +
+    '✗ Favorit game (❤️)\n' +
+    '✗ Riwayat baru dimainkan\n' +
+    '✗ Notifikasi\n' +
+    '✗ Skor & progress di tiap game (Cash King, Snake, dll)\n\n' +
+    'TIDAK dihapus:\n' +
+    '✓ Daftar game (game tetap ada)\n' +
+    '✓ Layout settings\n' +
+    '✓ Admin login & password\n\n' +
+    'Lanjut HAPUS COOKIES?';
+  if (!confirm(msg)) return;
+
+  // Clear core player data via STORE
+  const playerKeys = ['user','favs','activity','notifs'];
+  playerKeys.forEach(k => {
+    localStorage.removeItem(STORE[k]);
+    if (k === 'user') state.user = null;
+    else if (k === 'favs') state.favs = [];
+    else if (k === 'activity') state.activity = [];
+    else if (k === 'notifs') state.notifs = [];
+  });
+
+  // Clear individual game progress (kunci yang tidak punya prefix "gameHub")
+  const gameProgressKeys = [
+    'cashKingSave_v2','snakeBest','g2048Best','tttScores','memBest',
+    'rpsScores','whackBest','reactTimes','guessBest','tetrisBest',
+    'flappyBest','wordleBest','hangmanScores'
+  ];
+  gameProgressKeys.forEach(k => localStorage.removeItem(k));
+
+  updateAuthUI();
+  if ($('favCount')) $('favCount').textContent = 0;
+  updateNotifDot();
+  render();
+  toast('🍪 Cookies player dihapus — game tetap utuh');
 }
 
 function exportGames() {
@@ -1896,6 +1945,7 @@ $('ge_thumbFile').addEventListener('change', e => {
 });
 $('exportBtn').addEventListener('click', exportGames);
 $('resetGamesBtn').addEventListener('click', resetGames);
+$('clearCookiesBtn').addEventListener('click', clearCookiesPlayer);
 $('adminLogoutBtn').addEventListener('click', adminLogout);
 $('copyExportBtn').addEventListener('click', () => {
   $('exportText').select();
