@@ -88,7 +88,8 @@
   }
   a { color: inherit; text-decoration: none; }
 
-  .layout { display: grid; grid-template-columns: 220px 1fr; min-height: 100vh; }
+  .layout { display: grid; grid-template-columns: 220px 1fr 280px; min-height: 100vh; }
+  @media (max-width: 1400px) { .layout { grid-template-columns: 220px 1fr; } .right-sidebar { display: none; } }
 
   /* === SIDEBAR === */
   .sidebar {
@@ -501,7 +502,42 @@
       <div class="grid" id="grid"></div>
     </section>
   </main>
+
+  <!-- RIGHT SIDEBAR: Social + Chat -->
+  <aside class="right-sidebar" style="background:#16213e;border-left:1px solid #2a2a4a;padding:12px;display:flex;flex-direction:column;gap:10px;height:100vh;position:sticky;top:0;overflow-y:auto;">
+    <!-- Social Media Buttons -->
+    <a href="https://facebook.com" target="_blank" class="rs-btn" style="background:#fff;color:#1877f2;border-radius:8px;padding:14px;display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;font-weight:700;font-size:18px;border:2px solid #1877f2;">
+      <span style="font-size:28px;">📘</span> <span>Facebook</span>
+    </a>
+    <a href="https://wa.me/" target="_blank" class="rs-btn" style="background:#fff;color:#25d366;border-radius:8px;padding:14px;display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;font-weight:700;font-size:18px;border:2px solid #25d366;">
+      <span style="font-size:28px;">💬</span> <span>WhatsApp</span>
+    </a>
+    <a href="https://t.me/" target="_blank" class="rs-btn" style="background:#fff;color:#0088cc;border-radius:8px;padding:14px;display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;font-weight:700;font-size:18px;border:2px solid #0088cc;">
+      <span style="font-size:28px;">✈️</span> <span>Telegram</span>
+    </a>
+
+    <div style="background:#0f1729;border:1px solid #ff66b3;border-radius:8px;padding:10px;margin-top:6px;">
+      <div style="text-align:center;color:#ff66b3;font-size:11px;font-weight:700;margin-bottom:4px;">MODE LOGIN AKUN PENGUNJUNG</div>
+      <div style="text-align:center;color:#8a8aaa;font-size:10px;">mode lengkap dengan verifikasi akun baru</div>
+    </div>
+
+    <!-- Chat Tabs -->
+    <div style="background:#0f1729;border:1px solid #2a2a4a;border-radius:8px;padding:8px;flex:1;display:flex;flex-direction:column;min-height:300px;">
+      <div style="display:flex;gap:2px;margin-bottom:8px;border-bottom:1px solid #2a2a4a;">
+        <button class="chat-tab active" data-tab="chat" style="flex:1;background:none;border:none;color:#ff66b3;padding:6px;font-size:11px;cursor:pointer;border-bottom:2px solid #ff66b3;">Chat Room</button>
+        <button class="chat-tab" data-tab="info" style="flex:1;background:none;border:none;color:#8a8aaa;padding:6px;font-size:11px;cursor:pointer;border-bottom:2px solid transparent;">INDODAX Info</button>
+        <button class="chat-tab" data-tab="news" style="flex:1;background:none;border:none;color:#8a8aaa;padding:6px;font-size:11px;cursor:pointer;border-bottom:2px solid transparent;">News</button>
+      </div>
+      <div id="chatMessages" style="flex:1;overflow-y:auto;font-size:11px;line-height:1.5;max-height:300px;"></div>
+      <div style="display:flex;gap:4px;margin-top:6px;">
+        <input type="text" id="chatInput" placeholder="Masuk untuk menulis pesan..." style="flex:1;background:#000;border:1px solid #2a2a4a;color:#fff;padding:6px;border-radius:4px;font-size:11px;" />
+      </div>
+    </div>
+  </aside>
 </div>
+
+<!-- ============ FLOATING WIDGETS LAYER (admin-managed GIF/images) ============ -->
+<div id="floatingWidgetsLayer" style="position:fixed;inset:0;pointer-events:none;z-index:9000;"></div>
 
 <!-- LOGIN MODAL -->
 <div class="modal-bg" id="loginModal">
@@ -591,6 +627,7 @@
       <button class="btn-primary" id="bulkImportBtn" style="flex:0;background:linear-gradient(135deg,#00cc66,#00d4ff);">📥 Bulk Import</button>
       <button class="btn-primary" id="layoutBtn" style="flex:0;background:linear-gradient(135deg,#00d4ff,#6b46ff);">🎨 Layout Manual</button>
       <button class="btn-primary" id="changePassBtn" style="flex:0;background:linear-gradient(135deg,#ffaa00,#ff3030);">🔑 Ganti Password</button>
+      <button class="btn-primary" id="addWidgetBtn" style="flex:0;background:linear-gradient(135deg,#a855f7,#ec4899);" title="Tempel GIF/gambar floating yang bisa di-drag & resize">🖼️ Tempel GIF</button>
       <button class="btn-secondary" id="exportBtn">📋 Export JSON</button>
       <button class="btn-secondary" id="clearCookiesBtn" style="border-color:#00d4ff;color:#00d4ff;" title="Hapus data login, favorit, riwayat main, skor">🍪 Hapus Cookies Player</button>
       <button class="btn-secondary" id="ghSyncBtn" style="border-color:#00cc66;color:#00ff88;" title="Setup auto-sync ke GitHub">🔄 GitHub Sync</button>
@@ -1514,6 +1551,7 @@ function adminLogout() {
 }
 function updateAdminUI() {
   $('adminBtn').style.display = state.isAdmin ? 'flex' : 'none';
+  if (typeof renderFloatingWidgets === 'function') renderFloatingWidgets();
 }
 
 let editingGameIdx = -1;  // -1 = new game
@@ -2250,6 +2288,7 @@ $('oauthAdmin').addEventListener('click', () => {
 });
 $('layoutBtn').addEventListener('click', () => { closeModal('adminPanel'); openLayoutModal(); });
 $('changePassBtn').addEventListener('click', openChangePass);
+$('addWidgetBtn').addEventListener('click', () => openWidgetEdit(-1));
 $('savePassBtn').addEventListener('click', savePass);
 $('resetPassBtn').addEventListener('click', resetPass);
 $('exportPassBtn').addEventListener('click', exportPass);
@@ -2431,9 +2470,170 @@ function openDownloadModal(type) {
 $('playStoreBadge').addEventListener('click', e => { e.preventDefault(); openDownloadModal('play'); });
 $('appStoreBadge').addEventListener('click', e => { e.preventDefault(); openDownloadModal('app'); });
 
+// ============ CHAT MOCK ============
+const CHAT_DATA = {
+  chat: [
+    { user:'Candracantik23', color:'#ff66b3', msg:'update status post ig tag iklik aja haga beda' },
+    { user:'Candracantik23', color:'#ff66b3', msg:'nanti kalau pump semua eror lagu lemaaaa' },
+    { user:'Aagy', color:'#00ff88', msg:'@ibrahimaziz1051 mending cari koin yang sehat aja yang hidup bener' },
+    { user:'AryaAnay', color:'#00d4ff', msg:'FUN FUN di coin kong. Siap siap 300%' },
+    { user:'Aagy', color:'#00ff88', msg:'@ibrahimaziz1051 inget jangan fomo sekarang ini banyak banget yang beli di puncak sayang in duit juh' },
+    { user:'ibrahimaziz1051', color:'#ffaa00', msg:'@Aagyy siyap rdan laksanakan..' },
+    { user:'Aagy', color:'#00ff88', msg:'ada LINDA ama YUASA gila tess' },
+    { user:'DANA2005', color:'#a855f7', msg:'Lunc......simpen....xidoxxxxd...' },
+    { user:'Aagy', color:'#00ff88', msg:'@ibrahimaziz1051 nanti jam 8 ada koin pump' },
+    { user:'cbiper', color:'#ff66b3', msg:'koin pas dibuka MT nya sedih yekik harum nya, yg nyangkut sapa aja itu' },
+    { user:'Aagy', color:'#00ff88', msg:'@ibrahimaziz1051 cobs aja list ya jam 8 aku ga menjamin ada tapi pasti ada sih' },
+    { user:'ibrahimaziz1051', color:'#ffaa00', msg:'@Aagyy zenobnn kayanya gren tuh hu,' },
+    { user:'Aagy', color:'#00ff88', msg:'dimakan seller terus tuh' },
+    { user:'BangEleng', color:'#00d4ff', msg:'HNST INSTAN BUY KONG mau REBOUND KONG' },
+    { user:'BangEleng', color:'#00d4ff', msg:'HNST INSTAN BUY KONG' },
+  ],
+  info: [
+    { user:'INDODAX', color:'#ffaa00', msg:'📊 BTC: Rp 1.5 milyar (+2.3%)' },
+    { user:'INDODAX', color:'#ffaa00', msg:'📈 ETH: Rp 65 juta (+5.1%)' },
+    { user:'INDODAX', color:'#ffaa00', msg:'📉 DOGE: Rp 1.2 ribu (-1.5%)' },
+    { user:'INDODAX', color:'#ffaa00', msg:'⚡ Top Gainer: PEPE (+45%)' },
+  ],
+  news: [
+    { user:'News', color:'#ff66b3', msg:'🎮 GameHub update: 22 game baru ditambah!' },
+    { user:'News', color:'#ff66b3', msg:'📱 PWA support sudah aktif' },
+    { user:'News', color:'#ff66b3', msg:'🎯 Coming soon: Sudoku, Catur Mini' },
+  ]
+};
+let activeChatTab = 'chat';
+
+function renderChatMessages() {
+  const el = $('chatMessages');
+  if (!el) return;
+  const data = CHAT_DATA[activeChatTab] || [];
+  el.innerHTML = data.map(m =>
+    `<div style="margin-bottom:4px;"><b style="color:${m.color};">${m.user}:</b> <span style="color:#b8b8d4;">${m.msg}</span></div>`
+  ).join('');
+  el.scrollTop = el.scrollHeight;
+}
+
+document.querySelectorAll('.chat-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.chat-tab').forEach(b => {
+      b.style.color = '#8a8aaa';
+      b.style.borderBottomColor = 'transparent';
+    });
+    btn.style.color = '#ff66b3';
+    btn.style.borderBottomColor = '#ff66b3';
+    activeChatTab = btn.dataset.tab;
+    renderChatMessages();
+  });
+});
+
+// ============ FLOATING WIDGET (draggable + resizable) ============
+const WIDGET_STORE = 'gameHubFloatingWidgets';
+function getWidgets() { return JSON.parse(localStorage.getItem(WIDGET_STORE) || '[]'); }
+function saveWidgets(w) { localStorage.setItem(WIDGET_STORE, JSON.stringify(w)); }
+
+function renderFloatingWidgets() {
+  const layer = $('floatingWidgetsLayer');
+  if (!layer) return;
+  layer.innerHTML = '';
+  const widgets = getWidgets();
+  widgets.forEach((w, idx) => {
+    const div = document.createElement('div');
+    div.style.cssText = `position:absolute;left:${w.x}px;top:${w.y}px;width:${w.w}px;height:${w.h}px;pointer-events:auto;border:2px solid transparent;border-radius:8px;overflow:hidden;cursor:move;transition:border-color 0.15s;`;
+    div.dataset.idx = idx;
+    div.innerHTML = `
+      ${w.url ? `<a href="${w.url}" target="_blank" style="display:block;width:100%;height:100%;text-decoration:none;"><img src="${w.src}" style="width:100%;height:100%;object-fit:contain;display:block;" /></a>` : `<img src="${w.src}" style="width:100%;height:100%;object-fit:contain;display:block;" />`}
+      ${state.isAdmin ? `
+        <div class="widget-controls" style="position:absolute;top:0;right:0;display:flex;gap:2px;background:rgba(0,0,0,0.7);padding:2px;border-radius:0 0 0 6px;opacity:0;transition:opacity 0.15s;">
+          <button class="w-edit" data-idx="${idx}" style="background:#6b46ff;color:#fff;border:none;padding:2px 6px;border-radius:3px;font-size:10px;cursor:pointer;">✏️</button>
+          <button class="w-del" data-idx="${idx}" style="background:#ff3030;color:#fff;border:none;padding:2px 6px;border-radius:3px;font-size:10px;cursor:pointer;">🗑️</button>
+        </div>
+        <div class="resize-handle" data-idx="${idx}" style="position:absolute;bottom:0;right:0;width:16px;height:16px;background:#ff66b3;cursor:nwse-resize;border-radius:0 0 8px 0;"></div>
+      ` : ''}
+    `;
+    if (state.isAdmin) {
+      div.addEventListener('mouseenter', () => {
+        div.style.borderColor = '#ff66b3';
+        const c = div.querySelector('.widget-controls');
+        if (c) c.style.opacity = '1';
+      });
+      div.addEventListener('mouseleave', () => {
+        div.style.borderColor = 'transparent';
+        const c = div.querySelector('.widget-controls');
+        if (c) c.style.opacity = '0';
+      });
+      // Drag
+      div.addEventListener('mousedown', e => {
+        if (e.target.closest('.widget-controls') || e.target.closest('.resize-handle') || e.target.closest('a')) return;
+        e.preventDefault();
+        const startX = e.clientX, startY = e.clientY;
+        const origX = w.x, origY = w.y;
+        const onMove = me => {
+          w.x = origX + (me.clientX - startX);
+          w.y = origY + (me.clientY - startY);
+          div.style.left = w.x + 'px';
+          div.style.top = w.y + 'px';
+        };
+        const onUp = () => {
+          document.removeEventListener('mousemove', onMove);
+          document.removeEventListener('mouseup', onUp);
+          const widgets = getWidgets(); widgets[idx] = w; saveWidgets(widgets);
+        };
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onUp);
+      });
+      // Resize
+      const handle = div.querySelector('.resize-handle');
+      if (handle) handle.addEventListener('mousedown', e => {
+        e.stopPropagation(); e.preventDefault();
+        const startX = e.clientX, startY = e.clientY;
+        const origW = w.w, origH = w.h;
+        const onMove = me => {
+          w.w = Math.max(50, origW + (me.clientX - startX));
+          w.h = Math.max(50, origH + (me.clientY - startY));
+          div.style.width = w.w + 'px';
+          div.style.height = w.h + 'px';
+        };
+        const onUp = () => {
+          document.removeEventListener('mousemove', onMove);
+          document.removeEventListener('mouseup', onUp);
+          const widgets = getWidgets(); widgets[idx] = w; saveWidgets(widgets);
+        };
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onUp);
+      });
+      // Edit & Delete buttons
+      const editBtn = div.querySelector('.w-edit');
+      const delBtn = div.querySelector('.w-del');
+      if (editBtn) editBtn.onclick = e => { e.stopPropagation(); openWidgetEdit(idx); };
+      if (delBtn) delBtn.onclick = e => {
+        e.stopPropagation();
+        const widgets = getWidgets(); widgets.splice(idx, 1); saveWidgets(widgets);
+        renderFloatingWidgets(); toast('🗑️ Widget dihapus');
+      };
+    }
+    layer.appendChild(div);
+  });
+}
+
+function openWidgetEdit(idx) {
+  const widgets = getWidgets();
+  const w = idx === -1 ? { src:'', url:'', x:100, y:100, w:200, h:200 } : widgets[idx];
+  const src = prompt('URL gambar/GIF (https://...):', w.src);
+  if (src === null) return;
+  if (!src) return toast('❌ URL gambar wajib diisi');
+  const url = prompt('URL link saat di-klik (kosongkan kalau tidak ada):', w.url || '');
+  w.src = src; w.url = url || '';
+  if (idx === -1) widgets.push(w); else widgets[idx] = w;
+  saveWidgets(widgets);
+  renderFloatingWidgets();
+  toast(idx === -1 ? '✅ Widget ditambah' : '✅ Widget diupdate');
+}
+
 // ============ INIT ============
 updateAuthUI();
 updateAdminUI();
+renderChatMessages();
+renderFloatingWidgets();
 $('favCount').textContent = state.favs.length;
 updateNotifDot();
 render();
