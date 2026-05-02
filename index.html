@@ -551,27 +551,95 @@
 <div class="modal-bg" id="loginModal">
   <div class="modal">
     <h2>🎮 Masuk ke GameHub</h2>
-    <p class="modal-sub">Login untuk simpan favorit, statistik, dan progress</p>
 
-    <div class="oauth-row">
-      <button class="oauth-btn" id="oauthGoogle">🟢 Google</button>
-      <button class="oauth-btn" id="oauthGuest">👤 Guest</button>
-      <button class="oauth-btn" id="oauthAdmin" style="background:#ff66b3;color:#fff;">🛠️ Admin</button>
+    <!-- Tab switcher -->
+    <div style="display:flex;gap:0;margin-bottom:14px;border-bottom:2px solid #2a2a4a;">
+      <button class="auth-tab active" data-tab="login" style="flex:1;background:none;border:none;color:#ff66b3;padding:10px;cursor:pointer;font-weight:700;border-bottom:3px solid #ff66b3;font-size:14px;">🔓 Login</button>
+      <button class="auth-tab" data-tab="register" style="flex:1;background:none;border:none;color:#8a8aaa;padding:10px;cursor:pointer;font-weight:700;border-bottom:3px solid transparent;font-size:14px;">✨ Daftar Baru</button>
     </div>
-    <div class="divider">atau pakai email</div>
 
-    <div class="form-row">
-      <label>Nama</label>
-      <input type="text" id="inpName" placeholder="Nama tampilan kamu" maxlength="30" />
+    <!-- LOGIN TAB -->
+    <div id="loginTab">
+      <p class="modal-sub">Login untuk simpan favorit, chat, dan progress</p>
+      <div class="oauth-row">
+        <button class="oauth-btn" id="oauthGoogle">🟢 Google</button>
+        <button class="oauth-btn" id="oauthGuest">👤 Guest</button>
+        <button class="oauth-btn" id="oauthAdmin" style="background:#ff66b3;color:#fff;">🛠️ Admin</button>
+      </div>
+      <div class="divider">atau email + password</div>
+      <div class="form-row">
+        <label>Email</label>
+        <input type="email" id="inpEmail" placeholder="email@example.com" autocomplete="email" />
+      </div>
+      <div class="form-row">
+        <label>Password</label>
+        <input type="password" id="inpPass" placeholder="••••••••" autocomplete="current-password" />
+        <div class="err" id="errLogin"></div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-primary" id="doLogin">🔓 Masuk</button>
+        <button class="btn-secondary" onclick="closeModal('loginModal')">Batal</button>
+      </div>
+      <p style="text-align:center;font-size:11px;color:#8a8aaa;margin-top:10px;">
+        Belum punya akun? <a href="#" id="switchToRegister" style="color:#ff66b3;">Daftar di sini</a>
+      </p>
+    </div>
+
+    <!-- REGISTER TAB -->
+    <div id="registerTab" style="display:none;">
+      <p class="modal-sub">Buat akun baru — gratis, simpan progress di browser ini</p>
+      <div class="form-row">
+        <label>Nama Lengkap *</label>
+        <input type="text" id="regName" placeholder="Nama Anda" maxlength="30" autocomplete="name" />
+      </div>
+      <div class="form-row">
+        <label>Email *</label>
+        <input type="email" id="regEmail" placeholder="email@example.com" autocomplete="email" />
+      </div>
+      <div class="form-row">
+        <label>Password * (min 6 karakter)</label>
+        <input type="password" id="regPass" placeholder="••••••••" autocomplete="new-password" />
+      </div>
+      <div class="form-row">
+        <label>Konfirmasi Password *</label>
+        <input type="password" id="regPass2" placeholder="••••••••" autocomplete="new-password" />
+        <div class="err" id="errReg"></div>
+      </div>
+      <div class="form-row">
+        <label style="display:flex;align-items:center;gap:6px;font-size:12px;">
+          <input type="checkbox" id="regAgree" style="width:auto;" />
+          Saya setuju dengan <a href="#" style="color:#ff66b3;">Syarat & Ketentuan</a>
+        </label>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-primary" id="doRegister" style="background:linear-gradient(135deg,#00cc66,#6b46ff);">✨ Daftar</button>
+        <button class="btn-secondary" onclick="closeModal('loginModal')">Batal</button>
+      </div>
+      <p style="text-align:center;font-size:11px;color:#8a8aaa;margin-top:10px;">
+        Sudah punya akun? <a href="#" id="switchToLogin" style="color:#ff66b3;">Login di sini</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- EMAIL VERIFICATION MODAL (simulated) -->
+<div class="modal-bg" id="verifyModal">
+  <div class="modal">
+    <h2>📧 Verifikasi Email</h2>
+    <p class="modal-sub">Email konfirmasi terkirim (simulated). Masukkan kode 6 digit di bawah.</p>
+    <div style="background:#0f1729;border:1px solid #00cc66;padding:12px;border-radius:6px;margin-bottom:14px;text-align:center;">
+      <div style="font-size:11px;color:#8a8aaa;margin-bottom:4px;">📬 Kode verifikasi (untuk demo):</div>
+      <div id="verifyCode" style="font-size:32px;font-weight:bold;letter-spacing:8px;color:#00ff88;font-family:'Courier New',monospace;">------</div>
+      <div style="font-size:10px;color:#666;margin-top:4px;">⚠️ Mode demo: kode tampil langsung. Real version: kode dikirim via email.</div>
     </div>
     <div class="form-row">
-      <label>Email (opsional)</label>
-      <input type="email" id="inpEmail" placeholder="email@example.com" />
-      <div class="err" id="errLogin"></div>
+      <label>Masukkan kode 6 digit:</label>
+      <input type="text" id="verifyInput" maxlength="6" placeholder="123456" style="text-align:center;font-size:24px;letter-spacing:8px;font-family:monospace;" />
+      <div class="err" id="errVerify"></div>
     </div>
     <div class="modal-actions">
-      <button class="btn-primary" id="doLogin">Masuk</button>
-      <button class="btn-secondary" onclick="closeModal('loginModal')">Batal</button>
+      <button class="btn-primary" id="doVerify">✅ Verifikasi</button>
+      <button class="btn-secondary" id="resendCode">🔄 Kirim Ulang</button>
     </div>
   </div>
 </div>
@@ -1294,21 +1362,118 @@ function renderNotifs() {
   `).join('');
 }
 
-// ============ AUTH ============
-function login(name, email, source) {
-  if (!name || !name.trim()) { $('errLogin').textContent = 'Nama tidak boleh kosong'; return false; }
-  state.user = {
-    name: name.trim(),
-    email: (email || '').trim(),
-    source: source || 'email',
-    joinedAt: Date.now(),
-  };
+// ============ AUTH (registered users) ============
+const USERS_STORE = 'gameHubRegisteredUsers';
+function getUsers() { return JSON.parse(localStorage.getItem(USERS_STORE) || '[]'); }
+function saveUsers(u) { localStorage.setItem(USERS_STORE, JSON.stringify(u)); }
+function hashPass(s) { return btoa(unescape(encodeURIComponent(s + '_gamehub_salt'))); } // simple obfuscation, NOT secure (need backend for real)
+
+let pendingVerify = null; // { user, code }
+
+function login(name, email, source, password) {
+  if (source === 'email') {
+    // Real email login: validate against registered users
+    if (!email || !password) { $('errLogin').textContent = '❌ Email & password wajib'; return false; }
+    const users = getUsers();
+    const found = users.find(u => u.email.toLowerCase() === email.toLowerCase().trim());
+    if (!found) { $('errLogin').textContent = '❌ Email belum terdaftar. Klik "Daftar di sini"'; return false; }
+    if (found.password !== hashPass(password)) { $('errLogin').textContent = '❌ Password salah'; return false; }
+    if (!found.verified) { $('errLogin').textContent = '⚠️ Email belum diverifikasi'; pendingVerify = { user: found, code: found.verifyCode }; openVerify(); return false; }
+    state.user = { name: found.name, email: found.email, source: 'email', joinedAt: found.joinedAt };
+  } else {
+    // Guest / Google / Admin (no password validation needed)
+    if (!name || !name.trim()) { $('errLogin').textContent = 'Nama tidak boleh kosong'; return false; }
+    state.user = {
+      name: name.trim(),
+      email: (email || '').trim(),
+      source: source || 'email',
+      joinedAt: Date.now(),
+    };
+  }
   persist('user');
   closeModal('loginModal');
   updateAuthUI();
   toast(`👋 Selamat datang, ${state.user.name}!`);
   addNotif('🎉', 'Login berhasil', `Selamat datang di GameHub, ${state.user.name}!`);
   return true;
+}
+
+function register() {
+  const name = $('regName').value.trim();
+  const email = $('regEmail').value.trim().toLowerCase();
+  const pass = $('regPass').value;
+  const pass2 = $('regPass2').value;
+  const agree = $('regAgree').checked;
+  const err = $('errReg');
+  err.textContent = '';
+
+  if (!name) { err.textContent = '❌ Nama wajib'; return; }
+  if (!email || !/.+@.+\..+/.test(email)) { err.textContent = '❌ Email tidak valid'; return; }
+  if (pass.length < 6) { err.textContent = '❌ Password min 6 karakter'; return; }
+  if (pass !== pass2) { err.textContent = '❌ Konfirmasi password tidak cocok'; return; }
+  if (!agree) { err.textContent = '❌ Setujui Syarat & Ketentuan dulu'; return; }
+
+  const users = getUsers();
+  if (users.find(u => u.email.toLowerCase() === email)) {
+    err.textContent = '❌ Email sudah terdaftar. Login saja'; return;
+  }
+
+  const verifyCode = String(Math.floor(100000 + Math.random() * 900000));
+  const newUser = {
+    name, email,
+    password: hashPass(pass),
+    verified: false,
+    verifyCode,
+    joinedAt: Date.now()
+  };
+  users.push(newUser);
+  saveUsers(users);
+  pendingVerify = { user: newUser, code: verifyCode };
+  openVerify();
+  toast('📧 Email konfirmasi dikirim (lihat modal verifikasi)');
+}
+
+function openVerify() {
+  $('verifyCode').textContent = pendingVerify.code;
+  $('verifyInput').value = '';
+  $('errVerify').textContent = '';
+  closeModal('loginModal');
+  openModal('verifyModal');
+}
+
+function doVerify() {
+  const code = $('verifyInput').value.trim();
+  if (code !== pendingVerify.code) {
+    $('errVerify').textContent = '❌ Kode salah';
+    return;
+  }
+  // Mark user as verified
+  const users = getUsers();
+  const idx = users.findIndex(u => u.email === pendingVerify.user.email);
+  if (idx >= 0) { users[idx].verified = true; saveUsers(users); }
+  closeModal('verifyModal');
+  // Auto-login
+  state.user = {
+    name: pendingVerify.user.name,
+    email: pendingVerify.user.email,
+    source: 'email',
+    joinedAt: pendingVerify.user.joinedAt
+  };
+  persist('user');
+  updateAuthUI();
+  pendingVerify = null;
+  toast('✅ Email terverifikasi! Selamat datang');
+  addNotif('🎉', 'Akun terverifikasi', 'Welcome to GameHub!');
+}
+
+function switchAuthTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach(b => {
+    const isActive = b.dataset.tab === tab;
+    b.style.color = isActive ? '#ff66b3' : '#8a8aaa';
+    b.style.borderBottomColor = isActive ? '#ff66b3' : 'transparent';
+  });
+  $('loginTab').style.display = tab === 'login' ? 'block' : 'none';
+  $('registerTab').style.display = tab === 'register' ? 'block' : 'none';
 }
 function logout() {
   state.user = null;
@@ -1481,8 +1646,25 @@ $('clearNotif').addEventListener('click', e => {
 });
 
 // Login modal
-$('doLogin').addEventListener('click', () => login($('inpName').value, $('inpEmail').value, 'email'));
-$('inpName').addEventListener('keypress', e => { if (e.key === 'Enter') $('doLogin').click(); });
+$('doLogin').addEventListener('click', () => login(null, $('inpEmail').value, 'email', $('inpPass').value));
+$('inpPass').addEventListener('keypress', e => { if (e.key === 'Enter') $('doLogin').click(); });
+$('doRegister').addEventListener('click', register);
+$('regPass2').addEventListener('keypress', e => { if (e.key === 'Enter') $('doRegister').click(); });
+$('doVerify').addEventListener('click', doVerify);
+$('verifyInput').addEventListener('keypress', e => { if (e.key === 'Enter') $('doVerify').click(); });
+$('resendCode').addEventListener('click', () => {
+  if (!pendingVerify) return;
+  pendingVerify.code = String(Math.floor(100000 + Math.random() * 900000));
+  // update saved user
+  const users = getUsers();
+  const idx = users.findIndex(u => u.email === pendingVerify.user.email);
+  if (idx >= 0) { users[idx].verifyCode = pendingVerify.code; saveUsers(users); }
+  $('verifyCode').textContent = pendingVerify.code;
+  toast('🔄 Kode baru di-generate');
+});
+document.querySelectorAll('.auth-tab').forEach(b => b.addEventListener('click', () => switchAuthTab(b.dataset.tab)));
+$('switchToRegister').addEventListener('click', e => { e.preventDefault(); switchAuthTab('register'); });
+$('switchToLogin').addEventListener('click', e => { e.preventDefault(); switchAuthTab('login'); });
 $('oauthGoogle').addEventListener('click', () => {
   // simulated — real OAuth needs backend. Use user's email if remembered or prompt.
   const name = prompt('Untuk demo: ketik nama tampilan kamu');
