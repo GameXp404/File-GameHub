@@ -13,16 +13,20 @@
   .sub{text-align:center;color:#94a3b8;margin-bottom:20px;font-size:14px;}
   .panel{background:rgba(15,23,41,0.7);backdrop-filter:blur(15px);border:1px solid rgba(0,212,255,0.3);border-radius:14px;padding:22px;margin-bottom:18px;}
   .panel h2{margin-top:0;font-size:18px;color:#00d4ff;}
-  .drop{border:3px dashed rgba(0,212,255,0.5);border-radius:12px;padding:40px 20px;text-align:center;cursor:pointer;transition:all 0.2s;background:rgba(0,212,255,0.05);}
+  .drop{border:3px dashed rgba(0,212,255,0.5);border-radius:12px;padding:30px 20px;text-align:center;cursor:pointer;transition:all 0.2s;background:rgba(0,212,255,0.05);}
   .drop:hover,.drop.dragover{background:rgba(0,212,255,0.15);border-color:#00d4ff;transform:scale(1.01);}
   .drop p{margin:6px 0;}
-  .drop .big{font-size:48px;}
+  .drop .big{font-size:42px;}
   .drop .hint{color:#94a3b8;font-size:13px;}
   input[type=file]{display:none;}
-  button.primary{background:linear-gradient(135deg,#00d4ff,#6b46ff);color:#fff;border:none;padding:12px 24px;border-radius:10px;font-weight:600;cursor:pointer;font-size:14px;margin:6px 4px;}
+  .url-row{display:flex;gap:8px;margin:10px 0;}
+  .url-row input[type=text]{flex:1;padding:12px 14px;background:rgba(0,0,0,0.4);color:#fff;border:1px solid rgba(0,212,255,0.4);border-radius:8px;font-size:13px;outline:none;}
+  .url-row input[type=text]:focus{border-color:#00d4ff;box-shadow:0 0 0 3px rgba(0,212,255,0.15);}
+  button.primary{background:linear-gradient(135deg,#00d4ff,#6b46ff);color:#fff;border:none;padding:12px 24px;border-radius:10px;font-weight:600;cursor:pointer;font-size:14px;margin:6px 4px;white-space:nowrap;}
   button.primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,212,255,0.4);}
+  button.primary:disabled{opacity:0.5;cursor:not-allowed;transform:none;box-shadow:none;}
   button.secondary{background:rgba(107,70,255,0.3);color:#fff;border:1px solid rgba(107,70,255,0.6);padding:10px 20px;border-radius:10px;font-weight:600;cursor:pointer;margin:6px 4px;}
-  .game-area{position:relative;width:100%;aspect-ratio:4/3;max-height:70vh;background:#000;border-radius:12px;overflow:hidden;display:none;}
+  .game-area{position:relative;width:100%;aspect-ratio:4/3;max-height:80vh;background:#000;border-radius:12px;overflow:hidden;display:none;border:2px solid #00d4ff;box-shadow:0 0 40px rgba(0,212,255,0.3);}
   .game-area.active{display:block;}
   #game{width:100%;height:100%;}
   .legal{background:rgba(220,38,38,0.1);border:1px solid rgba(220,38,38,0.4);border-radius:10px;padding:14px;font-size:13px;color:#fca5a5;}
@@ -31,80 +35,129 @@
   .info-card{background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);padding:12px;border-radius:8px;font-size:13px;}
   .info-card b{color:#00d4ff;display:block;margin-bottom:4px;}
   ul.links{list-style:none;padding:0;}
-  ul.links li{padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);}
+  ul.links li{padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);}
   ul.links a{color:#00d4ff;text-decoration:none;}
   ul.links a:hover{text-decoration:underline;}
-  .status{text-align:center;padding:10px;color:#facc15;font-size:14px;}
-  details{background:rgba(255,255,255,0.05);padding:10px;border-radius:8px;margin:8px 0;}
-  details summary{cursor:pointer;font-weight:600;color:#00d4ff;}
-  code{background:rgba(0,0,0,0.4);padding:2px 6px;border-radius:4px;font-size:12px;}
+  .rom-suggest{background:rgba(0,212,255,0.06);border:1px solid rgba(0,212,255,0.25);padding:12px 14px;border-radius:8px;margin:8px 0;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;}
+  .rom-suggest .info b{color:#00d4ff;display:block;font-size:14px;}
+  .rom-suggest .info span{color:#94a3b8;font-size:12px;}
+  .status{text-align:center;padding:14px;color:#facc15;font-size:14px;font-weight:600;background:rgba(250,204,21,0.08);border-radius:8px;margin-top:10px;display:none;}
+  .status.active{display:block;}
+  .status.error{color:#f87171;background:rgba(248,113,113,0.1);}
+  .status.success{color:#34d399;background:rgba(52,211,153,0.1);}
+  details{background:rgba(255,255,255,0.05);padding:10px 14px;border-radius:8px;margin:8px 0;}
+  details summary{cursor:pointer;font-weight:600;color:#00d4ff;padding:4px 0;}
+  details[open] summary{margin-bottom:8px;}
+  code{background:rgba(0,0,0,0.4);padding:2px 6px;border-radius:4px;font-size:12px;color:#fbbf24;}
+  .divider{text-align:center;color:#64748b;font-size:12px;margin:14px 0;text-transform:uppercase;letter-spacing:1px;}
+  .divider::before,.divider::after{content:'';display:inline-block;width:80px;height:1px;background:rgba(255,255,255,0.1);vertical-align:middle;margin:0 8px;}
 </style>
 </head>
 <body>
 <a href="../../index.html" class="back-to-hub">← Kembali ke Hub</a>
 <div class="wrap">
   <h1>🎮 PSX Demo Emulator</h1>
-  <p class="sub">PlayStation 1 emulator langsung di browser pakai <b>EmulatorJS</b> (PCSX-ReARMed via WebAssembly)</p>
+  <p class="sub">PlayStation 1 di browser pakai <b>EmulatorJS</b> (PCSX-ReARMed WebAssembly core)</p>
 
-  <div class="panel" id="uploadPanel">
-    <h2>📂 Upload ROM PS1 Anda</h2>
-    <div class="drop" id="dropZone">
-      <div class="big">💿</div>
-      <p><b>Drag & Drop file ROM di sini</b></p>
-      <p class="hint">atau klik untuk pilih file • Format: <code>.bin</code> + <code>.cue</code> / <code>.iso</code> / <code>.chd</code> / <code>.pbp</code></p>
-      <input type="file" id="fileInput" accept=".bin,.cue,.iso,.chd,.pbp,.img,.mdf" />
+  <div class="panel" id="loaderPanel">
+    <h2>🚀 Mulai Bermain</h2>
+
+    <!-- METHOD 1: Direct URL -->
+    <div style="margin-bottom:16px;">
+      <label style="display:block;font-size:13px;color:#cbd5e1;margin-bottom:6px;">📡 <b>Cara 1:</b> Paste URL ROM langsung (paling cepat)</label>
+      <div class="url-row">
+        <input type="text" id="romUrl" placeholder="https://contoh.com/game.bin atau .iso/.cue/.chd/.pbp" />
+        <button class="primary" id="loadUrlBtn">▶️ Load</button>
+      </div>
+      <p style="font-size:12px;color:#64748b;margin:4px 0 0;">Tip: hosting ROM di Google Drive, Dropbox, atau archive.org → copy link langsung</p>
     </div>
+
+    <div class="divider">atau</div>
+
+    <!-- METHOD 2: File upload -->
+    <div>
+      <label style="display:block;font-size:13px;color:#cbd5e1;margin-bottom:6px;">💾 <b>Cara 2:</b> Upload file dari komputer Anda</label>
+      <div class="drop" id="dropZone">
+        <div class="big">💿</div>
+        <p><b>Drag &amp; drop file ROM di sini</b></p>
+        <p class="hint">atau klik untuk pilih file • Format: <code>.bin</code>+<code>.cue</code> / <code>.iso</code> / <code>.chd</code> / <code>.pbp</code></p>
+        <input type="file" id="fileInput" accept=".bin,.cue,.iso,.chd,.pbp,.img,.mdf" />
+      </div>
+    </div>
+
     <div class="status" id="status"></div>
-    <div style="text-align:center;margin-top:12px;">
-      <button class="secondary" onclick="document.getElementById('fileInput').click()">📁 Pilih File</button>
-      <button class="secondary" onclick="loadDemo()">🎯 Coba Test BIOS Boot</button>
-    </div>
   </div>
 
   <div class="game-area" id="gameArea">
     <div id="game"></div>
   </div>
 
+  <div class="panel" id="recommendPanel">
+    <h2>🎁 Sumber ROM Homebrew &amp; Demo Legal</h2>
+    <p style="color:#94a3b8;font-size:13px;margin-bottom:12px;">Game homebrew &amp; demo PS1 yang gratis &amp; legal didownload:</p>
+
+    <ul class="links">
+      <li>🏠 <a href="https://www.psxdev.net/forum/viewforum.php?f=70" target="_blank" rel="noopener"><b>PSXDev Homebrew Forum</b></a> — komunitas homebrew PS1 aktif, banyak game GPL/MIT</li>
+      <li>📚 <a href="https://archive.org/details/playstationdemos" target="_blank" rel="noopener"><b>Internet Archive — PlayStation Demo Discs</b></a> — magazine demos resmi (legal arsip), >300 disc tersedia</li>
+      <li>🎯 <a href="https://hitmen.c02.at/html/psx_releases.html" target="_blank" rel="noopener"><b>Hitmen PSX Releases</b></a> — tech demos dan tools dari grup demoscene</li>
+      <li>🛠️ <a href="https://github.com/ABelliqueux/nolibgs_hello_worlds" target="_blank" rel="noopener"><b>GitHub: nolibgs hello worlds</b></a> — contoh program PSX kecil (sumber + ROM build)</li>
+      <li>📺 <a href="https://www.youtube.com/results?search_query=playstation+1+homebrew+demo" target="_blank" rel="noopener"><b>YouTube: PS1 Homebrew Demos</b></a> — preview untuk pilih ROM</li>
+    </ul>
+
+    <details style="margin-top:14px;">
+      <summary>📌 ROM CD Sendiri (Rip dari Disk Asli)</summary>
+      <p style="font-size:13px;color:#cbd5e1;line-height:1.7;">
+        Kalau Anda punya CD PS1 asli, Anda bisa rip ke file <code>.bin</code>+<code>.cue</code> pakai:<br>
+        • <b>ImgBurn</b> (Windows, gratis) — Mode → Read → masukin disc → Save<br>
+        • <b>cdrdao</b> (Linux/Mac) — <code>cdrdao read-cd --device /dev/cdrom out.toc</code><br>
+        Hasil rip = legal karena Anda pemilik fisiknya.
+      </p>
+    </details>
+  </div>
+
   <div class="panel">
-    <h2>⚖️ Catatan Legal Penting</h2>
+    <h2>⚖️ Catatan Legal</h2>
     <div class="legal">
       <b>⚠️ ROM komersial PS1 tidak disertakan di sini.</b><br>
-      Berdasarkan hukum copyright internasional, distribusi ROM game komersial (Crash Bandicoot, Final Fantasy, Tekken, dll) tanpa lisensi adalah ilegal. Anda hanya boleh memainkan ROM dari:
+      Distribusi ROM game komersial (Crash, FF, Tekken, Resident Evil, dll) tanpa lisensi adalah ilegal di banyak negara. Yang boleh dimainkan di sini:
       <ul style="margin:8px 0 0 20px;padding:0;">
-        <li>✅ Game yang Anda miliki kaset CD-nya secara legal (rip sendiri pakai software seperti ImgBurn)</li>
-        <li>✅ Homebrew & demo public domain (free legal)</li>
-        <li>❌ Download dari situs ROM acak = ilegal di banyak negara</li>
+        <li>✅ Homebrew &amp; demo public domain (free legal)</li>
+        <li>✅ Game yang Anda rip sendiri dari CD asli yang Anda miliki</li>
+        <li>❌ Download ROM acak dari situs piracy = ilegal</li>
       </ul>
     </div>
   </div>
 
   <div class="panel">
-    <h2>🎁 ROM Public Domain & Homebrew (Legal)</h2>
-    <p style="color:#94a3b8;font-size:13px;">Game homebrew PS1 yang legal didownload & dimainkan:</p>
-    <ul class="links">
-      <li>🔗 <a href="https://www.psxdev.net/psx-homebrew-software" target="_blank" rel="noopener">PSXDev — Homebrew Software Repository</a></li>
-      <li>🔗 <a href="https://www.romhacking.net/?page=homebrew&category=&platform=11&genre=&group=&search=" target="_blank" rel="noopener">ROMHacking.net — PS1 Homebrew Section</a></li>
-      <li>🔗 <a href="https://archive.org/details/playstationdemos" target="_blank" rel="noopener">Internet Archive — PS1 Official Demo Discs</a> (Magazine demos, legal arsip)</li>
-      <li>🔗 <a href="https://hitmen.c02.at/html/psx_releases.html" target="_blank" rel="noopener">Hitmen — PSX Demos & Tools</a></li>
-    </ul>
-  </div>
-
-  <div class="panel">
-    <h2>📱 Cara Pakai</h2>
+    <h2>🎮 Kontrol &amp; Tips</h2>
     <div class="info-grid">
-      <div class="info-card"><b>1. Format ROM</b>Gunakan format <code>.cue</code> + <code>.bin</code> (paling kompatibel). Atau <code>.chd</code> (compressed) / <code>.pbp</code> (PSP eboot).</div>
-      <div class="info-card"><b>2. Kontrol Default</b>Arrow keys = D-pad • Z = X (cross) • X = O (circle) • A = Square • S = Triangle • Enter = Start • Shift = Select</div>
-      <div class="info-card"><b>3. Save State</b>Klik tombol Settings (⚙️) di pojok emulator untuk save/load state, control mapping, shader, dll.</div>
-      <div class="info-card"><b>4. Performance</b>Browser PC modern (Chrome/Edge) jalan lancar 60fps. Mobile mungkin lag — gunakan PC untuk pengalaman terbaik.</div>
+      <div class="info-card"><b>D-Pad / Stick</b>Arrow keys</div>
+      <div class="info-card"><b>X (Cross)</b>Z key</div>
+      <div class="info-card"><b>O (Circle)</b>X key</div>
+      <div class="info-card"><b>□ (Square)</b>A key</div>
+      <div class="info-card"><b>△ (Triangle)</b>S key</div>
+      <div class="info-card"><b>Start / Select</b>Enter / Shift</div>
+      <div class="info-card"><b>L1/R1/L2/R2</b>Q/W/E/R</div>
+      <div class="info-card"><b>Settings</b>Klik ⚙️ di toolbar emulator (save state, mapping, shader)</div>
     </div>
 
+    <details style="margin-top:14px;">
+      <summary>🔧 Format ROM &amp; Multi-Disc</summary>
+      <p style="font-size:13px;color:#cbd5e1;line-height:1.7;">
+        <b>Format paling kompatibel:</b> <code>.cue</code> + <code>.bin</code> (pasangan). Upload <code>.cue</code>-nya saja, browser akan minta <code>.bin</code> berikutnya.<br><br>
+        <b>CHD (compressed):</b> Konversi BIN/CUE → CHD pakai <code>chdman</code> (MAME tools) untuk hemat 30-50% space.<br><br>
+        <b>PBP (PSP eboot):</b> Format Sony resmi PSP, kompatibel langsung.<br><br>
+        <b>Multi-disc games (FF7, FF9, Chrono Cross):</b> Ganti disc lewat menu Settings → Disc Control di emulator.
+      </p>
+    </details>
     <details>
-      <summary>🔧 Tips Lanjutan</summary>
-      <p style="font-size:13px;color:#cbd5e1;">
-        <b>BIOS:</b> EmulatorJS otomatis load BIOS embedded SCPH1001 (open source HLE BIOS). Untuk akurasi maksimal, upload BIOS resmi PS1 yang Anda miliki.<br><br>
-        <b>Multi-disc games:</b> Untuk game multi-disc (FF7, FF9), ganti disc lewat menu Settings → Disc Control.<br><br>
-        <b>Format CHD lebih kecil:</b> Konversi BIN/CUE → CHD pakai <code>chdman</code> (MAME) untuk hemat ~30-50% size.<br><br>
-        <b>Memory Card:</b> Save game tersimpan di browser localStorage / IndexedDB. Backup berkala lewat menu Settings → Save State.
+      <summary>⚡ Performance Tips</summary>
+      <p style="font-size:13px;color:#cbd5e1;line-height:1.7;">
+        • PC modern Chrome/Edge/Firefox: lancar 60fps, bisa fullscreen<br>
+        • Mobile: bisa lag, recommend pakai PC<br>
+        • ROM > 200MB: butuh waktu load (browser convert ke memory)<br>
+        • Save state tersimpan di IndexedDB browser — backup berkala lewat Settings<br>
+        • Kalau lemot: turunin resolution di Settings → Video → Internal Resolution (1x = original PS1)
       </p>
     </details>
   </div>
@@ -115,7 +168,15 @@ const dropZone = document.getElementById('dropZone');
 const fileInput = document.getElementById('fileInput');
 const status = document.getElementById('status');
 const gameArea = document.getElementById('gameArea');
-const uploadPanel = document.getElementById('uploadPanel');
+const loaderPanel = document.getElementById('loaderPanel');
+const recommendPanel = document.getElementById('recommendPanel');
+const romUrlInput = document.getElementById('romUrl');
+const loadUrlBtn = document.getElementById('loadUrlBtn');
+
+function setStatus(msg, type='info'){
+  status.className = 'status active ' + (type === 'error' ? 'error' : type === 'success' ? 'success' : '');
+  status.innerHTML = msg;
+}
 
 ['dragenter','dragover'].forEach(ev=>{
   dropZone.addEventListener(ev, e=>{e.preventDefault();dropZone.classList.add('dragover');});
@@ -132,20 +193,32 @@ fileInput.addEventListener('change', e=>{
   if(e.target.files.length) handleFile(e.target.files[0]);
 });
 
+loadUrlBtn.addEventListener('click', ()=>{
+  const url = romUrlInput.value.trim();
+  if(!url){ setStatus('❌ URL kosong. Paste link ROM dulu.', 'error'); return; }
+  if(!/^https?:\/\//.test(url)){ setStatus('❌ URL harus diawali http:// atau https://', 'error'); return; }
+  loadFromUrl(url);
+});
+romUrlInput.addEventListener('keydown', e=>{ if(e.key==='Enter') loadUrlBtn.click(); });
+
 function handleFile(file){
-  status.textContent = `📥 Loading: ${file.name} (${(file.size/1024/1024).toFixed(2)} MB)...`;
+  setStatus(`📥 Loading file: ${file.name} (${(file.size/1024/1024).toFixed(2)} MB)...`);
   const url = URL.createObjectURL(file);
   startEmulator(url, file.name);
 }
 
-function loadDemo(){
-  status.innerHTML = `⚠️ Demo ROM tidak di-bundle (legal). Silakan upload ROM Anda sendiri atau download homebrew dari link di atas.<br><small>Untuk test cepat: download "PSX Cube Demo" dari psxdev.net (gratis legal) lalu upload di sini.</small>`;
+function loadFromUrl(url){
+  const name = url.split('/').pop().split('?')[0] || 'rom.bin';
+  setStatus(`📡 Mengambil ROM dari URL... (mungkin lama kalau file besar)`);
+  loadUrlBtn.disabled = true;
+  // EmulatorJS handle download sendiri kalau dikasih URL — pass langsung
+  startEmulator(url, name);
 }
 
 function startEmulator(romUrl, name){
-  uploadPanel.style.display = 'none';
+  loaderPanel.style.display = 'none';
+  recommendPanel.style.display = 'none';
   gameArea.classList.add('active');
-  status.textContent = '';
 
   // EmulatorJS configuration
   window.EJS_player = '#game';
@@ -155,6 +228,7 @@ function startEmulator(romUrl, name){
   window.EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
   window.EJS_startOnLoaded = true;
   window.EJS_color = '#00d4ff';
+  window.EJS_backgroundColor = '#0a0e22';
   window.EJS_Buttons = {
     playPause: true,
     restart: true,
@@ -165,7 +239,7 @@ function startEmulator(romUrl, name){
     loadState: true,
     screenRecord: false,
     gamepad: true,
-    cheat: true,
+    cheat: false,
     volume: true,
     saveSavFiles: true,
     loadSavFiles: true,
@@ -175,8 +249,14 @@ function startEmulator(romUrl, name){
     cacheManager: true,
   };
 
+  window.EJS_onGameStart = () => {
+    setStatus('✅ Emulator siap. Klik area game lalu pakai keyboard.', 'success');
+    setTimeout(()=>{ status.classList.remove('active'); }, 4000);
+  };
+
   const script = document.createElement('script');
   script.src = 'https://cdn.emulatorjs.org/stable/data/loader.js';
+  script.onerror = () => setStatus('❌ Gagal load EmulatorJS dari CDN. Cek koneksi internet.', 'error');
   document.body.appendChild(script);
 }
 </script>
