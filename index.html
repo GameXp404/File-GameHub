@@ -568,13 +568,62 @@
       </div>
     </div>
 
-    <section>
+    <section id="gridSection">
       <!-- SECTION HEADER welcome text (no icon) -->
       <div class="section-head">
         <h1 id="sectionTitle" style="font-size:32px;font-weight:900;background:linear-gradient(135deg,#ff66b3,#6b46ff);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:4px;line-height:1.1;">🎮 Selamat Datang di GameHub</h1>
         <p id="sectionSub" style="color:#b8b8d4;font-size:14px;">22+ Game Online Gratis · No Download · Langsung Main</p>
       </div>
       <div class="grid" id="grid"></div>
+    </section>
+
+    <!-- ========== GAME DETAIL PAGE (hidden, shown via hash routing) ========== -->
+    <section id="detailSection" style="display:none;padding:24px;">
+      <button id="backToGrid" style="background:#2a2a4a;color:#fff;border:none;padding:8px 18px;border-radius:8px;cursor:pointer;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+        ← Kembali ke Semua Game
+      </button>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px;">
+        <!-- LEFT: Big preview / iframe -->
+        <div id="detailPreview" style="aspect-ratio:1/1;border-radius:14px;overflow:hidden;position:relative;background:#0f1729;border:2px solid #6b46ff;">
+          <div id="detailThumb" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:120px;text-shadow:0 8px 20px rgba(0,0,0,0.6);"></div>
+          <div id="detailIframeWrap" style="display:none;width:100%;height:100%;">
+            <iframe id="detailIframe" style="width:100%;height:100%;border:0;" allow="autoplay;fullscreen"></iframe>
+          </div>
+        </div>
+
+        <!-- RIGHT: Info -->
+        <div>
+          <div id="detailBadges" style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;"></div>
+          <h1 id="detailTitle" style="font-size:36px;font-weight:900;background:linear-gradient(135deg,#ff66b3,#6b46ff);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:4px;line-height:1.1;"></h1>
+          <div id="detailMeta" style="color:#8a8aaa;font-size:13px;margin-bottom:14px;"></div>
+          <p id="detailDesc" style="color:#b8b8d4;font-size:14px;line-height:1.7;margin-bottom:16px;"></p>
+
+          <!-- Stats -->
+          <div id="detailStats" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;"></div>
+
+          <!-- Rating -->
+          <div style="background:#0f1729;border:1px solid #2a2a4a;padding:12px;border-radius:8px;margin-bottom:14px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <span style="font-size:12px;color:#8a8aaa;">RATING</span>
+              <span id="ratingValue" style="font-weight:700;color:#ffaa00;">★ 0.0</span>
+            </div>
+            <div id="ratingStars" style="font-size:28px;display:flex;gap:4px;cursor:pointer;"></div>
+            <div id="ratingCount" style="font-size:11px;color:#666;margin-top:4px;"></div>
+          </div>
+
+          <!-- Big Play Button -->
+          <button id="bigPlayBtn" style="width:100%;background:linear-gradient(135deg,#ff66b3,#6b46ff);color:#fff;border:none;padding:18px;border-radius:12px;font-size:18px;font-weight:800;cursor:pointer;box-shadow:0 4px 20px rgba(255,102,179,0.4);transition:transform 0.1s;">
+            ▶️ Mainkan Game
+          </button>
+        </div>
+      </div>
+
+      <!-- Related Games -->
+      <div style="margin-top:30px;">
+        <h2 style="font-size:22px;color:#fff;margin-bottom:12px;">🎮 Game Sejenis</h2>
+        <div class="grid" id="relatedGrid"></div>
+      </div>
     </section>
   </main>
 
@@ -1317,6 +1366,47 @@ const GAMES = [
   { id:'cards',   title:'Solitaire',      cat:'card',     tags:['card'],    emoji:'🃏', grad:'linear-gradient(135deg, #b8000c, #000)', soon:true, badge:'soon' },
 ];
 
+// Descriptions per game (untuk detail page)
+const GAME_DESC = {
+  'cash-king': 'Game clicker bertema "moneysite" dengan 4 tema (Moneysite/Casino/Crypto/MLM Babe), prestige system Diamond, dan 20 achievement. Klik untuk earn cash, beli upgrade, jadi miliarder virtual.',
+  'snake': 'Klasik Snake — kontrol ular, makan apel, jangan tabrak diri sendiri atau dinding. Best score tersimpan otomatis.',
+  '2048': 'Gabungkan tile angka yang sama untuk dapat angka lebih besar. Capai 2048 untuk menang. Pakai panah/WASD.',
+  'ttt': 'Tic Tac Toe vs AI dengan blocking strategy. AI akan block menang Anda dan cari peluang menang sendiri. Pertarungan klasik 3-in-a-row.',
+  'memory': 'Match pasangan kartu emoji. Buka 2 kartu, kalau cocok stay terbuka. Hafalkan posisi! Sedikit langkah = makin bagus.',
+  'rps': 'Batu-Kertas-Gunting vs CPU. Pilih senjata, CPU random, lihat siapa menang. Score persistent.',
+  'whack': 'Pukul tikus yang muncul dari lubang sebelum hilang. 30 detik untuk dapat skor sebanyak mungkin.',
+  'reaction': 'Tes refleks: tunggu warna berubah ke hijau, klik secepat mungkin. Hindari early click! Diukur dalam millisecond.',
+  'guess': 'Tebak angka 1-100 dengan hint hot/cold. Sedikit tebakan = makin bagus.',
+  'slot': 'Slot machine 3 reel klasik dengan emoji symbol. Spin untuk match.',
+  'caishen': 'Slot bertema Tionghoa CaiShen (财神 - Dewa Kekayaan). 3 reel dengan symbol prosperity. Saldo & jackpot system.',
+  'slot-5reel': 'Slot 5 reel CaiShen dengan animasi spin smooth dan WebAudio sound. Auto x10 mode tersedia.',
+  'slot-ultra': 'Slot ultra dengan 5 reel × 3 row + scatter symbol. Free spin + jackpot mechanic.',
+  'slot-advanced': 'Slot 5 reel advanced dengan 5 paylines (tengah, atas, bawah, V, ^), WILD symbol, scatter free spin, dan random Bonus Pick mini-game.',
+  'slot-fruit': 'Slot fruit klasik dengan symbol cherry, lemon, watermelon, lucky seven. Animation lengkap.',
+  'slot-5x6': 'Slot 5×6 grid (5 kolom × 6 baris). Match 5 dalam 1 baris untuk menang. Auto spin tersedia.',
+  'tetris': 'Block Drop klasik (Tetris). 7 jenis tetromino, line clear, level system. Panah ← → gerak, ↑ rotate, Space hard-drop.',
+  'wordle': 'Wordle versi Indonesia. Tebak kata 5 huruf dalam 6 percobaan. 🟩 huruf benar+posisi, 🟨 ada tapi salah posisi.',
+  'pong': 'Pong klasik vs CPU. Mouse atau panah ↑↓. First to 5 menang. AI adaptive.',
+  'flappy': 'Klik atau Spasi untuk lompat. Hindari pipa hijau, kumpulkan skor. Best score tersimpan.',
+  'mine': 'Minesweeper 9×9 dengan 10 ranjau. Klik buka sel, klik kanan flag. Number = jumlah ranjau di sekitar.',
+  'hangman': 'Tebak kata Indonesia (kota, makanan, sejarah). Salah 6 kali = kalah. 46 kata tersedia.',
+  'sudoku': 'Sudoku 4×4 (mini variant). Isi setiap baris, kolom, dan kotak 2×2 dengan angka 1-4 (tidak boleh dobel). Auto-validate.',
+  'connect4': 'Connect 4 vs CPU dengan AI yang bisa block & win. Drop koin merah ke kolom, capai 4 berturut (horizontal/vertikal/diagonal) untuk menang.',
+  'simon': 'Color Match (Simon Says). Hafalkan sequence warna yang flash, ulangi dengan klik. Tiap level +1 panjang sequence. WebAudio sound.',
+  'bubble': 'Match-3 puzzle. Klik bubble warna sama yang berdekatan (min 2). Makin banyak bubble dalam 1 group makin tinggi skor (N²).',
+  'brick': 'Breakout/Arkanoid klasik. Mouse atau panah untuk gerakkan paddle, hancurkan semua brick. 3 lives, scoring per brick.',
+  'asteroids': 'Klasik Asteroids. ←→ rotate ship, ↑ thrust, Space tembak. Hancurkan asteroid, hindari tabrakan. 3 lives.',
+  'number-memory': 'Hafalkan deretan angka yang flash, ketik ulang. Tiap level +1 angka. Tes short-term memory Anda.',
+  'frog': 'Frogger klasik. Kontrol kucing dengan panah, lewati jalan tanpa ketabrak mobil, capai garis finish atas.',
+  'color-click': 'Stroop Test game. Klik tombol BERWARNA sesuai TEKS (bukan tulisan tombol). 30 detik untuk skor maksimal. Tricky!',
+  'word-find': 'Word Search Indonesia. Cari kata di grid 8×8. Klik huruf pertama, lalu huruf terakhir kata. 5 kata target tiap game.',
+};
+
+// Default description fallback
+function getDesc(g) {
+  return GAME_DESC[g.id] || `Game ${g.title} kategori ${g.cat}. Mainkan langsung di browser tanpa download.`;
+}
+
 const TITLES = {
   all: '🎮 Selamat Datang di GameHub',
   trending: 'Sedang Tren',
@@ -1672,9 +1762,7 @@ function render() {
     const card = document.createElement(g.soon ? 'div' : 'a');
     card.className = 'card' + (g.soon ? ' disabled' : '');
     if (!g.soon) {
-      card.href = g.url;
-      if (g.external) card.target = '_blank';
-      card.addEventListener('click', () => logPlay(g));
+      card.href = '#game/' + g.id;
     }
     const faved = isFav(g.id);
     // build thumbnail based on type
@@ -2952,6 +3040,158 @@ function openWidgetEdit(idx) {
   toast(idx === -1 ? '✅ Widget ditambah' : '✅ Widget diupdate');
 }
 
+// ============ GAME DETAIL PAGE (hash routing) ============
+const RATINGS_STORE = 'gameHubRatings';
+const PLAYS_STORE = 'gameHubPlayCount';
+function getRatings() { return JSON.parse(localStorage.getItem(RATINGS_STORE) || '{}'); }
+function getPlayCounts() { return JSON.parse(localStorage.getItem(PLAYS_STORE) || '{}'); }
+function getMyRating(id) { return JSON.parse(localStorage.getItem('rating_' + id) || 'null'); }
+
+function showGameDetail(gameId) {
+  const games = getGames();
+  const g = games.find(x => x.id === gameId);
+  if (!g || g.soon) {
+    location.hash = '';
+    return;
+  }
+  $('gridSection').style.display = 'none';
+  $('detailSection').style.display = 'block';
+  window.scrollTo(0, 0);
+
+  // Title + badges
+  $('detailTitle').textContent = g.title;
+  const badges = [];
+  if (g.badge) badges.push(`<span style="background:${g.badge==='top'?'#ffaa00':g.badge==='new'?'#ff3030':'#6b46ff'};color:${g.badge==='top'?'#000':'#fff'};padding:3px 10px;border-radius:10px;font-size:11px;font-weight:700;text-transform:uppercase;">${g.badge}</span>`);
+  if (g.gameType && g.gameType !== 'web') {
+    const TYPE_LBL = {steam:'🎮 Steam', cloud:'☁️ Cloud', download:'⬇️ Download', launcher:'🚀 Launcher'};
+    badges.push(`<span style="background:#000;color:#fff;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:700;">${TYPE_LBL[g.gameType]}</span>`);
+  }
+  badges.push(`<span style="background:#2a2a4a;color:#fff;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:700;">${g.cat.toUpperCase()}</span>`);
+  $('detailBadges').innerHTML = badges.join('');
+
+  // Meta line: tags
+  $('detailMeta').textContent = (g.tags || []).filter(t => !['new','top','originals'].includes(t)).map(t => '#' + t).join(' ');
+
+  // Description
+  $('detailDesc').textContent = getDesc(g);
+
+  // Thumbnail (kalau image, pakai img; emoji+gradient → div)
+  const thumb = $('detailThumb');
+  if (g.thumbType === 'url' && g.thumbUrl) {
+    thumb.style.background = `url('${g.thumbUrl}') center/cover`;
+    thumb.textContent = '';
+  } else if (g.thumbType === 'upload' && g.thumbData) {
+    thumb.style.background = `url('${g.thumbData}') center/cover`;
+    thumb.textContent = '';
+  } else {
+    thumb.style.background = g.grad;
+    thumb.textContent = g.emoji;
+  }
+
+  // Stats: difficulty, players, plays count
+  const plays = getPlayCounts()[gameId] || 0;
+  const statsHtml = [
+    `<div style="background:#0f1729;border:1px solid #2a2a4a;padding:10px;border-radius:6px;text-align:center;"><div style="font-size:18px;font-weight:700;color:#ff66b3;">${plays}</div><div style="font-size:10px;color:#8a8aaa;text-transform:uppercase;">Total Plays</div></div>`,
+    `<div style="background:#0f1729;border:1px solid #2a2a4a;padding:10px;border-radius:6px;text-align:center;"><div style="font-size:18px;font-weight:700;color:#00d4ff;">${g.difficulty || '-'}</div><div style="font-size:10px;color:#8a8aaa;text-transform:uppercase;">Difficulty</div></div>`,
+    `<div style="background:#0f1729;border:1px solid #2a2a4a;padding:10px;border-radius:6px;text-align:center;"><div style="font-size:18px;font-weight:700;color:#00ff88;">${g.players || '1 player'}</div><div style="font-size:10px;color:#8a8aaa;text-transform:uppercase;">Players</div></div>`
+  ];
+  $('detailStats').innerHTML = statsHtml.join('');
+
+  // Rating
+  renderRating(gameId);
+
+  // Play button
+  $('bigPlayBtn').onclick = () => playGameInDetail(g);
+
+  // Hide iframe by default, show thumb
+  $('detailIframeWrap').style.display = 'none';
+  $('detailThumb').style.display = 'flex';
+
+  // Related games (same category, exclude current, max 6)
+  const related = games.filter(x => x.id !== gameId && x.cat === g.cat && !x.soon).slice(0, 6);
+  const relGrid = $('relatedGrid');
+  relGrid.innerHTML = '';
+  related.forEach(rg => {
+    const card = document.createElement('a');
+    card.className = 'card';
+    card.href = '#game/' + rg.id;
+    let thumbHtml;
+    if (rg.thumbType === 'url' && rg.thumbUrl) thumbHtml = `<div class="card-thumb" style="background:url('${rg.thumbUrl}') center/cover;"></div>`;
+    else if (rg.thumbType === 'upload' && rg.thumbData) thumbHtml = `<div class="card-thumb" style="background:url('${rg.thumbData}') center/cover;"></div>`;
+    else thumbHtml = `<div class="card-thumb" style="background:${rg.grad};">${rg.emoji}</div>`;
+    card.innerHTML = `${rg.badge?`<span class="badge ${rg.badge}">${rg.badge}</span>`:''}${thumbHtml}<div class="card-overlay"><div class="card-title">${rg.title}</div><div class="card-cat">${rg.cat}</div></div>`;
+    relGrid.appendChild(card);
+  });
+  if (related.length === 0) relGrid.innerHTML = '<div style="color:#8a8aaa;padding:20px;">Tidak ada game lain di kategori ini</div>';
+}
+
+function playGameInDetail(g) {
+  // Increment play count
+  const counts = getPlayCounts();
+  counts[g.id] = (counts[g.id] || 0) + 1;
+  localStorage.setItem(PLAYS_STORE, JSON.stringify(counts));
+  // Log activity
+  if (typeof logPlay === 'function') logPlay(g);
+  // External: open in new tab
+  if (g.external || (g.gameType && g.gameType !== 'web')) {
+    window.open(g.url, '_blank');
+    return;
+  }
+  // Internal: load in iframe
+  $('detailIframeWrap').style.display = 'block';
+  $('detailThumb').style.display = 'none';
+  $('detailIframe').src = g.url;
+  // Re-render to update play count
+  setTimeout(() => showGameDetail(g.id), 200);
+}
+
+function renderRating(gameId) {
+  const ratings = getRatings();
+  const data = ratings[gameId] || { sum: 0, count: 0 };
+  const avg = data.count ? data.sum / data.count : 0;
+  $('ratingValue').textContent = `★ ${avg.toFixed(1)}`;
+  $('ratingCount').textContent = `${data.count} rating · klik bintang untuk rate`;
+  const myRating = getMyRating(gameId) || 0;
+  const stars = $('ratingStars');
+  stars.innerHTML = '';
+  for (let i = 1; i <= 5; i++) {
+    const s = document.createElement('span');
+    s.textContent = i <= myRating ? '★' : (i <= Math.round(avg) ? '☆' : '☆');
+    s.style.color = i <= myRating ? '#ffaa00' : (i <= Math.round(avg) ? '#ffaa00' : '#444');
+    s.dataset.val = i;
+    s.onclick = () => {
+      const myOld = getMyRating(gameId);
+      if (myOld) { data.sum -= myOld; data.count--; }
+      data.sum += i; data.count++;
+      ratings[gameId] = data;
+      localStorage.setItem(RATINGS_STORE, JSON.stringify(ratings));
+      localStorage.setItem('rating_' + gameId, i);
+      renderRating(gameId);
+      toast(`⭐ Rating ${i}/5 disimpan`);
+    };
+    stars.appendChild(s);
+  }
+}
+
+function showGrid() {
+  $('gridSection').style.display = 'block';
+  $('detailSection').style.display = 'none';
+  $('detailIframe').src = '';  // stop game
+  window.scrollTo(0, 0);
+}
+
+function navigate() {
+  const hash = location.hash.slice(1);
+  if (hash.startsWith('game/')) {
+    showGameDetail(hash.slice(5));
+  } else {
+    showGrid();
+  }
+}
+
+window.addEventListener('hashchange', navigate);
+$('backToGrid')?.addEventListener('click', () => { location.hash = ''; });
+
 // ============ LIVE CLOCK ============
 function tickClock() {
   const now = new Date();
@@ -3154,6 +3394,7 @@ renderFloatingWidgets();
 tickClock();
 applyBanner();
 applySidebarBrand();
+navigate(); // handle initial hash on page load
 $('chatLoginBtn')?.addEventListener('click', () => openModal('loginModal'));
 $('chatSendBtn')?.addEventListener('click', postChatMessage);
 $('chatInput')?.addEventListener('keypress', e => { if (e.key === 'Enter') postChatMessage(); });
