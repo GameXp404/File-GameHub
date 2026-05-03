@@ -1548,9 +1548,9 @@ function applyLayout() {
   const L = getLayout();
   document.documentElement.style.setProperty('--accent-pink', L.accentColor);
   document.documentElement.style.setProperty('--accent-purple', L.primaryColor);
-  document.body.style.background = L.bgColor;
-  const sidebar = document.querySelector('.sidebar'); if (sidebar) sidebar.style.background = L.sidebarColor;
-  const topbar = document.querySelector('.topbar'); if (topbar) topbar.style.background = L.sidebarColor;
+  // body.style.background = L.bgColor; // DISABLED - biar CSS animated water bg jalan
+  const sidebar = document.querySelector('.sidebar'); if (sidebar) sidebar.style.background = `rgba(15, 23, 41, 0.55)`;
+  const topbar = document.querySelector('.topbar'); if (topbar) topbar.style.background = `rgba(15, 23, 41, 0.6)`;
   // brand text
   const brand = document.querySelector('.brand');
   if (brand) brand.innerHTML = `<span class="brand-icon">🎮</span> ${L.brand}`;
