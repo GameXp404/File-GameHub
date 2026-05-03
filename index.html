@@ -734,8 +734,9 @@
       <input type="text" id="bn_link" placeholder="games/cash-king.html atau https://..." />
     </div>
     <div class="form-row">
-      <label>Tinggi Banner (px)</label>
-      <input type="number" id="bn_height" min="80" max="500" placeholder="120" />
+      <label>Tinggi Banner (opsional)</label>
+      <input type="number" id="bn_height" min="0" max="800" placeholder="auto" />
+      <div style="font-size:11px;color:#8a8aaa;margin-top:4px;">💡 Kosongkan / 0 = auto-fit ke aspect ratio gambar (rekomendasi)</div>
     </div>
     <div class="modal-actions">
       <button class="btn-primary" id="saveBannerBtn">💾 Simpan</button>
@@ -3030,10 +3031,32 @@ function applyBanner() {
   if (b.url) {
     // Banner ada gambar → tampilkan gambar
     img.style.backgroundImage = `url('${b.url}')`;
+    img.style.backgroundSize = 'cover';
     img.style.display = 'block';
     bn.style.borderStyle = 'solid';
     bn.style.borderColor = '#6b46ff';
-    bn.style.minHeight = (b.height || 120) + 'px';
+    // Auto-fit ke aspect ratio gambar kalau height tidak di-set
+    if (!b.height || b.height <= 0) {
+      const probe = new Image();
+      probe.onload = () => {
+        const containerWidth = bn.offsetWidth;
+        const aspectRatio = probe.naturalHeight / probe.naturalWidth;
+        const autoHeight = Math.min(containerWidth * aspectRatio, 600); // cap 600px max
+        bn.style.minHeight = autoHeight + 'px';
+        bn.style.height = autoHeight + 'px';
+        img.style.backgroundSize = 'contain';
+        img.style.backgroundRepeat = 'no-repeat';
+      };
+      probe.onerror = () => {
+        bn.style.minHeight = '120px';
+      };
+      probe.src = b.url;
+      bn.style.minHeight = '120px'; // sementara sambil load
+    } else {
+      bn.style.minHeight = b.height + 'px';
+      bn.style.height = b.height + 'px';
+      img.style.backgroundSize = 'cover';
+    }
     // Tampilkan admin controls overlay kalau admin (tetap visible bahkan saat banner ada gambar)
     if (state.isAdmin) {
       empty.style.display = 'block';
@@ -3058,6 +3081,7 @@ function applyBanner() {
     bn.style.borderStyle = 'dashed';
     bn.style.borderColor = '#2a2a4a';
     bn.style.minHeight = '120px';
+    bn.style.height = 'auto';
     adminCtrl.style.display = state.isAdmin ? 'flex' : 'none';
     removeBtn.style.display = 'none';
     bn.onclick = state.isAdmin ? openBannerEdit : null;
@@ -3073,21 +3097,22 @@ function openBannerEdit() {
   const b = getBanner();
   $('bn_url').value = b.url || '';
   $('bn_link').value = b.link || '';
-  $('bn_height').value = b.height || 120;
+  $('bn_height').value = b.height || '';  // empty = auto
   openModal('bannerEditModal');
 }
 
 function saveBannerEdit() {
+  const heightVal = parseInt($('bn_height').value);
   const b = {
     url: $('bn_url').value.trim(),
     link: $('bn_link').value.trim(),
-    height: parseInt($('bn_height').value) || 120
+    height: (heightVal && heightVal > 0) ? heightVal : 0  // 0 = auto-fit
   };
   if (!b.url) { alert('URL banner wajib diisi'); return; }
   saveBanner(b);
   applyBanner();
   closeModal('bannerEditModal');
-  toast('✅ Banner diupdate');
+  toast(b.height ? `✅ Banner diupdate (tinggi ${b.height}px)` : '✅ Banner diupdate (auto-fit)');
 }
 
 function removeBanner() {
@@ -3100,6 +3125,15 @@ function removeBanner() {
 $('editTopBannerBtn')?.addEventListener('click', e => { e.stopPropagation(); openBannerEdit(); });
 $('removeTopBannerBtn')?.addEventListener('click', e => { e.stopPropagation(); removeBanner(); });
 $('saveBannerBtn')?.addEventListener('click', saveBannerEdit);
+// Re-fit banner saat window resize (kalau auto mode)
+let resizeDebounce;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeDebounce);
+  resizeDebounce = setTimeout(() => {
+    const b = getBanner();
+    if (b.url && (!b.height || b.height <= 0)) applyBanner();
+  }, 250);
+});
 
 // Re-render banner on admin status change
 const oldUpdateAdminUI = updateAdminUI;
