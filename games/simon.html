@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="id"><head>
+<meta charset="UTF-8" /><title>🌈 Color Match (Simon)</title>
+<link rel="stylesheet" href="game.css" />
+<style>
+  .grid{display:grid;grid-template-columns:200px 200px;gap:14px;justify-content:center;margin:20px auto;}
+  .pad{width:200px;height:200px;border-radius:14px;cursor:pointer;opacity:0.5;transition:opacity 0.15s,transform 0.1s;}
+  .pad.active{opacity:1;transform:scale(1.05);}
+  .pad.disabled{cursor:not-allowed;}
+  .red{background:#dc2626;}.green{background:#16a34a;}.blue{background:#2563eb;}.yellow{background:#facc15;}
+</style></head><body>
+<a href="../index.html" class="back-to-hub">← Kembali ke Hub</a>
+<div class="game-wrap">
+  <h1>🌈 Color Match (Simon Says)</h1>
+  <div class="subtitle">Lihat sequence warna, lalu ulangi dengan klik. Tiap level +1 panjang.</div>
+  <div class="score-row">
+    <div class="score-box">Level<b id="level">0</b></div>
+    <div class="score-box">Best<b id="best">0</b></div>
+  </div>
+  <div class="grid">
+    <div class="pad red" data-c="red"></div>
+    <div class="pad green" data-c="green"></div>
+    <div class="pad blue" data-c="blue"></div>
+    <div class="pad yellow" data-c="yellow"></div>
+  </div>
+  <div class="message" id="msg">Klik Mulai</div>
+  <button class="primary" id="start">▶️ Mulai</button>
+</div>
+<script>
+const COLORS=['red','green','blue','yellow'];const SOUNDS={red:262,green:330,blue:392,yellow:494};
+let seq=[],userIdx=0,playing=false;
+const ctx=new(window.AudioContext||window.webkitAudioContext)();
+function tone(f){const o=ctx.createOscillator(),g=ctx.createGain();o.frequency.value=f;o.type='sine';g.gain.value=0.1;o.connect(g);g.connect(ctx.destination);o.start();setTimeout(()=>{o.stop();},250);}
+function flash(color){const pad=document.querySelector(`.pad[data-c="${color}"]`);pad.classList.add('active');tone(SOUNDS[color]);setTimeout(()=>pad.classList.remove('active'),350);}
+async function playSeq(){playing=true;document.getElementById('msg').textContent='👁️ Lihat sequence...';document.querySelectorAll('.pad').forEach(p=>p.classList.add('disabled'));await new Promise(r=>setTimeout(r,500));for(const c of seq){flash(c);await new Promise(r=>setTimeout(r,500));}playing=false;document.querySelectorAll('.pad').forEach(p=>p.classList.remove('disabled'));document.getElementById('msg').textContent='👆 Ulangi sequence!';userIdx=0;}
+function nextLevel(){seq.push(COLORS[Math.floor(Math.random()*4)]);document.getElementById('level').textContent=seq.length;playSeq();}
+function start(){ctx.resume();seq=[];nextLevel();}
+document.querySelectorAll('.pad').forEach(p=>p.addEventListener('click',()=>{if(playing||p.classList.contains('disabled'))return;const c=p.dataset.c;flash(c);if(c===seq[userIdx]){userIdx++;if(userIdx===seq.length){const best=Math.max(seq.length,parseInt(localStorage.simonBest||0));localStorage.simonBest=best;document.getElementById('best').textContent=best;document.getElementById('msg').textContent='✅ Benar! Lanjut...';setTimeout(nextLevel,800);}}else{document.getElementById('msg').textContent=`💀 Salah! Level ${seq.length}. Klik Mulai.`;tone(100);seq=[];}}));
+document.getElementById('start').onclick=start;document.getElementById('best').textContent=localStorage.simonBest||0;
+</script></body></html>

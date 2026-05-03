@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="id"><head>
+<meta charset="UTF-8" /><title>🐸 Frog Crossing</title>
+<link rel="stylesheet" href="game.css" />
+</head><body>
+<a href="../index.html" class="back-to-hub">← Kembali ke Hub</a>
+<div class="game-wrap">
+  <h1>🐸 Frog Crossing</h1>
+  <div class="subtitle">Panah arrow untuk gerak. Hindari mobil, capai garis finish atas!</div>
+  <div class="score-row">
+    <div class="score-box">Skor<b id="score">0</b></div>
+    <div class="score-box">Lives<b id="lives">3</b></div>
+    <div class="score-box">Best<b id="best">0</b></div>
+  </div>
+  <canvas id="c" width="500" height="500"></canvas>
+  <div class="message" id="msg">Tekan ↑ untuk maju</div>
+  <button class="primary" id="restart">🔄 Mulai Ulang</button>
+</div>
+<script>
+const cv=document.getElementById('c'),ctx=cv.getContext('2d');const W=500,H=500,SZ=50,LANES=10;
+let frog,cars,score,lives,gameOver,frame;
+function reset(){frog={x:Math.floor(LANES/2)*SZ,y:H-SZ};cars=[];for(let row=1;row<LANES-1;row++){const dir=row%2===0?1:-1;const speed=(1+Math.random()*2)*dir;for(let i=0;i<2+Math.floor(Math.random()*2);i++)cars.push({x:Math.random()*W,y:row*SZ,vx:speed,w:SZ*1.5,h:SZ-8,color:`hsl(${Math.random()*360},70%,50%)`});}score=parseInt(document.getElementById('score').textContent)||0;if(arguments[0]==='full'){score=0;lives=3;}gameOver=false;frame=0;upd();document.getElementById('msg').textContent='Tekan ↑ untuk maju';loop();}
+function upd(){document.getElementById('score').textContent=score;document.getElementById('lives').textContent=lives;document.getElementById('best').textContent=localStorage.frogBest||0;}
+function loop(){if(gameOver)return;frame++;cars.forEach(c=>{c.x+=c.vx;if(c.vx>0&&c.x>W)c.x=-c.w;if(c.vx<0&&c.x<-c.w)c.x=W;});for(const c of cars){if(frog.x<c.x+c.w&&frog.x+SZ>c.x&&frog.y<c.y+c.h&&frog.y+SZ>c.y){lives--;if(lives<=0){gameOver=true;document.getElementById('msg').textContent='💀 Game Over! Skor: '+score;saveBest();return;}frog.x=Math.floor(LANES/2)*SZ;frog.y=H-SZ;upd();break;}}if(frog.y<=0){score+=10;upd();frog.x=Math.floor(LANES/2)*SZ;frog.y=H-SZ;document.getElementById('msg').textContent=`🎉 +10! Total ${score}`;}draw();requestAnimationFrame(loop);}
+function draw(){ctx.fillStyle='#0a0e22';ctx.fillRect(0,0,W,H);ctx.fillStyle='#16a34a';ctx.fillRect(0,0,W,SZ);ctx.fillRect(0,H-SZ,W,SZ);ctx.fillStyle='#444';ctx.fillRect(0,SZ,W,H-2*SZ);ctx.strokeStyle='#fff';ctx.lineWidth=1;for(let r=1;r<LANES-1;r++){ctx.setLineDash([10,10]);ctx.beginPath();ctx.moveTo(0,r*SZ);ctx.lineTo(W,r*SZ);ctx.stroke();}ctx.setLineDash([]);for(const c of cars){ctx.fillStyle=c.color;ctx.fillRect(c.x,c.y+4,c.w,c.h);}ctx.font=SZ-10+'px Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('🐸',frog.x+SZ/2,frog.y+SZ/2);}
+function saveBest(){const b=Math.max(score,parseInt(localStorage.frogBest||0));localStorage.frogBest=b;upd();}
+window.addEventListener('keydown',e=>{if(gameOver)return;const k=e.key;if(k==='ArrowUp')frog.y-=SZ;if(k==='ArrowDown')frog.y=Math.min(H-SZ,frog.y+SZ);if(k==='ArrowLeft')frog.x=Math.max(0,frog.x-SZ);if(k==='ArrowRight')frog.x=Math.min(W-SZ,frog.x+SZ);if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(k))e.preventDefault();});
+document.getElementById('restart').onclick=()=>reset('full');reset('full');
+</script></body></html>

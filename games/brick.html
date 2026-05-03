@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="id"><head>
+<meta charset="UTF-8" /><title>🧱 Brick Breaker</title>
+<link rel="stylesheet" href="game.css" />
+</head><body>
+<a href="../index.html" class="back-to-hub">← Kembali ke Hub</a>
+<div class="game-wrap">
+  <h1>🧱 Brick Breaker</h1>
+  <div class="subtitle">Mouse / panah ← → untuk gerak paddle. Hancurkan semua brick!</div>
+  <div class="score-row">
+    <div class="score-box">Skor<b id="score">0</b></div>
+    <div class="score-box">Lives<b id="lives">3</b></div>
+    <div class="score-box">Best<b id="best">0</b></div>
+  </div>
+  <canvas id="c" width="500" height="400"></canvas>
+  <div class="message" id="msg">Klik canvas untuk mulai</div>
+  <button class="primary" id="restart">🔄 Mulai Ulang</button>
+</div>
+<script>
+const cv=document.getElementById('c'),ctx=cv.getContext('2d');const W=500,H=400;
+const COLS=10,ROWS=5,BW=W/COLS,BH=20;const COLORS=['#ef4444','#f59e0b','#facc15','#22c55e','#3b82f6'];
+let paddle,ball,bricks,score,lives,running,best;
+function reset(){paddle={x:W/2-40,w:80,h:10};ball={x:W/2,y:H-40,vx:3,vy:-3,r:7};bricks=[];for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)bricks.push({x:c*BW,y:r*BH+20,w:BW-2,h:BH-2,color:COLORS[r],alive:true});score=0;lives=3;running=false;upd();draw();document.getElementById('msg').textContent='Klik canvas untuk mulai';}
+function upd(){document.getElementById('score').textContent=score;document.getElementById('lives').textContent=lives;document.getElementById('best').textContent=localStorage.brickBest||0;}
+function loop(){if(!running)return;ball.x+=ball.vx;ball.y+=ball.vy;if(ball.x<ball.r||ball.x>W-ball.r)ball.vx=-ball.vx;if(ball.y<ball.r)ball.vy=-ball.vy;if(ball.y>H-30&&ball.x>paddle.x&&ball.x<paddle.x+paddle.w){ball.vy=-Math.abs(ball.vy);ball.vx+=(ball.x-(paddle.x+paddle.w/2))*0.05;}for(const b of bricks){if(!b.alive)continue;if(ball.x>b.x&&ball.x<b.x+b.w&&ball.y>b.y&&ball.y<b.y+b.h){b.alive=false;ball.vy=-ball.vy;score+=10;upd();if(bricks.every(b=>!b.alive)){win();return;}break;}}if(ball.y>H){lives--;upd();if(lives<=0){lose();return;}ball={x:W/2,y:H-40,vx:3,vy:-3,r:7};}draw();requestAnimationFrame(loop);}
+function draw(){ctx.fillStyle='#0a0e22';ctx.fillRect(0,0,W,H);for(const b of bricks){if(!b.alive)continue;ctx.fillStyle=b.color;ctx.fillRect(b.x,b.y,b.w,b.h);}ctx.fillStyle='#ff66b3';ctx.fillRect(paddle.x,H-20,paddle.w,paddle.h);ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(ball.x,ball.y,ball.r,0,Math.PI*2);ctx.fill();}
+function win(){running=false;document.getElementById('msg').textContent='🎉 Menang! Skor: '+score;saveBest();}
+function lose(){running=false;document.getElementById('msg').textContent='💀 Game Over! Skor: '+score;saveBest();draw();}
+function saveBest(){const b=Math.max(score,parseInt(localStorage.brickBest||0));localStorage.brickBest=b;upd();}
+cv.addEventListener('click',()=>{if(!running){running=true;document.getElementById('msg').textContent='GO!';loop();}});
+cv.addEventListener('mousemove',e=>{const r=cv.getBoundingClientRect();paddle.x=e.clientX-r.left-paddle.w/2;paddle.x=Math.max(0,Math.min(W-paddle.w,paddle.x));});
+window.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')paddle.x-=20;if(e.key==='ArrowRight')paddle.x+=20;paddle.x=Math.max(0,Math.min(W-paddle.w,paddle.x));});
+document.getElementById('restart').onclick=reset;reset();
+</script></body></html>

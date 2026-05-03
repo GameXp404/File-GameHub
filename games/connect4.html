@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="id"><head>
+<meta charset="UTF-8" /><title>🔴 Connect 4</title>
+<link rel="stylesheet" href="game.css" />
+<style>
+  .board{display:inline-grid;grid-template-columns:repeat(7,52px);gap:6px;background:#1e40af;padding:10px;border-radius:10px;border:3px solid #6b46ff;}
+  .cell{width:52px;height:52px;border-radius:50%;background:#0a0e22;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:32px;transition:transform 0.2s;}
+  .cell.red{background:radial-gradient(#ff6666,#cc0000);}
+  .cell.yellow{background:radial-gradient(#ffeb3b,#fbc02d);}
+  .cell.win{animation:pulse 0.6s infinite alternate;}
+  @keyframes pulse{from{transform:scale(1);}to{transform:scale(1.15);box-shadow:0 0 20px gold;}}
+</style></head><body>
+<a href="../index.html" class="back-to-hub">← Kembali ke Hub</a>
+<div class="game-wrap">
+  <h1>🔴 Connect 4</h1>
+  <div class="subtitle">Klik kolom untuk drop koin merah. Connect 4 berturut menang!</div>
+  <div class="score-row">
+    <div class="score-box">Kamu (🔴)<b id="ws">0</b></div>
+    <div class="score-box">CPU (🟡)<b id="ls">0</b></div>
+    <div class="score-box">Seri<b id="ds">0</b></div>
+  </div>
+  <div class="board" id="board"></div>
+  <div class="message" id="msg">Giliran kamu (klik kolom)</div>
+  <button class="primary" id="restart">🔄 Ronde Baru</button>
+</div>
+<script>
+const ROWS=6,COLS=7;let grid,turn,gameOver;
+let scores=JSON.parse(localStorage.c4Scores||'{"w":0,"l":0,"d":0}');
+function init(){grid=Array.from({length:ROWS},()=>Array(COLS).fill(0));turn='red';gameOver=false;render();document.getElementById('msg').textContent='Giliran kamu (klik kolom)';upd();}
+function upd(){document.getElementById('ws').textContent=scores.w;document.getElementById('ls').textContent=scores.l;document.getElementById('ds').textContent=scores.d;localStorage.c4Scores=JSON.stringify(scores);}
+function render(highlight){const b=document.getElementById('board');b.innerHTML='';for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){const cell=document.createElement('div');cell.className='cell';if(grid[r][c]==='red')cell.classList.add('red');if(grid[r][c]==='yellow')cell.classList.add('yellow');if(highlight&&highlight.some(h=>h[0]===r&&h[1]===c))cell.classList.add('win');cell.onclick=()=>drop(c);b.appendChild(cell);}}
+function drop(col){if(gameOver||turn!=='red')return;for(let r=ROWS-1;r>=0;r--){if(!grid[r][col]){grid[r][col]='red';if(checkWin('red',r,col))return;turn='yellow';render();setTimeout(cpu,400);return;}}}
+function cpu(){if(gameOver)return;let bestCol=-1;for(let c=0;c<COLS;c++){for(let r=ROWS-1;r>=0;r--){if(!grid[r][c]){grid[r][c]='yellow';if(wouldWin('yellow',r,c)){bestCol=c;grid[r][c]=0;break;}grid[r][c]=0;break;}}}if(bestCol===-1)for(let c=0;c<COLS;c++){for(let r=ROWS-1;r>=0;r--){if(!grid[r][c]){grid[r][c]='red';if(wouldWin('red',r,c)){bestCol=c;grid[r][c]=0;break;}grid[r][c]=0;break;}}}if(bestCol===-1){const valid=[];for(let c=0;c<COLS;c++)if(!grid[0][c])valid.push(c);bestCol=valid[Math.floor(Math.random()*valid.length)];}for(let r=ROWS-1;r>=0;r--){if(!grid[r][bestCol]){grid[r][bestCol]='yellow';if(checkWin('yellow',r,bestCol))return;turn='red';render();document.getElementById('msg').textContent='Giliran kamu';return;}}}
+function wouldWin(p,r,c){return getWinLine(p,r,c)!==null;}
+function getWinLine(p,r,c){const dirs=[[0,1],[1,0],[1,1],[1,-1]];for(const[dr,dc]of dirs){const line=[[r,c]];for(let i=1;i<4;i++){const nr=r+dr*i,nc=c+dc*i;if(nr<0||nr>=ROWS||nc<0||nc>=COLS||grid[nr][nc]!==p)break;line.push([nr,nc]);}for(let i=1;i<4;i++){const nr=r-dr*i,nc=c-dc*i;if(nr<0||nr>=ROWS||nc<0||nc>=COLS||grid[nr][nc]!==p)break;line.unshift([nr,nc]);}if(line.length>=4)return line.slice(0,4);}return null;}
+function checkWin(p,r,c){const line=getWinLine(p,r,c);if(line){gameOver=true;render(line);if(p==='red'){scores.w++;document.getElementById('msg').textContent='🎉 Kamu menang!';}else{scores.l++;document.getElementById('msg').textContent='💀 CPU menang';}upd();return true;}if(grid.flat().every(v=>v)){gameOver=true;scores.d++;document.getElementById('msg').textContent='🤝 Seri';upd();render();return true;}return false;}
+document.getElementById('restart').onclick=init;init();
+</script></body></html>

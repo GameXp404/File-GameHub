@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="id"><head>
+<meta charset="UTF-8" /><title>🔢 Sudoku 4x4</title>
+<link rel="stylesheet" href="game.css" />
+<style>
+  .board{display:inline-grid;grid-template-columns:repeat(4,60px);gap:0;border:3px solid #6b46ff;background:#0f1729;}
+  .cell{width:60px;height:60px;border:1px solid #2a2a4a;text-align:center;font-size:28px;font-weight:bold;background:#0f1729;color:#fff;outline:none;}
+  .cell.given{background:#1a1a2e;color:#ff66b3;}
+  .cell.error{background:#3a0000;color:#ff6666;}
+  .cell:focus{background:#2a2a4a;border-color:#ff66b3;}
+  .cell:nth-child(4n){border-right:2px solid #6b46ff;}
+  .row:nth-child(2) .cell, .row:nth-child(4) .cell{border-bottom:2px solid #6b46ff;}
+</style></head><body>
+<a href="../index.html" class="back-to-hub">← Kembali ke Hub</a>
+<div class="game-wrap">
+  <h1>🔢 Sudoku 4x4</h1>
+  <div class="subtitle">Isi setiap baris, kolom, dan kotak 2x2 dengan angka 1-4 (tidak boleh dobel)</div>
+  <div class="score-row">
+    <div class="score-box">Salah<b id="errs">0</b></div>
+    <div class="score-box">Best<b id="best">-</b></div>
+    <div class="score-box">Time<b id="time">0s</b></div>
+  </div>
+  <div class="board" id="board"></div>
+  <div class="message" id="msg">Klik sel & ketik 1-4</div>
+  <button class="primary" id="restart">🔄 Game Baru</button>
+</div>
+<script>
+const PUZZLES=[[[1,0,0,4],[0,4,1,0],[0,1,4,0],[4,0,0,1]],[[0,2,0,0],[3,0,0,2],[2,0,0,3],[0,0,2,0]],[[1,0,0,2],[0,3,1,0],[0,2,3,0],[3,0,0,4]]];
+let solution,board,errs,timer,seconds,startTime;
+function solve(g){function bt(p){if(p===16)return true;const r=Math.floor(p/4),c=p%4;if(g[r][c])return bt(p+1);for(let n=1;n<=4;n++){let ok=true;for(let i=0;i<4;i++)if(g[r][i]===n||g[i][c]===n){ok=false;break;}const br=Math.floor(r/2)*2,bc=Math.floor(c/2)*2;for(let i=0;i<2;i++)for(let j=0;j<2;j++)if(g[br+i][bc+j]===n)ok=false;if(ok){g[r][c]=n;if(bt(p+1))return true;g[r][c]=0;}}return false;}return bt(0);}
+function init(){const p=PUZZLES[Math.floor(Math.random()*PUZZLES.length)];board=p.map(r=>[...r]);solution=p.map(r=>[...r]);solve(solution);errs=0;seconds=0;startTime=Date.now();clearInterval(timer);timer=setInterval(()=>{seconds=Math.floor((Date.now()-startTime)/1000);document.getElementById('time').textContent=seconds+'s';},1000);render();document.getElementById('errs').textContent=0;document.getElementById('msg').textContent='Klik sel & ketik 1-4';document.getElementById('best').textContent=localStorage.sudokuBest||'-';}
+function render(){const b=document.getElementById('board');b.innerHTML='';for(let r=0;r<4;r++){const row=document.createElement('div');row.className='row';row.style.display='contents';for(let c=0;c<4;c++){const cell=document.createElement('input');cell.className='cell';cell.maxLength=1;cell.value=board[r][c]||'';cell.dataset.r=r;cell.dataset.c=c;if(PUZZLES[0][r][c]||board[r][c]&&!isNaN(board[r][c])){if(board[r][c]===solution[r][c])cell.classList.add(typeof PUZZLES==='object');}cell.disabled=false;cell.addEventListener('input',e=>{const v=parseInt(e.target.value);if(!v||v<1||v>4){e.target.value='';board[r][c]=0;return;}board[r][c]=v;if(v!==solution[r][c]){errs++;document.getElementById('errs').textContent=errs;e.target.classList.add('error');}else{e.target.classList.remove('error');checkWin();}});b.appendChild(cell);}}}
+function checkWin(){for(let r=0;r<4;r++)for(let c=0;c<4;c++)if(board[r][c]!==solution[r][c])return;clearInterval(timer);document.getElementById('msg').textContent=`🎉 Selesai dalam ${seconds}s, ${errs} salah!`;const score=seconds+errs*5;const best=parseInt(localStorage.sudokuBest||'9999');if(score<best)localStorage.sudokuBest=score;}
+document.getElementById('restart').onclick=init;init();
+</script></body></html>

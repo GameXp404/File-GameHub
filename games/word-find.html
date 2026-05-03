@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="id"><head>
+<meta charset="UTF-8" /><title>🔍 Word Find</title>
+<link rel="stylesheet" href="game.css" />
+<style>
+  .grid{display:inline-grid;grid-template-columns:repeat(8,40px);gap:2px;background:#0f1729;padding:8px;border-radius:8px;border:3px solid #6b46ff;}
+  .cell{width:40px;height:40px;background:#1a1a2e;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:bold;cursor:pointer;color:#fff;border-radius:4px;user-select:none;}
+  .cell.sel{background:#6b46ff;}
+  .cell.found{background:#16a34a;color:#fff;animation:pulse 0.4s;}
+  @keyframes pulse{from{transform:scale(1);}50%{transform:scale(1.2);}to{transform:scale(1);}}
+  .targets{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:14px 0;}
+  .word{padding:4px 10px;background:#2a2a4a;color:#fff;border-radius:4px;font-size:13px;}
+  .word.done{background:#16a34a;text-decoration:line-through;}
+</style></head><body>
+<a href="../index.html" class="back-to-hub">← Kembali ke Hub</a>
+<div class="game-wrap">
+  <h1>🔍 Word Find Indonesia</h1>
+  <div class="subtitle">Cari kata di grid. Klik huruf pertama, drag/klik huruf terakhir untuk select.</div>
+  <div class="score-row">
+    <div class="score-box">Ditemukan<b id="found">0</b>/<span id="total">0</span></div>
+    <div class="score-box">Time<b id="time">0s</b></div>
+  </div>
+  <div class="targets" id="targets"></div>
+  <div class="grid" id="grid"></div>
+  <div class="message" id="msg">Klik huruf pertama lalu huruf terakhir kata</div>
+  <button class="primary" id="restart">🔄 Game Baru</button>
+</div>
+<script>
+const SIZE=8;const WORDS=['JAKARTA','BANDUNG','MEDAN','BALI','KOPI','NASI','RUMAH','SAYUR'];
+let grid,words,foundWords,startSel,timer,seconds;
+function init(){grid=Array.from({length:SIZE},()=>Array(SIZE).fill(''));words=[...WORDS].sort(()=>Math.random()-0.5).slice(0,5);foundWords=[];placeAll();fillEmpty();render();renderTargets();seconds=0;clearInterval(timer);timer=setInterval(()=>{seconds++;document.getElementById('time').textContent=seconds+'s';},1000);document.getElementById('found').textContent=0;document.getElementById('total').textContent=words.length;document.getElementById('msg').textContent='Klik huruf pertama lalu huruf terakhir';}
+function placeAll(){for(const w of words){let placed=false;for(let tries=0;tries<50&&!placed;tries++){const dir=Math.random()<0.5?'h':'v';const r=Math.floor(Math.random()*SIZE);const c=Math.floor(Math.random()*SIZE);if(dir==='h'&&c+w.length<=SIZE){let ok=true;for(let i=0;i<w.length;i++)if(grid[r][c+i]&&grid[r][c+i]!==w[i]){ok=false;break;}if(ok){for(let i=0;i<w.length;i++)grid[r][c+i]=w[i];placed=true;}}else if(dir==='v'&&r+w.length<=SIZE){let ok=true;for(let i=0;i<w.length;i++)if(grid[r+i][c]&&grid[r+i][c]!==w[i]){ok=false;break;}if(ok){for(let i=0;i<w.length;i++)grid[r+i][c]=w[i];placed=true;}}}}}
+function fillEmpty(){for(let r=0;r<SIZE;r++)for(let c=0;c<SIZE;c++)if(!grid[r][c])grid[r][c]=String.fromCharCode(65+Math.floor(Math.random()*26));}
+function render(){const g=document.getElementById('grid');g.innerHTML='';for(let r=0;r<SIZE;r++)for(let c=0;c<SIZE;c++){const cell=document.createElement('div');cell.className='cell';cell.textContent=grid[r][c];cell.dataset.r=r;cell.dataset.c=c;cell.onclick=()=>handleClick(r,c);g.appendChild(cell);}foundWords.forEach(coords=>coords.forEach(([r,c])=>{const idx=r*SIZE+c;g.children[idx].classList.add('found');}));}
+function handleClick(r,c){if(!startSel){startSel=[r,c];document.querySelectorAll('.cell').forEach(c=>c.classList.remove('sel'));document.getElementById('grid').children[r*SIZE+c].classList.add('sel');}else{const[r1,c1]=startSel;const dr=r-r1,dc=c-c1;if(dr!==0&&dc!==0&&Math.abs(dr)!==Math.abs(dc)){startSel=null;return;}const len=Math.max(Math.abs(dr),Math.abs(dc))+1;const sr=dr===0?0:Math.sign(dr);const sc=dc===0?0:Math.sign(dc);let word='',coords=[];for(let i=0;i<len;i++){const nr=r1+sr*i,nc=c1+sc*i;word+=grid[nr][nc];coords.push([nr,nc]);}startSel=null;if(words.includes(word)&&!foundWords.some(f=>f.word===word)){foundWords.push({word,coords});foundWords[foundWords.length-1].word=word;render();renderTargets();document.getElementById('found').textContent=foundWords.length;document.getElementById('msg').textContent=`✅ "${word}" ditemukan!`;if(foundWords.length===words.length){clearInterval(timer);document.getElementById('msg').textContent=`🎉 Selesai dalam ${seconds}s!`;}}else{document.querySelectorAll('.cell').forEach(c=>c.classList.remove('sel'));document.getElementById('msg').textContent='❌ Bukan kata target';}}}
+function renderTargets(){const t=document.getElementById('targets');t.innerHTML='';words.forEach(w=>{const span=document.createElement('span');span.className='word'+(foundWords.some(f=>f.word===w)?' done':'');span.textContent=w;t.appendChild(span);});}
+document.getElementById('restart').onclick=init;init();
+</script></body></html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="id"><head>
+<meta charset="UTF-8" /><title>🔢 Number Memory</title>
+<link rel="stylesheet" href="game.css" />
+<style>
+  .display{font-size:80px;font-weight:bold;font-family:'Courier New',monospace;background:#0f1729;border:3px solid #6b46ff;border-radius:12px;padding:30px;margin:20px auto;display:inline-block;letter-spacing:4px;color:#ff66b3;min-width:300px;}
+  .input-num{font-size:32px;padding:14px;text-align:center;background:#0f1729;color:#fff;border:3px solid #6b46ff;border-radius:8px;width:300px;letter-spacing:4px;font-family:monospace;}
+</style></head><body>
+<a href="../index.html" class="back-to-hub">← Kembali ke Hub</a>
+<div class="game-wrap">
+  <h1>🔢 Number Memory</h1>
+  <div class="subtitle">Hafalkan deretan angka, lalu ketik ulang. Tiap level +1 angka.</div>
+  <div class="score-row">
+    <div class="score-box">Level<b id="level">0</b></div>
+    <div class="score-box">Best<b id="best">0</b></div>
+  </div>
+  <div class="display" id="display">--</div>
+  <input type="text" class="input-num" id="input" maxlength="20" placeholder="ketik angka" style="display:none;" autocomplete="off" />
+  <div class="message" id="msg">Klik Mulai untuk play</div>
+  <button class="primary" id="start">▶️ Mulai</button>
+  <button class="secondary" id="check" style="display:none;">✅ Cek</button>
+</div>
+<script>
+let level=0,target='';
+function start(){level=1;next();}
+function next(){target=Array.from({length:level},()=>Math.floor(Math.random()*10)).join('');document.getElementById('level').textContent=level;document.getElementById('display').textContent=target;document.getElementById('msg').textContent='👁️ Hafalkan...';document.getElementById('input').style.display='none';document.getElementById('check').style.display='none';document.getElementById('start').style.display='none';setTimeout(()=>{document.getElementById('display').textContent='--';document.getElementById('msg').textContent='👆 Ketik angka tadi';document.getElementById('input').style.display='inline-block';document.getElementById('input').value='';document.getElementById('input').focus();document.getElementById('check').style.display='inline-block';},1500+level*300);}
+function check(){const v=document.getElementById('input').value.trim();if(v===target){const best=Math.max(level,parseInt(localStorage.numMemBest||0));localStorage.numMemBest=best;document.getElementById('best').textContent=best;document.getElementById('msg').textContent=`✅ Benar! Lanjut level ${level+1}`;level++;setTimeout(next,1000);}else{document.getElementById('msg').textContent=`💀 Salah! Jawaban: ${target}. Best: ${localStorage.numMemBest||0}`;document.getElementById('start').style.display='inline-block';document.getElementById('start').textContent='▶️ Coba Lagi';document.getElementById('check').style.display='none';document.getElementById('input').style.display='none';}}
+document.getElementById('start').onclick=start;document.getElementById('check').onclick=check;
+document.getElementById('input').addEventListener('keypress',e=>{if(e.key==='Enter')check();});
+document.getElementById('best').textContent=localStorage.numMemBest||0;
+</script></body></html>

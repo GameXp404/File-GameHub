@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="id"><head>
+<meta charset="UTF-8" /><title>🚀 Asteroids</title>
+<link rel="stylesheet" href="game.css" />
+</head><body>
+<a href="../index.html" class="back-to-hub">← Kembali ke Hub</a>
+<div class="game-wrap">
+  <h1>🚀 Asteroids</h1>
+  <div class="subtitle">← → putar, ↑ thrust, Space tembak. Hancurkan asteroid!</div>
+  <div class="score-row">
+    <div class="score-box">Skor<b id="score">0</b></div>
+    <div class="score-box">Lives<b id="lives">3</b></div>
+    <div class="score-box">Best<b id="best">0</b></div>
+  </div>
+  <canvas id="c" width="500" height="500"></canvas>
+  <div class="message" id="msg">Tekan tombol arah</div>
+  <button class="primary" id="restart">🔄 Mulai Ulang</button>
+</div>
+<script>
+const cv=document.getElementById('c'),ctx=cv.getContext('2d');const W=500,H=500;
+let ship,bullets,asteroids,score,lives,keys,gameOver;
+function reset(){ship={x:W/2,y:H/2,a:0,vx:0,vy:0};bullets=[];asteroids=[];for(let i=0;i<5;i++)spawnAsteroid();score=0;lives=3;gameOver=false;keys={};upd();document.getElementById('msg').textContent='Tekan ↑ untuk maju, Space untuk tembak';loop();}
+function spawnAsteroid(){let x,y;do{x=Math.random()*W;y=Math.random()*H;}while(Math.hypot(x-W/2,y-H/2)<100);asteroids.push({x,y,vx:(Math.random()-0.5)*2,vy:(Math.random()-0.5)*2,r:30});}
+function upd(){document.getElementById('score').textContent=score;document.getElementById('lives').textContent=lives;document.getElementById('best').textContent=localStorage.astBest||0;}
+function loop(){if(gameOver)return;if(keys.ArrowLeft)ship.a-=0.08;if(keys.ArrowRight)ship.a+=0.08;if(keys.ArrowUp){ship.vx+=Math.cos(ship.a)*0.15;ship.vy+=Math.sin(ship.a)*0.15;}ship.vx*=0.99;ship.vy*=0.99;ship.x=(ship.x+ship.vx+W)%W;ship.y=(ship.y+ship.vy+H)%H;bullets.forEach(b=>{b.x=(b.x+b.vx+W)%W;b.y=(b.y+b.vy+H)%H;b.life--;});bullets=bullets.filter(b=>b.life>0);asteroids.forEach(a=>{a.x=(a.x+a.vx+W)%W;a.y=(a.y+a.vy+H)%H;});for(let i=asteroids.length-1;i>=0;i--){for(let j=bullets.length-1;j>=0;j--){if(Math.hypot(asteroids[i].x-bullets[j].x,asteroids[i].y-bullets[j].y)<asteroids[i].r){asteroids.splice(i,1);bullets.splice(j,1);score+=10;upd();spawnAsteroid();break;}}}for(const a of asteroids){if(Math.hypot(a.x-ship.x,a.y-ship.y)<a.r+10){lives--;upd();ship.x=W/2;ship.y=H/2;ship.vx=0;ship.vy=0;if(lives<=0){gameOver=true;document.getElementById('msg').textContent='💀 Game Over! Skor: '+score;const b=Math.max(score,parseInt(localStorage.astBest||0));localStorage.astBest=b;upd();return;}break;}}draw();requestAnimationFrame(loop);}
+function draw(){ctx.fillStyle='#0a0e22';ctx.fillRect(0,0,W,H);ctx.strokeStyle='#fff';ctx.lineWidth=2;for(const a of asteroids){ctx.beginPath();ctx.arc(a.x,a.y,a.r,0,Math.PI*2);ctx.stroke();}ctx.fillStyle='#ff66b3';for(const b of bullets){ctx.beginPath();ctx.arc(b.x,b.y,3,0,Math.PI*2);ctx.fill();}ctx.save();ctx.translate(ship.x,ship.y);ctx.rotate(ship.a);ctx.strokeStyle='#00ff88';ctx.beginPath();ctx.moveTo(15,0);ctx.lineTo(-10,-8);ctx.lineTo(-10,8);ctx.closePath();ctx.stroke();ctx.restore();}
+window.addEventListener('keydown',e=>{keys[e.key]=true;if(e.key===' '&&!gameOver){bullets.push({x:ship.x,y:ship.y,vx:Math.cos(ship.a)*7,vy:Math.sin(ship.a)*7,life:50});e.preventDefault();}});
+window.addEventListener('keyup',e=>{keys[e.key]=false;});
+document.getElementById('restart').onclick=reset;reset();
+</script></body></html>

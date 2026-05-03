@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="id"><head>
+<meta charset="UTF-8" /><title>🫧 Bubble Pop</title>
+<link rel="stylesheet" href="game.css" />
+<style>
+  .grid{display:inline-grid;grid-template-columns:repeat(8,40px);gap:3px;background:#0f1729;padding:8px;border-radius:8px;border:3px solid #6b46ff;}
+  .b{width:40px;height:40px;border-radius:50%;cursor:pointer;transition:transform 0.15s;display:flex;align-items:center;justify-content:center;}
+  .b:hover{transform:scale(1.15);}
+  .b.gone{opacity:0;pointer-events:none;}
+  .c0{background:radial-gradient(#ff8888,#dc2626);}
+  .c1{background:radial-gradient(#88ddff,#1e40af);}
+  .c2{background:radial-gradient(#88ff88,#16a34a);}
+  .c3{background:radial-gradient(#ffdd88,#f59e0b);}
+  .c4{background:radial-gradient(#dd88ff,#9333ea);}
+</style></head><body>
+<a href="../index.html" class="back-to-hub">← Kembali ke Hub</a>
+<div class="game-wrap">
+  <h1>🫧 Bubble Pop</h1>
+  <div class="subtitle">Klik bubble warna sama yang berdekatan (min 2). Makin banyak makin tinggi skor!</div>
+  <div class="score-row">
+    <div class="score-box">Skor<b id="score">0</b></div>
+    <div class="score-box">Best<b id="best">0</b></div>
+    <div class="score-box">Tersisa<b id="left">0</b></div>
+  </div>
+  <div class="grid" id="grid"></div>
+  <div class="message" id="msg">Klik bubble berdekatan dengan warna sama</div>
+  <button class="primary" id="restart">🔄 Game Baru</button>
+</div>
+<script>
+const ROWS=10,COLS=8,COLORS=5;let grid,score;
+function init(){grid=Array.from({length:ROWS},()=>Array.from({length:COLS},()=>Math.floor(Math.random()*COLORS)));score=0;render();update();document.getElementById('msg').textContent='Klik bubble!';}
+function update(){document.getElementById('score').textContent=score;const left=grid.flat().filter(v=>v!==-1).length;document.getElementById('left').textContent=left;document.getElementById('best').textContent=localStorage.bubbleBest||0;if(left===0){document.getElementById('msg').textContent='🎉 Bersih! Skor: '+score;const b=Math.max(score,parseInt(localStorage.bubbleBest||0));localStorage.bubbleBest=b;}else if(!hasMoves()){document.getElementById('msg').textContent='💀 Tidak ada move. Skor akhir: '+score;const b=Math.max(score,parseInt(localStorage.bubbleBest||0));localStorage.bubbleBest=b;}}
+function render(){const g=document.getElementById('grid');g.innerHTML='';for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){const b=document.createElement('div');b.className='b';if(grid[r][c]===-1)b.classList.add('gone');else b.classList.add('c'+grid[r][c]);b.onclick=()=>pop(r,c);g.appendChild(b);}}
+function findGroup(r,c,color,visited=new Set()){const k=r+','+c;if(visited.has(k)||r<0||r>=ROWS||c<0||c>=COLS||grid[r][c]!==color)return[];visited.add(k);const result=[[r,c]];result.push(...findGroup(r-1,c,color,visited));result.push(...findGroup(r+1,c,color,visited));result.push(...findGroup(r,c-1,color,visited));result.push(...findGroup(r,c+1,color,visited));return result;}
+function pop(r,c){if(grid[r][c]===-1)return;const group=findGroup(r,c,grid[r][c]);if(group.length<2){document.getElementById('msg').textContent='⚠️ Min 2 bubble berwarna sama berdekatan';return;}group.forEach(([gr,gc])=>grid[gr][gc]=-1);score+=group.length*group.length;collapse();render();update();document.getElementById('msg').textContent=`💥 ${group.length} bubble! +${group.length*group.length} skor`;}
+function collapse(){for(let c=0;c<COLS;c++){const col=[];for(let r=ROWS-1;r>=0;r--)if(grid[r][c]!==-1)col.push(grid[r][c]);for(let r=ROWS-1;r>=0;r--)grid[r][c]=col[ROWS-1-r]!==undefined?col[ROWS-1-r]:-1;}}
+function hasMoves(){for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)if(grid[r][c]!==-1&&findGroup(r,c,grid[r][c]).length>=2)return true;return false;}
+document.getElementById('restart').onclick=init;init();
+</script></body></html>
