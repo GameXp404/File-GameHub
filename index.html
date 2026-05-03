@@ -2849,9 +2849,36 @@ $('copyExportBtn').addEventListener('click', () => {
 // ============ SERVICE WORKER REGISTRATION ============
 if ('serviceWorker' in navigator && location.protocol !== 'file:') {
   window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/File-GameHub/sw.js').catch(()=>{});
     navigator.serviceWorker.register('/sw.js')
-      .then(reg => console.log('[SW] registered:', reg.scope))
+      .then(reg => {
+        console.log('[SW] registered');
+        // Force check for update
+        reg.update();
+        // Listen for updates
+        reg.addEventListener('updatefound', () => {
+          const newWorker = reg.installing;
+          if (newWorker) {
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                // Update tersedia, auto reload
+                if (confirm('🆕 Update tersedia! Reload halaman untuk dapat versi baru?')) {
+                  newWorker.postMessage({ action: 'skipWaiting' });
+                  setTimeout(() => location.reload(), 200);
+                }
+              }
+            });
+          }
+        });
+      })
       .catch(err => console.warn('[SW] registration failed:', err));
+    // Auto reload kalau SW baru take control
+    let refreshing = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (refreshing) return;
+      refreshing = true;
+      location.reload();
+    });
   });
 }
 

@@ -1,6 +1,6 @@
 // GameHub Service Worker
 // Cache-first untuk asset statis, network-first untuk HTML
-const CACHE_VERSION = 'gamehub-v3';
+const CACHE_VERSION = 'gamehub-v5-water-glass';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 
@@ -12,6 +12,11 @@ const STATIC_ASSETS = [
   '/icons/icon-192.png',
   '/icons/icon-512.png',
 ];
+
+// Listen untuk skipWaiting message dari client
+self.addEventListener('message', event => {
+  if (event.data && event.data.action === 'skipWaiting') self.skipWaiting();
+});
 
 // INSTALL: pre-cache static assets
 self.addEventListener('install', event => {
