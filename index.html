@@ -2866,31 +2866,42 @@ $('copyExportBtn').addEventListener('click', () => {
 });
 
 // ============ SERVICE WORKER REGISTRATION ============
+// Pakai relative path './sw.js' supaya bekerja baik di GitHub Pages
+// (gamexp404.github.io/File-GameHub/) maupun deploy lain
 if ('serviceWorker' in navigator && location.protocol !== 'file:') {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/File-GameHub/sw.js').catch(()=>{});
-    navigator.serviceWorker.register('/sw.js')
-      .then(reg => {
-        console.log('[SW] registered');
-        // Force check for update
-        reg.update();
-        // Listen for updates
-        reg.addEventListener('updatefound', () => {
-          const newWorker = reg.installing;
-          if (newWorker) {
-            newWorker.addEventListener('statechange', () => {
-              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                // Update tersedia, auto reload
-                if (confirm('🆕 Update tersedia! Reload halaman untuk dapat versi baru?')) {
-                  newWorker.postMessage({ action: 'skipWaiting' });
-                  setTimeout(() => location.reload(), 200);
-                }
-              }
-            });
+  window.addEventListener('load', async () => {
+    try {
+      // STEP 1: Bersihkan SW lama yang mungkin corrupt (v13/v14 yg gagal install)
+      const regs = await navigator.serviceWorker.getRegistrations();
+      for (const r of regs) {
+        // Unregister SW yang scope-nya bukan di folder ini (legacy /sw.js)
+        if (r.scope && !r.scope.includes(location.pathname.replace(/[^/]*$/, ''))) {
+          await r.unregister();
+          console.log('[SW] removed stale registration:', r.scope);
+        }
+      }
+
+      // STEP 2: Register SW baru pakai relative path
+      const reg = await navigator.serviceWorker.register('./sw.js');
+      console.log('[SW] registered, scope:', reg.scope);
+      reg.update();
+
+      reg.addEventListener('updatefound', () => {
+        const newWorker = reg.installing;
+        if (!newWorker) return;
+        newWorker.addEventListener('statechange', () => {
+          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            if (confirm('🆕 Update tersedia! Reload halaman untuk dapat versi baru?')) {
+              newWorker.postMessage({ action: 'skipWaiting' });
+              setTimeout(() => location.reload(), 200);
+            }
           }
         });
-      })
-      .catch(err => console.warn('[SW] registration failed:', err));
+      });
+    } catch (err) {
+      console.warn('[SW] registration failed:', err);
+    }
+
     // Auto reload kalau SW baru take control
     let refreshing = false;
     navigator.serviceWorker.addEventListener('controllerchange', () => {

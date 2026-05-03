@@ -1,16 +1,20 @@
 // GameHub Service Worker
 // Cache-first untuk asset statis, network-first untuk HTML
-const CACHE_VERSION = 'gamehub-v14-psx-demo';
+const CACHE_VERSION = 'gamehub-v15-fix-paths';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 
+// Derive scope base path dari lokasi sw.js sendiri
+// Bekerja baik di GitHub Pages /File-GameHub/ maupun root /
+const SCOPE = self.location.pathname.replace(/sw\.js$/, '');
+
 const STATIC_ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icon.svg',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png',
+  SCOPE,
+  SCOPE + 'index.html',
+  SCOPE + 'manifest.json',
+  SCOPE + 'icon.svg',
+  SCOPE + 'icons/icon-192.png',
+  SCOPE + 'icons/icon-512.png',
 ];
 
 // Listen untuk skipWaiting message dari client
@@ -18,13 +22,15 @@ self.addEventListener('message', event => {
   if (event.data && event.data.action === 'skipWaiting') self.skipWaiting();
 });
 
-// INSTALL: pre-cache static assets
+// INSTALL: pre-cache static assets (per-file, jangan all-or-nothing)
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(STATIC_CACHE)
-      .then(cache => cache.addAll(STATIC_ASSETS))
-      .then(() => self.skipWaiting())
-      .catch(err => console.warn('SW install error:', err))
+    caches.open(STATIC_CACHE).then(cache =>
+      // Pakai Promise.allSettled supaya 1 file gagal tidak blokir SW install
+      Promise.allSettled(
+        STATIC_ASSETS.map(url => cache.add(url).catch(err => console.warn('SW pre-cache miss:', url, err)))
+      )
+    ).then(() => self.skipWaiting())
   );
 });
 
@@ -43,7 +49,7 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   const { request } = event;
   if (request.method !== 'GET') return;
-  // Skip cross-origin & analytics
+  // Skip cross-origin (CDN, dll - termasuk EmulatorJS CDN)
   const url = new URL(request.url);
   if (url.origin !== location.origin) return;
 
@@ -56,7 +62,7 @@ self.addEventListener('fetch', event => {
           caches.open(RUNTIME_CACHE).then(cache => cache.put(request, copy));
           return response;
         })
-        .catch(() => caches.match(request).then(r => r || caches.match('/index.html')))
+        .catch(() => caches.match(request).then(r => r || caches.match(SCOPE + 'index.html')))
     );
     return;
   }
