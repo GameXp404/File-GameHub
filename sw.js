@@ -1,6 +1,6 @@
 // GameHub Service Worker
 // Cache-first untuk asset statis, network-first untuk HTML
-const CACHE_VERSION = 'gamehub-v7-bg-override-fix';
+const CACHE_VERSION = 'gamehub-v8-bglayer';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 
