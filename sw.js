@@ -1,6 +1,6 @@
 // GameHub Service Worker
 // Cache-first untuk asset statis, network-first untuk HTML
-const CACHE_VERSION = 'gamehub-v13-circuit-bg';
+const CACHE_VERSION = 'gamehub-v14-psx-demo';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 
