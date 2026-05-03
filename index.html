@@ -3254,12 +3254,20 @@ function showGameDetail(gameId) {
   // Rating
   renderRating(gameId);
 
-  // Play button
+  // Play button - text + handler
+  $('bigPlayBtn').innerHTML = '🎮 Mainkan di Tab Baru';
   $('bigPlayBtn').onclick = () => playGameInDetail(g);
 
-  // Hide iframe by default, show thumb
-  $('detailIframeWrap').style.display = 'none';
-  $('detailThumb').style.display = 'flex';
+  // Auto-load iframe preview (kecuali external) supaya user bisa lihat preview langsung
+  if (g.external || (g.gameType && g.gameType !== 'web')) {
+    $('detailIframeWrap').style.display = 'none';
+    $('detailThumb').style.display = 'flex';
+    $('detailIframe').src = 'about:blank';
+  } else {
+    $('detailIframeWrap').style.display = 'block';
+    $('detailThumb').style.display = 'none';
+    $('detailIframe').src = g.url;
+  }
 
   // Related games (same category, exclude current, max 6)
   const related = games.filter(x => x.id !== gameId && x.cat === g.cat && !x.soon).slice(0, 6);
@@ -3286,17 +3294,24 @@ function playGameInDetail(g) {
   localStorage.setItem(PLAYS_STORE, JSON.stringify(counts));
   // Log activity
   if (typeof logPlay === 'function') logPlay(g);
-  // External: open in new tab
-  if (g.external || (g.gameType && g.gameType !== 'web')) {
-    window.open(g.url, '_blank');
-    return;
-  }
-  // Internal: load in iframe
+  // SEMUA game buka di tab baru (full window, fokus keyboard auto, no iframe focus issue)
+  window.open(g.url, '_blank');
+  // Update play count di UI tanpa hilangin iframe preview
+  setTimeout(() => {
+    const plays = getPlayCounts()[g.id] || 0;
+    const statBox = document.querySelector('#detailStats > div:first-child > div:first-child');
+    if (statBox) statBox.textContent = plays;
+  }, 200);
+}
+
+// Auto-load game preview ke iframe pas detail page kebuka (bisa lihat preview tanpa klik)
+function loadIframePreview(g) {
+  if (g.external || (g.gameType && g.gameType !== 'web')) return;
   $('detailIframeWrap').style.display = 'block';
   $('detailThumb').style.display = 'none';
-  $('detailIframe').src = g.url;
-  // Re-render to update play count
-  setTimeout(() => showGameDetail(g.id), 200);
+  if ($('detailIframe').src !== location.origin + '/' + g.url && !$('detailIframe').src.endsWith(g.url)) {
+    $('detailIframe').src = g.url;
+  }
 }
 
 function renderRating(gameId) {
