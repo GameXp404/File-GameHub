@@ -471,7 +471,15 @@
 <div class="layout">
 
   <aside class="sidebar" id="sidebar">
-    <a class="brand" href="#"><span class="brand-icon">🎮</span><span class="brand-text">GameHub</span></a>
+    <!-- Sidebar brand box - customizable (admin tempel logo/banner) -->
+    <div id="sidebarBrand" style="margin:8px;border-radius:12px;overflow:hidden;cursor:pointer;position:relative;min-height:64px;background:linear-gradient(135deg,#16213e,#0f1729);border:2px dashed #2a2a4a;display:flex;align-items:center;justify-content:center;">
+      <div id="sidebarBrandImg" style="position:absolute;inset:0;background-size:cover;background-position:center;display:none;"></div>
+      <div id="sidebarBrandDefault" style="position:relative;z-index:2;padding:6px;display:flex;align-items:center;gap:10px;">
+        <span class="brand-icon" style="background:linear-gradient(135deg,#ff66b3,#6b46ff);width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;box-shadow:0 4px 12px rgba(255,102,179,0.4);flex-shrink:0;">🎮</span>
+        <span class="brand-text" style="background:linear-gradient(135deg,#ff66b3,#6b46ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;font-size:22px;font-weight:900;">GameHub</span>
+      </div>
+      <button id="editBrandBtn" style="display:none;position:absolute;top:4px;right:4px;background:#ff66b3;color:#fff;border:none;padding:3px 8px;border-radius:4px;cursor:pointer;font-size:10px;font-weight:700;z-index:3;">✏️</button>
+    </div>
     <div class="nav-item active" data-cat="all"><span class="icon">🏠</span> Beranda</div>
     <div class="nav-item" data-cat="trending"><span class="icon">⭐</span> Sedang Tren</div>
     <div class="nav-item" data-cat="new"><span class="icon">🆕</span> Baru</div>
@@ -561,13 +569,10 @@
     </div>
 
     <section>
-      <!-- SECTION HEADER dengan ikon GH + welcome text (yang dipindah dari hero) -->
-      <div class="section-head" style="display:flex;align-items:center;gap:18px;">
-        <img id="sectionIcon" src="icons/icon-192.png" alt="GameHub" style="width:84px;height:84px;border-radius:16px;flex-shrink:0;box-shadow:0 4px 16px rgba(255,102,179,0.3);" />
-        <div style="flex:1;min-width:0;">
-          <h1 id="sectionTitle" style="font-size:32px;font-weight:900;background:linear-gradient(135deg,#ff66b3,#6b46ff);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:4px;line-height:1.1;">🎮 Selamat Datang di GameHub</h1>
-          <p id="sectionSub" style="color:#b8b8d4;font-size:14px;">22+ Game Online Gratis · No Download · Langsung Main</p>
-        </div>
+      <!-- SECTION HEADER welcome text (no icon) -->
+      <div class="section-head">
+        <h1 id="sectionTitle" style="font-size:32px;font-weight:900;background:linear-gradient(135deg,#ff66b3,#6b46ff);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:4px;line-height:1.1;">🎮 Selamat Datang di GameHub</h1>
+        <p id="sectionSub" style="color:#b8b8d4;font-size:14px;">22+ Game Online Gratis · No Download · Langsung Main</p>
       </div>
       <div class="grid" id="grid"></div>
     </section>
@@ -688,6 +693,28 @@
       <p style="text-align:center;font-size:11px;color:#8a8aaa;margin-top:10px;">
         Sudah punya akun? <a href="#" id="switchToLogin" style="color:#ff66b3;">Login di sini</a>
       </p>
+    </div>
+  </div>
+</div>
+
+<!-- SIDEBAR BRAND EDIT MODAL (admin-only) -->
+<div class="modal-bg" id="brandEditModal">
+  <div class="modal" style="max-width:480px;">
+    <h2>✏️ Edit Logo Sidebar</h2>
+    <p class="modal-sub">Ganti logo top-left sidebar dengan gambar/banner Anda. Kosongkan = pakai default GameHub.</p>
+    <div class="form-row">
+      <label>URL Logo / Banner (gambar atau GIF)</label>
+      <input type="text" id="bd_url" placeholder="https://example.com/logo.png" />
+      <div style="font-size:11px;color:#8a8aaa;margin-top:4px;">💡 Saran: gambar persegi atau landscape, ukuran kecil (max 200x200px)</div>
+    </div>
+    <div class="form-row">
+      <label>Link saat di-klik (opsional)</label>
+      <input type="text" id="bd_link" placeholder="https://instagram.com/youraccount" />
+    </div>
+    <div class="modal-actions">
+      <button class="btn-primary" id="saveBrandBtn">💾 Simpan</button>
+      <button class="btn-secondary" id="resetBrandBtn">↩️ Reset Default</button>
+      <button class="btn-secondary" onclick="closeModal('brandEditModal')">Batal</button>
     </div>
   </div>
 </div>
@@ -2928,6 +2955,64 @@ function tickClock() {
 }
 setInterval(tickClock, 1000);
 
+// ============ SIDEBAR BRAND (admin-editable logo) ============
+const SIDEBAR_BRAND_STORE = 'gameHubSidebarBrand';
+function getSidebarBrand() { return JSON.parse(localStorage.getItem(SIDEBAR_BRAND_STORE) || '{}'); }
+function saveSidebarBrand(b) { localStorage.setItem(SIDEBAR_BRAND_STORE, JSON.stringify(b)); }
+
+function applySidebarBrand() {
+  const b = getSidebarBrand();
+  const box = $('sidebarBrand');
+  const img = $('sidebarBrandImg');
+  const def = $('sidebarBrandDefault');
+  const editBtn = $('editBrandBtn');
+  if (!box) return;
+
+  if (b.url) {
+    img.style.backgroundImage = `url('${b.url}')`;
+    img.style.display = 'block';
+    def.style.display = 'none';
+    box.style.borderStyle = 'solid';
+    box.style.borderColor = '#6b46ff';
+    box.style.minHeight = '80px';
+    box.onclick = b.link ? () => window.open(b.link, '_blank') : (state.isAdmin ? openBrandEdit : null);
+  } else {
+    img.style.display = 'none';
+    def.style.display = 'flex';
+    box.style.borderStyle = 'dashed';
+    box.style.borderColor = '#2a2a4a';
+    box.onclick = state.isAdmin ? openBrandEdit : null;
+  }
+  if (editBtn) editBtn.style.display = state.isAdmin ? 'block' : 'none';
+}
+
+function openBrandEdit() {
+  const b = getSidebarBrand();
+  $('bd_url').value = b.url || '';
+  $('bd_link').value = b.link || '';
+  openModal('brandEditModal');
+}
+
+function saveBrandEdit() {
+  const b = { url: $('bd_url').value.trim(), link: $('bd_link').value.trim() };
+  saveSidebarBrand(b);
+  applySidebarBrand();
+  closeModal('brandEditModal');
+  toast('✅ Logo sidebar diupdate');
+}
+
+function resetSidebarBrand() {
+  if (!confirm('Reset logo sidebar ke default GameHub?')) return;
+  saveSidebarBrand({});
+  applySidebarBrand();
+  closeModal('brandEditModal');
+  toast('↩️ Logo direset');
+}
+
+$('editBrandBtn')?.addEventListener('click', e => { e.stopPropagation(); openBrandEdit(); });
+$('saveBrandBtn')?.addEventListener('click', saveBrandEdit);
+$('resetBrandBtn')?.addEventListener('click', resetSidebarBrand);
+
 // ============ TOP BANNER (admin-editable image only) ============
 const BANNER_STORE = 'gameHubTopBanner';
 function getBanner() { return JSON.parse(localStorage.getItem(BANNER_STORE) || '{}'); }
@@ -3021,6 +3106,7 @@ const oldUpdateAdminUI = updateAdminUI;
 window.updateAdminUI = function() {
   oldUpdateAdminUI();
   applyBanner();
+  applySidebarBrand();
 };
 
 // ============ INIT ============
@@ -3031,6 +3117,7 @@ updateChatGate();
 renderFloatingWidgets();
 tickClock();
 applyBanner();
+applySidebarBrand();
 $('chatLoginBtn')?.addEventListener('click', () => openModal('loginModal'));
 $('chatSendBtn')?.addEventListener('click', postChatMessage);
 $('chatInput')?.addEventListener('keypress', e => { if (e.key === 'Enter') postChatMessage(); });
