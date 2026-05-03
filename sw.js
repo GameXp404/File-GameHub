@@ -1,6 +1,6 @@
 // GameHub Service Worker
 // Cache-first untuk asset statis, network-first untuk HTML
-const CACHE_VERSION = 'gamehub-v10-aqua';
+const CACHE_VERSION = 'gamehub-v11-water-bg';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 
