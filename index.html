@@ -1568,7 +1568,37 @@ let state = {
 };
 
 function persist(key) { localStorage.setItem(STORE[key], JSON.stringify(state[key])); }
-function getGames() { return state.gamesOverride || GAMES; }
+function getGames() {
+  // Tanpa override → pakai GAMES asli
+  if (!state.gamesOverride || !Array.isArray(state.gamesOverride)) return GAMES;
+  // Merge: override bisa edit visual (badge, grad, thumb, title), tapi
+  // properti kritis (url, soon, id) selalu dari GAMES asli supaya
+  // override stale tidak bikin game baru "hilang" atau game lama jadi soon
+  const byId = new Map(GAMES.map(g => [g.id, g]));
+  const overrideById = new Map(state.gamesOverride.map(g => [g.id, g]));
+  const merged = [];
+  // Pertama tambah semua dari GAMES (sumber truth utama), inject visual override jika ada
+  for (const g of GAMES) {
+    const ov = overrideById.get(g.id);
+    if (ov) {
+      // Pakai visual properties dari override, tapi url/soon/id dari GAMES asli
+      merged.push({
+        ...ov,
+        id: g.id,
+        url: g.url,
+        soon: g.soon,
+        cat: g.cat,
+      });
+    } else {
+      merged.push(g);
+    }
+  }
+  // Kemudian tambah game custom yg cuma ada di override (admin tambah game baru)
+  for (const g of state.gamesOverride) {
+    if (!byId.has(g.id)) merged.push(g);
+  }
+  return merged;
+}
 function getLayout() { return state.layout; }
 
 function applyLayout() {
