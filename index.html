@@ -80,10 +80,10 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html {
-    background: linear-gradient(135deg, #1e3a8a 0%, #6b46ff 25%, #06b6d4 50%, #ec4899 75%, #1e3a8a 100%) !important;
+    background: linear-gradient(135deg, #1e3a8a 0%, #0891b2 25%, #06b6d4 50%, #0284c7 75%, #1e3a8a 100%) !important;
     background-size: 400% 400% !important;
     background-attachment: fixed !important;
-    animation: bgFlow 18s ease infinite !important;
+    animation: bgFlow 22s ease infinite !important;
     min-height: 100vh;
   }
   body {
@@ -91,7 +91,7 @@
     font-family: 'Segoe UI', Roboto, Arial, sans-serif;
     min-height: 100vh;
     overflow-x: hidden;
-    background: rgba(5, 10, 24, 0.5) !important;  /* dim overlay supaya bg agak gelap */
+    background: rgba(8, 50, 90, 0.35) !important;  /* aqua tint overlay */
   }
   a { color: inherit; text-decoration: none; }
 
@@ -132,16 +132,18 @@
   .layout { display: grid; grid-template-columns: 220px 1fr 280px; min-height: 100vh; }
   @media (max-width: 1400px) { .layout { grid-template-columns: 220px 1fr; } .right-sidebar { display: none; } }
 
-  /* === SIDEBAR (Glassmorphism) === */
+  /* === SIDEBAR (Aqua Glass) === */
   .sidebar {
-    background: rgba(15, 23, 41, 0.45) !important;
-    backdrop-filter: blur(24px) saturate(200%);
-    -webkit-backdrop-filter: blur(24px) saturate(200%);
-    border-right: 1px solid rgba(107, 70, 255, 0.25);
+    background: linear-gradient(135deg, rgba(8, 145, 178, 0.25), rgba(30, 64, 175, 0.3)) !important;
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-right: 1px solid rgba(255, 255, 255, 0.15);
     padding: 16px 0;
     position: sticky; top: 0;
     height: 100vh; overflow-y: auto;
-    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
+    box-shadow:
+      inset 0 0 60px rgba(180, 220, 255, 0.08),
+      4px 0 32px rgba(6, 182, 212, 0.3);
   }
   .sidebar::-webkit-scrollbar { width: 6px; }
   .sidebar::-webkit-scrollbar-thumb { background: #6b46ff; border-radius: 3px; }
@@ -167,30 +169,40 @@
     box-shadow: 0 4px 12px rgba(255, 102, 179, 0.4);
     flex-shrink: 0;
   }
-  /* Sidebar nav-item = gradient pill button (seperti tombol "Mulai Main") */
+  /* Sidebar nav-item = aqua glass pill */
   .nav-item {
     display: flex; align-items: center; gap: 10px;
     padding: 10px 14px;
     margin: 4px 10px;
     cursor: pointer; font-size: 13px; color: #fff;
-    background: linear-gradient(135deg, var(--nav-c1, #6b46ff), var(--nav-c2, #ff66b3));
-    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(8, 145, 178, 0.35), rgba(30, 64, 175, 0.4));
+    backdrop-filter: blur(8px);
+    border-radius: 16px;
     font-weight: 600;
-    transition: all 0.15s ease;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
-    border: 2px solid transparent;
+    transition: all 0.2s ease;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.15),
+      0 2px 8px rgba(6, 182, 212, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     position: relative;
     overflow: hidden;
   }
   .nav-item:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 14px rgba(0,0,0,0.4);
-    filter: brightness(1.1);
+    transform: translateX(4px);
+    background: linear-gradient(135deg, rgba(8, 145, 178, 0.5), rgba(30, 64, 175, 0.55));
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.25),
+      0 4px 14px rgba(6, 182, 212, 0.4),
+      0 0 20px rgba(180, 220, 255, 0.3);
+    border-color: rgba(180, 220, 255, 0.5);
   }
   .nav-item.active {
-    border-color: #fff;
-    box-shadow: 0 0 0 2px var(--nav-c2, #ff66b3), 0 4px 14px rgba(0,0,0,0.5);
-    transform: translateY(-1px);
+    background: linear-gradient(135deg, rgba(180, 220, 255, 0.3), rgba(6, 182, 212, 0.4));
+    border-color: rgba(255, 255, 255, 0.6);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.3),
+      0 0 0 1px rgba(255,255,255,0.3),
+      0 4px 20px rgba(180, 220, 255, 0.5);
   }
   .nav-item .icon {
     width: 28px; height: 28px; flex-shrink: 0;
@@ -230,14 +242,16 @@
   main { padding: 0; }
   .topbar {
     position: sticky; top: 0;
-    background: rgba(15, 23, 41, 0.5) !important;
-    backdrop-filter: blur(24px) saturate(200%);
-    -webkit-backdrop-filter: blur(24px) saturate(200%);
-    border-bottom: 1px solid rgba(107, 70, 255, 0.25);
+    background: linear-gradient(135deg, rgba(8, 145, 178, 0.25), rgba(30, 64, 175, 0.3)) !important;
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
     padding: 12px 24px;
     display: flex; align-items: center; gap: 16px;
     z-index: 50;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+    box-shadow:
+      inset 0 0 40px rgba(180, 220, 255, 0.08),
+      0 4px 32px rgba(6, 182, 212, 0.25);
   }
   .topbar .menu-btn { background: none; border: none; color: #fff; font-size: 20px; cursor: pointer; display: none; }
   .search-wrap { flex: 1; max-width: 600px; margin: 0 auto; position: relative; }
@@ -330,20 +344,25 @@
   }
   .card {
     aspect-ratio: 1 / 1;
-    border-radius: 14px; overflow: hidden;
+    border-radius: 22px; overflow: hidden;
     cursor: pointer; position: relative;
-    background: rgba(42, 42, 74, 0.4);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s, border-color 0.2s;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: linear-gradient(145deg, rgba(8, 145, 178, 0.2), rgba(30, 64, 175, 0.3));
+    backdrop-filter: blur(14px) saturate(180%);
+    -webkit-backdrop-filter: blur(14px) saturate(180%);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s, border-color 0.2s;
+    border: 1px solid rgba(255, 255, 255, 0.18);
     display: block;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    box-shadow:
+      inset 0 0 30px rgba(180, 220, 255, 0.08),
+      0 6px 20px rgba(0, 0, 0, 0.3);
   }
   .card:hover {
-    transform: translateY(-6px) scale(1.02);
-    box-shadow: 0 16px 40px rgba(107, 70, 255, 0.5), 0 0 30px rgba(255, 102, 179, 0.3);
-    border-color: rgba(255, 102, 179, 0.6);
+    transform: translateY(-8px) scale(1.03);
+    box-shadow:
+      inset 0 0 40px rgba(180, 220, 255, 0.15),
+      0 16px 40px rgba(6, 182, 212, 0.5),
+      0 0 30px rgba(180, 220, 255, 0.4);
+    border-color: rgba(180, 220, 255, 0.8);
   }
   .card.disabled { opacity: 0.5; cursor: not-allowed; }
   .card.disabled:hover { transform: none; box-shadow: none; border-color: transparent; }
@@ -529,7 +548,7 @@
 
   <aside class="sidebar" id="sidebar">
     <!-- Sidebar brand box - customizable (default = GH icon, full size) -->
-    <div id="sidebarBrand" style="margin:8px;border-radius:14px;overflow:hidden;cursor:pointer;position:relative;aspect-ratio:1/1;width:calc(100% - 16px);background:#0f1729;border:2px solid #6b46ff;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,102,179,0.3);">
+    <div id="sidebarBrand" style="margin:8px;border-radius:22px;overflow:hidden;cursor:pointer;position:relative;aspect-ratio:1/1;width:calc(100% - 16px);background:linear-gradient(145deg, rgba(8,145,178,0.3), rgba(30,64,175,0.4));backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;box-shadow:inset 0 1px 0 rgba(255,255,255,0.2), 0 6px 24px rgba(6, 182, 212, 0.4);">
       <div id="sidebarBrandImg" style="position:absolute;inset:0;background-size:cover;background-position:center;background-image:url('icons/icon-512.png');"></div>
       <div id="sidebarBrandDefault" style="position:relative;z-index:2;padding:6px;display:none;align-items:center;gap:10px;">
         <span class="brand-icon" style="background:linear-gradient(135deg,#ff66b3,#6b46ff);width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;flex-shrink:0;">🎮</span>
@@ -612,7 +631,7 @@
     </div>
 
     <!-- BANNER KOSONG (admin tempel banner di sini) -->
-    <div id="topBanner" style="margin:20px 24px 0;border-radius:14px;overflow:hidden;min-height:120px;background:linear-gradient(135deg,#16213e,#0f1729);border:2px dashed #2a2a4a;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color 0.15s;position:relative;">
+    <div id="topBanner" style="margin:20px 24px 0;border-radius:24px;overflow:hidden;min-height:120px;background:linear-gradient(145deg, rgba(8,145,178,0.2), rgba(30,64,175,0.25));backdrop-filter:blur(14px) saturate(180%);-webkit-backdrop-filter:blur(14px) saturate(180%);border:1px dashed rgba(180,220,255,0.3);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color 0.15s;position:relative;box-shadow:inset 0 0 30px rgba(180,220,255,0.08), 0 6px 20px rgba(0,0,0,0.2);">
       <div id="topBannerImg" style="position:absolute;inset:0;background-size:cover;background-position:center;display:none;z-index:1;"></div>
       <div id="topBannerEmpty" style="position:relative;z-index:2;text-align:center;color:#666;font-size:13px;padding:20px;width:100%;">
         <div style="font-size:32px;margin-bottom:6px;opacity:0.4;">🖼️</div>
