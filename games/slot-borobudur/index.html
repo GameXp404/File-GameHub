@@ -176,6 +176,18 @@
 
   .menu-btn{background:none;border:none;font-size:22px;color:#fff;cursor:pointer;}
 
+  /* Music control button */
+  .music-btn{position:fixed;top:14px;right:14px;z-index:30;
+    width:46px;height:46px;border-radius:50%;
+    background:linear-gradient(135deg, rgba(139,69,19,0.85), rgba(60,20,8,0.95));
+    border:2px solid #d4a017;color:#ffd700;font-size:20px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    backdrop-filter:blur(10px);
+    box-shadow:0 4px 16px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,215,0,0.3);
+    transition:all 0.2s;}
+  .music-btn:hover{transform:scale(1.08);box-shadow:0 6px 20px rgba(255,165,0,0.4);}
+  .music-btn.muted{opacity:0.5;color:#888;}
+
   /* Win popup */
   .win-popup{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
     background:rgba(0,0,0,0.8);z-index:50;opacity:0;pointer-events:none;transition:opacity 0.3s;}
@@ -249,6 +261,12 @@
 <body>
 
 <div class="bg"></div>
+
+<!-- Background music (loops continuously) -->
+<audio id="bgm" src="img/bgm-borobudur.mp3" loop preload="auto"></audio>
+
+<!-- Music toggle button -->
+<button class="music-btn" id="musicBtn" onclick="toggleMusic()" title="Musik">🎵</button>
 
 <div class="game">
 
@@ -697,6 +715,42 @@ function buyFeature() {
 document.getElementById('infoBtn').onclick = () => {
   alert('🏛️ SLOT BOROBUDUR PREMIUM\n\n• 5 reel × 4 row, 8 paylines\n• Garuda 🦅 = WILD (gantikan semua kecuali scatter)\n• Volcano 🌋 = SCATTER, 3+ → 8 free spin x2\n• Multiplier naik tiap menang (max x10)\n• BELI FITUR: langsung 8 free spin\n\nFun money — bukan judi sungguhan!\n\nAsset 100% custom (AI generated)\nBuilt by GameXp404');
 };
+
+// ============ BACKGROUND MUSIC ============
+const bgm = document.getElementById('bgm');
+const musicBtn = document.getElementById('musicBtn');
+let musicMuted = localStorage.getItem('borobudur_muted') === '1';
+bgm.volume = 0.4; // mid volume
+
+function updateMusicBtn() {
+  musicBtn.textContent = musicMuted ? '🔇' : '🎵';
+  musicBtn.classList.toggle('muted', musicMuted);
+}
+updateMusicBtn();
+
+function toggleMusic() {
+  musicMuted = !musicMuted;
+  localStorage.setItem('borobudur_muted', musicMuted ? '1' : '0');
+  if (musicMuted) {
+    bgm.pause();
+  } else {
+    bgm.play().catch(() => {});
+  }
+  updateMusicBtn();
+}
+
+// Auto-play on first user interaction (browser policy: must be user-triggered)
+function startMusicOnFirstInteraction() {
+  if (!musicMuted) {
+    bgm.play().catch(() => {});
+  }
+  document.removeEventListener('click', startMusicOnFirstInteraction);
+  document.removeEventListener('touchstart', startMusicOnFirstInteraction);
+  document.removeEventListener('keydown', startMusicOnFirstInteraction);
+}
+document.addEventListener('click', startMusicOnFirstInteraction);
+document.addEventListener('touchstart', startMusicOnFirstInteraction);
+document.addEventListener('keydown', startMusicOnFirstInteraction);
 
 init();
 </script>
